@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { User } from '../../interfaces/user';
+import { UsersHttpService } from '../services/users-http.service';
 
 @Component({
   selector: 'app-login',
@@ -16,7 +17,14 @@ export class LoginComponent {
         password: ''
     }
 
-    login() {
+    constructor(private usersHttpService: UsersHttpService) {
 
+    }
+
+    login() {
+        this.usersHttpService.getUsers().subscribe((response) => {
+            let users = response;
+            console.log(users);
+        });
     }
 }
