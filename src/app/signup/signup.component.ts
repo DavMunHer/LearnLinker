@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { User } from '../../interfaces/user';
+import { UsersHttpService } from '../services/users-http.service';
 
 @Component({
   selector: 'app-signup',
@@ -19,12 +20,12 @@ export class SignupComponent {
         password: ''
     }
 
+    constructor(private usersHttpService : UsersHttpService) { }
 
     signup() {
+        this.errorMessage = '';
         if (this.user.password === this.passwordConfirmation) {
-            //TODO: Hacer el insert con todo el tema de jwt
-            console.log(`Está working`);
-            console.log(this.user);
+            this.usersHttpService.signUp(this.user).subscribe();
         } else {
             this.errorMessage = 'The password confirmation is not the same as the password one!';
         }

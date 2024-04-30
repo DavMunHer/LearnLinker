@@ -12,4 +12,8 @@ export class UsersHttpService {
     getUsers() {
         return this.http.get<User[]>(`users`);
     }
+
+    signUp(user: User) {
+        return this.http.post<User>(`user/signup`, user);
+    }
 }

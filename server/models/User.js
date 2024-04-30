@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize');
 const connection = require('../config/database');
+const { timestamp } = require('rxjs');
 
 const User = connection.define('user', {
     id: {
@@ -22,17 +23,13 @@ const User = connection.define('user', {
         type: Sequelize.STRING,
         allowNull: false
     },
-    createdAt: {
-        type: Sequelize.DATE,
-        allowNull: false,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
-    },
-    updatedAt: {
-        type: Sequelize.DATE,
-        allowNull: false,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP')
+
+},
+    {
+        tableName: 'users',
+        timestamps: true
     }
-});
+);
 
 // Asociaciones con otros modelos
 // User.hasMany(Post);
