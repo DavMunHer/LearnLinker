@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-const connection = require('../config/database');
+const connection = require('../.config/database');
 const { timestamp } = require('rxjs');
 
 const User = connection.define('user', {
