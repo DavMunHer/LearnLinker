@@ -16,4 +16,8 @@ export class UsersHttpService {
     signUp(user: User) {
         return this.http.post<User>(`user/signup`, user);
     }
+
+    login(user: any) {
+        return this.http.post<string>(`user/login`, user);
+    }
 }

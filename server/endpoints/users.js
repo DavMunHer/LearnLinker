@@ -54,7 +54,7 @@ router.post('/user/login', async (req, res) => {
         const passwordValidation = await bcrypt.compare(password, existingUser.password);
 
         if (!passwordValidation) {
-            return res.status(401).json({ message: 'The credentials are not valid.' });
+            return res.status(401).json({ message: 'The credentials are invalid.' });
         }
 
         const secretKey = process.env.JWT_SECRET_KEY;

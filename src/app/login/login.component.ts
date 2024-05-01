@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, ErrorHandler } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { User } from '../../interfaces/user';
 import { UsersHttpService } from '../services/users-http.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
@@ -11,20 +11,29 @@ import { UsersHttpService } from '../services/users-http.service';
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
-    protected user: User = {
-        username: '',
-        email: '',
+    protected user: any = {
+        usernameOrEmail: '',
         password: ''
     }
+    protected errorMessage: string = '';
 
-    constructor(private usersHttpService: UsersHttpService) {
+    constructor(private usersHttpService: UsersHttpService, private httpError: ErrorHandler) { }
 
+    private handleError(error: HttpErrorResponse): void {
+        if (error.status === 401) {
+            this.errorMessage = 'Invalid credentials';
+          } else {
+            this.errorMessage = 'Ha ocurrido un error';
+          }
     }
 
     login() {
-        this.usersHttpService.getUsers().subscribe((response) => {
-            let users = response;
-            console.log(users);
+        this.errorMessage = '';
+        this.usersHttpService.login(this.user).subscribe((token) => {
+            localStorage.setItem('Token', token);
+        },
+            (error) => {
+                this.handleError(error);
         });
     }
 }
