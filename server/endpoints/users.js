@@ -63,13 +63,16 @@ router.post('/user/login', async (req, res) => {
         const token = jwt.sign({
             username: existingUser.username,
             email: existingUser.email
-        }, secretKey , { expiresIn: '30d' });
+        }, secretKey, { expiresIn: '30d' });
         res.json({ token });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Internal server error.' });
     }
-})
+});
+
+
+
 
 // ... Otros endpoints
 

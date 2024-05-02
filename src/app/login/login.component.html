@@ -1,10 +1,10 @@
 <form (ngSubmit)="login()">
-    <label for="username">Nombre de usuario:</label>
+    <label for="username">Username:</label>
     <input class="border-2" type="text" name="username" autocomplete="username" [(ngModel)]="user.usernameOrEmail" id="username">
     <br>
-    <label for="password">Contraseña: </label>
+    <label for="password">Password: </label>
     <input class="border-2" type="password" autocomplete="current-password" [(ngModel)]="user.password" name="password" id="password">
-    <button class="block bg-blue-500 text-white font-bold py-2 px-4 rounded" type="submit">Enviar</button>
+    <button class="block bg-blue-500 text-white font-bold py-2 px-4 rounded" type="submit">Send</button>
 </form>
 @if(errorMessage) {
     <p class="text-red-500">{{errorMessage}}</p>
