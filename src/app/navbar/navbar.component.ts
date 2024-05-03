@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../services/auth.service';
-import * as jwtDecode from 'jwt-decode';
 import { User } from '../../interfaces/user';
 
 @Component({
@@ -20,10 +19,10 @@ export class NavbarComponent {
 
     constructor(protected authService: AuthService) { }
 
-    ngOnInit(): void {
-        if (this.authService.isLogued()) {
-            this.loguedUser = jwtDecode.jwtDecode(JSON.stringify(this.authService.getToken()));
-            console.log(this.loguedUser);
-        }
-    }
+    // ngOnInit(): void {
+    //     if (this.authService.isLogued()) {
+    //         this.loguedUser = jwtDecode.jwtDecode(JSON.stringify(this.authService.getToken()));
+    //         console.log(this.loguedUser);
+    //     }
+    // }
 }
