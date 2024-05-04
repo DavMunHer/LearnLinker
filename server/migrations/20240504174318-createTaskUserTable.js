@@ -3,28 +3,27 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
     async up(queryInterface, Sequelize) {
-        await queryInterface.createTable('users',
+        await queryInterface.createTable('task_user',
             {
                 id: {
                     type: Sequelize.INTEGER,
-                    autoIncrement: true,
-                    primaryKey: true
+                    primaryKey: true,
                 },
-                username: {
-                    type: Sequelize.STRING,
-                    unique: true,
-                    allowNull: false
+                user_id: {
+                    type: Sequelize.INTEGER,
+                    references: {
+                        model: 'User',
+                        key: 'id'
+                    },
+                    onDelete: 'CASCADE'
                 },
-                email: {
-                    type: Sequelize.STRING,
-                    unique: true,
-                    validate: {
-                        isEmail: true
-                    }
-                },
-                password: {
-                    type: Sequelize.STRING,
-                    allowNull: false
+                task_id: {
+                    type: Sequelize.INTEGER,
+                    references: {
+                        model: 'Task',
+                        key: 'id'
+                    },
+                    onDelete: 'CASCADE'
                 },
                 createdAt: {
                     type: Sequelize.DATE,
@@ -41,6 +40,6 @@ module.exports = {
     },
 
     async down(queryInterface, Sequelize) {
-        await queryInterface.dropTable('users');
+        await queryInterface.dropTable('task_user');
     }
 };

@@ -1,29 +1,44 @@
 'use strict';
 
+const SCORE = new Sequelize.DataTypes.TINYINT({
+    validate: {
+      isInRange: [0, 10]
+    }
+});
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
     async up(queryInterface, Sequelize) {
-        await queryInterface.createTable('users',
+        await queryInterface.createTable('feedback',
             {
-                id: {
+                author_id: {
                     type: Sequelize.INTEGER,
-                    autoIncrement: true,
+                    references: {
+                        model: 'User',
+                        key: 'id',
+                    },
+                    onDelete: 'CASCADE',
                     primaryKey: true
                 },
-                username: {
+                receptor_id: {
+                    type: Sequelize.INTEGER,
+                    references: {
+                        model: 'User',
+                        key: 'id',
+                    },
+                    onDelete: 'CASCADE',
+                    primaryKey: true
+                },
+                title: {
                     type: Sequelize.STRING,
-                    unique: true,
                     allowNull: false
                 },
-                email: {
+                description: {
                     type: Sequelize.STRING,
-                    unique: true,
-                    validate: {
-                        isEmail: true
-                    }
+                    allowNull: false
                 },
-                password: {
-                    type: Sequelize.STRING,
+                score: {
+                    type: SCORE,
                     allowNull: false
                 },
                 createdAt: {
@@ -41,6 +56,6 @@ module.exports = {
     },
 
     async down(queryInterface, Sequelize) {
-        await queryInterface.dropTable('users');
+        await queryInterface.dropTable('feedback');
     }
 };
