@@ -22,7 +22,7 @@ export class ProfileComponent {
 
     ngOnInit(): void {
         if (this.authService.isLogued()) {
-            this.loguedUser = jwtDecode.jwtDecode(JSON.stringify(this.authService.getToken()));
+            this.loguedUser = jwtDecode.jwtDecode(this.authService.getToken()!);
         }
     }
 }
