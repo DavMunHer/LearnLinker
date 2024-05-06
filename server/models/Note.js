@@ -1,10 +1,9 @@
 const Sequelize = require('sequelize');
-const connection = require('../config/database');
-const { timestamp } = require('rxjs');
+const sequelize = require('../config/database');
 const User = require('./User');
 const Task = require('./Task');
 
-const Note = connection.define('note', {
+const Note = sequelize.define('Note', {
     id: {
         type: Sequelize.INTEGER,
         primaryKey: true,

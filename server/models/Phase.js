@@ -1,9 +1,9 @@
 const Sequelize = require('sequelize');
-const connection = require('../config/database');
-const { timestamp } = require('rxjs');
+const sequelize = require('../config/database');
 const Task = require('./Task');
+const Project = require('./Project');
 
-const Phase = connection.define('phase', {
+const Phase = sequelize.define('Phase', {
     id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,

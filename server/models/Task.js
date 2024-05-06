@@ -1,10 +1,7 @@
 const Sequelize = require('sequelize');
-const connection = require('../config/database');
-const { timestamp } = require('rxjs');
-const Phase = require('./Phase');
-const User = require('./User');
+const sequelize = require('../config/database');
 
-const Task = connection.define('task', {
+const Task = sequelize.define('Task', {
     id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -42,9 +39,10 @@ const Task = connection.define('task', {
 );
 
 // Asociaciones con otros modelos
-Task.belongsTo(Phase);
-Task.belongsToMany(User);
-
+Task.associate = function (models) {
+    Task.belongsTo(models.Phase);
+    Task.belongsToMany(models.User);
+}
 Task.sync(); // Sincronizar el modelo con la base de datos
 
 module.exports = Task;
