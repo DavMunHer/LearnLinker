@@ -8,7 +8,7 @@ module.exports = {
                 user_id: {
                     type: Sequelize.INTEGER,
                     references: {
-                        model: 'User',
+                        model: 'users',
                         key: 'id'
                     },
                     primaryKey: true,
@@ -17,7 +17,7 @@ module.exports = {
                 project_id: {
                     type: Sequelize.INTEGER,
                     references: {
-                        model: 'Project',
+                        model: 'projects',
                         key: 'id'
                     },
                     primaryKey: true,

@@ -13,7 +13,7 @@ yarn-error.log
 
 # Express
 /server/node_modules
-/server/.config
+/server/config
 /server/.env
 
 # IDEs and editors

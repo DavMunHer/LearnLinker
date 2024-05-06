@@ -8,7 +8,7 @@ module.exports = {
         user_id: {
             type: Sequelize.INTEGER,
             references: {
-                model: 'User',
+                model: 'users',
                 key: 'id'
             },
             onDelete: 'CASCADE',
@@ -17,7 +17,7 @@ module.exports = {
         task_id: {
             type: Sequelize.INTEGER,
             references: {
-                model: 'Task',
+                model: 'tasks',
                 key: 'id'
             },
             onDelete: 'CASCADE',
@@ -26,7 +26,7 @@ module.exports = {
         note_id: {
             type: Sequelize.INTEGER,
             references: {
-                model: 'Note',
+                model: 'notes',
                 key: 'id'
             },
             onDelete: 'CASCADE',

@@ -1,6 +1,8 @@
 const Sequelize = require('sequelize');
-const connection = require('../.config/database');
+const connection = require('../config/database');
 const { timestamp } = require('rxjs');
+const Task = require('./Task');
+const Project = require('./Project');
 
 const User = connection.define('user', {
     id: {
@@ -32,7 +34,8 @@ const User = connection.define('user', {
 );
 
 // Asociaciones con otros modelos
-// User.hasMany(Post);
+User.hasMany(Task);
+User.hasMany(Project);
 
 User.sync(); // Sincronizar el modelo con la base de datos
 

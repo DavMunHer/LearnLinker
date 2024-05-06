@@ -1,20 +1,20 @@
 'use strict';
 
-const SCORE = new Sequelize.DataTypes.TINYINT({
-    validate: {
-      isInRange: [0, 10]
-    }
-});
-
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
     async up(queryInterface, Sequelize) {
+        const SCORE = new Sequelize.DataTypes.TINYINT({
+            validate: {
+              isInRange: [0, 10]
+            }
+        });
+
         await queryInterface.createTable('feedback',
             {
                 author_id: {
                     type: Sequelize.INTEGER,
                     references: {
-                        model: 'User',
+                        model: 'users',
                         key: 'id',
                     },
                     onDelete: 'CASCADE',
@@ -23,7 +23,7 @@ module.exports = {
                 receptor_id: {
                     type: Sequelize.INTEGER,
                     references: {
-                        model: 'User',
+                        model: 'users',
                         key: 'id',
                     },
                     onDelete: 'CASCADE',

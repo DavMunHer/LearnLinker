@@ -17,7 +17,7 @@ module.exports = {
                 phase_id: {
                     type: Sequelize.INTEGER,
                     references: {
-                        model: 'Phase',
+                        model: 'phases',
                         key: 'id'
                     },
                     onDelete: 'CASCADE'
