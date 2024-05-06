@@ -5,17 +5,14 @@ module.exports = {
     async up(queryInterface, Sequelize) {
         await queryInterface.createTable('task_user',
             {
-                id: {
-                    type: Sequelize.INTEGER,
-                    primaryKey: true,
-                },
                 user_id: {
                     type: Sequelize.INTEGER,
                     references: {
                         model: 'User',
                         key: 'id'
                     },
-                    onDelete: 'CASCADE'
+                    onDelete: 'CASCADE',
+                    primaryKey: true
                 },
                 task_id: {
                     type: Sequelize.INTEGER,
@@ -23,7 +20,8 @@ module.exports = {
                         model: 'Task',
                         key: 'id'
                     },
-                    onDelete: 'CASCADE'
+                    onDelete: 'CASCADE',
+                    primaryKey: true
                 },
                 createdAt: {
                     type: Sequelize.DATE,

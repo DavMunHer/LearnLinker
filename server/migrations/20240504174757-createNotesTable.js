@@ -9,15 +9,6 @@ module.exports = {
                     type: Sequelize.INTEGER,
                     primaryKey: true,
                 },
-                task_user_id: {
-                    type: Sequelize.INTEGER,
-                    references: {
-                        model: 'task_user',
-                        key: 'id',
-                        raw: true
-                    },
-                    onDelete: 'CASCADE'
-                },
                 date: {
                     type: Sequelize.DATE,
                     allowNull: false
