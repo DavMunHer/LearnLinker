@@ -7,6 +7,9 @@ import { E404Component } from './e404/e404.component';
 import { HomeComponent } from './home/home.component';
 import { authGuard } from './guards/auth.guard';
 import { guestGuard } from './guards/guest.guard';
+import { CreateProjectComponent } from './project/create-project/create-project.component';
+import { EditProjectComponent } from './project/edit-project/edit-project.component';
+import { ProjectDetailsComponent } from './project/project-details/project-details.component';
 
 export const routes: Routes = [
     {
@@ -38,6 +41,24 @@ export const routes: Routes = [
         component: ProfileComponent,
         canActivate: [authGuard],
         title: 'User profile!'
+    },
+    {
+        path: 'create-project',
+        component: CreateProjectComponent,
+        canActivate: [authGuard],
+        title: 'Create a new project'
+    },
+    {
+        path: 'edit-project/:id',
+        component: EditProjectComponent,
+        canActivate: [authGuard],
+        title: 'Edit an existing project'
+    },
+    {
+        path: 'project/:id',
+        component: ProjectDetailsComponent,
+        canActivate: [authGuard],
+        title: 'Project details'
     },
     { path: '', redirectTo: '/home', pathMatch: 'full' },
     { path: '**', component: E404Component, pathMatch: 'full' }

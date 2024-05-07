@@ -10,8 +10,14 @@ export class ProjectsHttpService {
 
     constructor(private http: HttpClient) { }
 
-    getProject(id: number): Observable<Project> {
-        return this.http.get<Project>(``);
+    // El id es un string porque viene de la ruta
+    getProject(id: string): Observable<Project> {
+        return this.http.get<Project>(`project/${id}`);
+    }
+
+    // El id es un string porque viene de la ruta
+    getProjectDetails(id: string): Observable<Project> {
+        return this.http.get<Project>(`project-details/${id}`);
     }
 
     sendProject(project: Project): Observable<Project> {

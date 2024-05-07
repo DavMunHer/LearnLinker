@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Project } from '../../../interfaces/project';
 import { ProjectsHttpService } from '../../services/projects-http.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-project-details',
@@ -15,10 +16,12 @@ export class ProjectDetailsComponent implements OnInit {
         start_date: '',
         end_date: ''
     }
+    constructor(private projectHttpService: ProjectsHttpService, private route: ActivatedRoute) { }
 
-    constructor(private projectHttpService: ProjectsHttpService) { }
 
     ngOnInit(): void {
-        // this.project = this.projectHttpService.
+        this.projectHttpService.getProjectDetails(this.route.snapshot.params['id']).subscribe((response) => {
+            this.project = response;
+        });
     }
 }
