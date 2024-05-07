@@ -14,7 +14,7 @@ module.exports = {
                     type: Sequelize.STRING,
                     allowNull: false
                 },
-                phase_id: {
+                phaseId: {
                     type: Sequelize.INTEGER,
                     references: {
                         model: 'phases',

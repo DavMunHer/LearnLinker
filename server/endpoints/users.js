@@ -4,6 +4,7 @@ const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { where, Op } = require('sequelize');
+const Project = require('../models/Project');
 const dotenv = require('dotenv').config();
 
 router.get('/users', async (req, res) => {
@@ -44,7 +45,6 @@ router.post('/user/signup', async (req, res) => {
 router.post('/user/login', async (req, res) => {
     try {
         const { usernameOrEmail, password } = req.body;
-        console.log(req.body);
         const existingUser = await User.findOne({ where: { [Op.or]: { username: usernameOrEmail, email: usernameOrEmail } } });
 
         if (!existingUser) {
@@ -59,7 +59,6 @@ router.post('/user/login', async (req, res) => {
 
         const secretKey = process.env.JWT_SECRET_KEY;
 
-        console.log(secretKey);
         const token = jwt.sign({
             username: existingUser.username,
             email: existingUser.email
@@ -71,6 +70,33 @@ router.post('/user/login', async (req, res) => {
     }
 });
 
+router.get('/user/:user_id/projects', async (req, res) => {
+    try {
+        const userId = (req.params.user_id);
+        console.log(userId);
+        const userProjectsInfo = await User.findAll({
+            where: { id: userId },
+            attributes: [],
+            include: [{
+              model: Project,
+              through: {
+                attributes: ['role']
+              }
+            }]
+        });
+        /*
+        Una vez obtenemos el array con el objeto del usuario incluyendo los proyectos, de aquí cogemos únicamente
+        el array de proyectos
+        */
+        const userProjects = userProjectsInfo[0].Projects;
+        res.json(userProjects);
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error.' });
+    }
+
+});
 
 
 

@@ -1,6 +1,6 @@
 const express = require('express');
-const Project = require('../models/Project');
 const router = express.Router();
+const Project = require('../models/Project');
 
 router.get('/projects', async (req, res) => {
     try {
@@ -11,3 +11,35 @@ router.get('/projects', async (req, res) => {
         res.status(500).json({ message: 'Internal server error.' });
     }
 });
+
+
+router.post('/create/project', async (req, res) => {
+    try {
+        const projectRequest = req.body;
+        const newProject = new Project(projectRequest);
+        console.log(newProject);
+        newProject.save();
+        res.status(201).json({ message: 'Project creation successful.' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error.' });
+    }
+});
+
+router.delete('/delete/project/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const projectObject = await Project.findByPk(id);
+        console.log(projectObject);
+        if (!projectObject) {
+            return res.status(404).json({ message: 'Project not found.' });
+        }
+        projectObject.destroy();
+        res.status(201).json({ message: 'Project elimination successful.' });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Internal server error.' });
+    }
+});
+
+module.exports = router;

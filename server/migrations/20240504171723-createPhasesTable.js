@@ -26,7 +26,7 @@ module.exports = {
                     type: Sequelize.DATE,
                     allowNull: true
                 },
-                project_id: {
+                projectId: {
                     type: Sequelize.INTEGER,
                     references: {
                         model: 'projects',

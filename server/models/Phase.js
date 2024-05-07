@@ -25,7 +25,7 @@ const Phase = sequelize.define('Phase', {
         type: Sequelize.DATE,
         allowNull: true
     },
-    project_id: {
+    projectId: {
         type: Sequelize.INTEGER,
         references: {
             model: 'Project',

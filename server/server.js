@@ -1,4 +1,5 @@
 const usersEndpoints = require('./endpoints/users');
+const projectsEndpoints = require('./endpoints/projects');
 const cors = require('cors');
 
 const express = require('express');
@@ -13,6 +14,7 @@ app.use(cors()); //En producción hará falta especificar el origen desde el que
  * Por el contrario la respuesta se enviaría mediante req.raw y habría que hacer el parse para acceder a la información
 */
 app.use(usersEndpoints);
+app.use(projectsEndpoints);
 
 app.listen(port, () => {
     console.log(`App listening at port ${port}`);

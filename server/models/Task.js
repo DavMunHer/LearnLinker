@@ -11,7 +11,7 @@ const Task = sequelize.define('Task', {
         type: Sequelize.STRING,
         allowNull: false
     },
-    phase_id: {
+    phaseId: {
         type: Sequelize.INTEGER,
         references: {
             model: 'Phase',
