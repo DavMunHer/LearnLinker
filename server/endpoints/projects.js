@@ -30,6 +30,26 @@ router.get('/project/:id', async (req, res) => {
     }
 });
 
+router.get('/project-details/:id', async (req, res) => {
+    try {
+        const project = await Project.findByPk(req.params.id);
+        if (!project) {
+            return res.status(404).json({ message: 'Project not found.' });
+        }
+        const frontProject = {
+            name: project.name,
+            start_date: project.start_date,
+            end_date: project.end_date
+        }
+        //FIXME: Mandar todas las fases de desarrollo que estén asociadas con el proyecto + sus relaciones
+        res.send(frontProject);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error.' });
+    }
+});
+
+
 router.post('/create/project', async (req, res) => {
     try {
         const projectRequest = req.body;
