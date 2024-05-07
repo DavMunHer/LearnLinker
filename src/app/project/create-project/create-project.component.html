@@ -1,0 +1,15 @@
+<form (ngSubmit)="createProject()">
+    <label for="project-name">Project name:</label>
+    <input class="border-2" type="text" name="project-name" autocomplete="project-name" [(ngModel)]="newProject.name" id="project-name">
+    <br>
+    <label for="project-start-date">Project start date: </label>
+    <input class="border-2" type="date" autocomplete="current-project-start-date" [(ngModel)]="newProject.start_date" name="project-start-date" id="project-start-date">
+    <br>
+    <label for="project-start-date">Project start date: </label>
+    <input class="border-2" type="date" autocomplete="current-project-start-date" [(ngModel)]="newProject.start_date" name="project-start-date" id="project-start-date">
+    <button class="block bg-blue-500 text-white font-bold py-2 px-4 rounded" type="submit">Send</button>
+</form>
+<!-- @if(errorMessage) {
+    <p class="text-red-500">{{errorMessage}}</p>
+} -->
+
