@@ -70,12 +70,12 @@ router.post('/user/login', async (req, res) => {
     }
 });
 
-router.get('/user/:user_id/projects', async (req, res) => {
+router.get('/user/:user_email/projects', async (req, res) => {
     try {
-        const userId = (req.params.user_id);
-        console.log(userId);
+        const userEmail = (req.params.user_email);
+        console.log(userEmail);
         const userProjectsInfo = await User.findAll({
-            where: { id: userId },
+            where: { email: userEmail },
             attributes: [],
             include: [{
               model: Project,

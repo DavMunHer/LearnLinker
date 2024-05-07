@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { User } from '../../interfaces/user';
 import { AuthService } from '../services/auth.service';
-import * as jwtDecode from 'jwt-decode';
 
 
 @Component({
@@ -22,7 +21,8 @@ export class ProfileComponent {
 
     ngOnInit(): void {
         if (this.authService.isLogued()) {
-            this.loguedUser = jwtDecode.jwtDecode(this.authService.getToken()!);
+            this.loguedUser = this.authService.getSessionUser();
+            console.log(this.loguedUser);
         }
     }
 }
