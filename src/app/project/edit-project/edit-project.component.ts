@@ -12,7 +12,7 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './edit-project.component.scss'
 })
 export class EditProjectComponent implements OnInit {
-    protected project: Project = {
+    protected project: any = {
         name: '',
         start_date: '',
         end_date: ''
@@ -23,6 +23,10 @@ export class EditProjectComponent implements OnInit {
     ngOnInit(): void {
         this.projectHttpService.getProject(this.route.snapshot.params['id']).subscribe((response) => {
             this.project = response;
+
+
+            console.log(this.project);
+            console.log(typeof this.project.start_date);
         });
     }
 
