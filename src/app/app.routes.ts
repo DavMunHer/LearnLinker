@@ -10,6 +10,7 @@ import { guestGuard } from './guards/guest.guard';
 import { CreateProjectComponent } from './project/create-project/create-project.component';
 import { EditProjectComponent } from './project/edit-project/edit-project.component';
 import { ProjectDetailsComponent } from './project/project-details/project-details.component';
+import { ProjectsManagementComponent } from './project/projects-management/projects-management.component';
 
 export const routes: Routes = [
     {
@@ -41,6 +42,12 @@ export const routes: Routes = [
         component: ProfileComponent,
         canActivate: [authGuard],
         title: 'User profile!'
+    },
+    {
+        path: 'project-management',
+        component: ProjectsManagementComponent,
+        canActivate: [authGuard],
+        title: 'Manage projects'
     },
     {
         path: 'create-project',

@@ -24,5 +24,8 @@ export class ProjectsHttpService {
         return this.http.post<Project>(`create/project`, project);
     }
 
+    getUserProjects(userEmail: string): Observable<Project[]> {
+        return this.http.get<Project[]>(`user/${userEmail}/projects`);
+    }
 
 }
