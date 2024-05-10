@@ -28,7 +28,7 @@ const Phase = sequelize.define('Phase', {
     projectId: {
         type: Sequelize.INTEGER,
         references: {
-            model: 'Project',
+            model: Project,
             key: 'id'
         },
         onDelete: 'CASCADE'
@@ -40,9 +40,9 @@ const Phase = sequelize.define('Phase', {
     }
 );
 
+Phase.belongsTo(Project);
 // Asociaciones con otros modelos
 Phase.associate = function () {
-    Phase.belongsTo(Project);
     Phase.hasMany(Task);
 }
 

@@ -1,5 +1,7 @@
 const Sequelize = require('sequelize');
 const sequelize = require('../config/database');
+const Phase = require('./Phase');
+const User = require('./User');
 
 const Task = sequelize.define('Task', {
     id: {
@@ -14,7 +16,7 @@ const Task = sequelize.define('Task', {
     phaseId: {
         type: Sequelize.INTEGER,
         references: {
-            model: 'Phase',
+            model: Phase,
             key: 'id'
         },
         onDelete: 'CASCADE'
@@ -39,8 +41,8 @@ const Task = sequelize.define('Task', {
 );
 
 // Asociaciones con otros modelos
+Task.belongsTo(Phase);
 Task.associate = function (models) {
-    Task.belongsTo(models.Phase);
     Task.belongsToMany(models.User);
 }
 Task.sync(); // Sincronizar el modelo con la base de datos

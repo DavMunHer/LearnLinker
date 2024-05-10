@@ -5,5 +5,6 @@ export interface Project {
     end_date: string
     project_user?: {
         role: string
-    }
+    },
+    user_email?: string
 }

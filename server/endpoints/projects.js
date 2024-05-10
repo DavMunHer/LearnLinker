@@ -4,6 +4,8 @@ const Project = require('../models/Project');
 const Phase = require('../models/Phase');
 const { Sequelize } = require('sequelize');
 const { formatDateAttribute } = require('./helper');
+const sequelize = require('../config/database');
+const User = require('../models/User');
 
 Phase.belongsTo(Project);
 Project.hasMany(Phase);
@@ -66,8 +68,15 @@ router.get('/project-details/:id', async (req, res) => {
 router.post('/create/project', async (req, res) => {
     try {
         const projectRequest = req.body;
-        const newProject = new Project(projectRequest);
-        newProject.save();
+        console.log(projectRequest.name);
+        const loguedUser = await User.findOne({ where: { 'email': req.body.user_email } });
+
+        let newProject = await Project.create({
+            'name': projectRequest.name,
+            'start_date': projectRequest.start_date,
+            'end_date': projectRequest.end_date
+        });
+        sequelize.query(`INSERT INTO project_user (userId, projectId, role) VALUES (${loguedUser.id}, ${newProject.id},"manager")`);
         res.status(201).json({ message: 'Project creation successful.' });
     } catch (error) {
         console.error(error);
