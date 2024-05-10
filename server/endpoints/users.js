@@ -17,6 +17,23 @@ router.get('/users', async (req, res) => {
     }
 });
 
+
+router.get('/user/:user_email', async (req, res) => {
+    try {
+        const user = await User.findOne({ where: { 'email': req.params.user_email } });
+        if (!user) {
+            return res.status(404).json({ message: 'User not found.' });
+        }
+        res.json({
+            username: user.username,
+            email: user.email
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error.' });
+    }
+})
+
 router.post('/user/signup', async (req, res) => {
     try {
         const { username, email, password } = req.body;
@@ -48,7 +65,7 @@ router.post('/user/login', async (req, res) => {
         const existingUser = await User.findOne({ where: { [Op.or]: { username: usernameOrEmail, email: usernameOrEmail } } });
 
         if (!existingUser) {
-            return res.status(401).json({ message: 'User not found.' });
+            return res.status(404).json({ message: 'User not found.' });
         }
 
         const passwordValidation = await bcrypt.compare(password, existingUser.password);

@@ -3,6 +3,8 @@ import { Project } from '../../../interfaces/project';
 import { FormsModule } from '@angular/forms';
 import { ProjectsHttpService } from '../../services/projects-http.service';
 import { AuthService } from '../../services/auth.service';
+import { UsersHttpService } from '../../services/users-http.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
     selector: 'app-create-project',
@@ -16,17 +18,40 @@ export class CreateProjectComponent implements OnInit {
         name: '',
         start_date: '',
         end_date: '',
-        user_email: ''
+        user_email: '',
     }
+    protected leaderEmail = '';
+    protected userNotFoundErrorMessage = '';
+    protected errorMessage = '';
 
-    constructor(private projectHttpService: ProjectsHttpService, private authService: AuthService) { }
+    constructor(
+        private projectHttpService: ProjectsHttpService,
+        private authService: AuthService,
+        private userHttpService: UsersHttpService
+    ) { }
+
+    private handleError(error: HttpErrorResponse) {
+        if (error.status == 404) {
+            this.userNotFoundErrorMessage = 'There is no user with that email or username';
+        } else {
+            this.errorMessage = 'An error has occurred';
+        }
+    }
 
     ngOnInit(): void {
         this.newProject.user_email = this.authService.getSessionUser().email;
     }
 
     createProject() {
-        console.log(this.newProject);
-        this.projectHttpService.sendProject(this.newProject).subscribe();
+        this.userHttpService.getUser(this.leaderEmail).subscribe({
+            next: (response) => {
+                if (this.leaderEmail == response.email && this.leaderEmail != this.newProject.user_email) {
+                    this.projectHttpService.sendProject(this.newProject).subscribe();
+                }
+            },
+            error: (error) => {
+                this.handleError(error);
+            }
+        })
     }
 }

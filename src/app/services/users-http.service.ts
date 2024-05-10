@@ -15,6 +15,10 @@ export class UsersHttpService {
         return this.http.get<User[]>(`users`);
     }
 
+    getUser(email: string): Observable<User> {
+        return this.http.get<User>(`user/${email}`);
+    }
+
     getUserProjects(email: string): Observable<Project[]> {
         return this.http.get<Project[]>(`user/${email}/projects`);
     }
