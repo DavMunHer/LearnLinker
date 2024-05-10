@@ -30,7 +30,4 @@ export class EditProjectComponent implements OnInit {
         });
     }
 
-    editProject() {
-
-    }
 }

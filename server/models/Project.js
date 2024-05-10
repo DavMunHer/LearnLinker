@@ -1,5 +1,7 @@
 const Sequelize = require('sequelize');
 const sequelize = require('../config/database');
+const Phase = require('./Phase');
+const User = require('./User');
 
 const Project = sequelize.define('Project', {
     id: {
@@ -26,11 +28,10 @@ const Project = sequelize.define('Project', {
     }
 );
 
+Project.hasMany(Phase);
 Project.associate = function (models) {
-    Project.hasMany(models.Phase);
-    Project.belongsToMany(models.User, {through: 'project_user'});
+Project.belongsToMany(models.User, {through: 'project_user'});
 }
-// Asociaciones con otros modelos
 
 Project.sync(); // Sincronizar el modelo con la base de datos
 

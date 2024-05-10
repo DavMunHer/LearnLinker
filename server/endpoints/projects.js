@@ -1,6 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const Project = require('../models/Project');
+const Phase = require('../models/Phase');
+const { Sequelize } = require('sequelize');
+
+Phase.belongsTo(Project);
+Project.hasMany(Phase);
+
+
 
 router.get('/projects', async (req, res) => {
     try {
@@ -47,17 +54,28 @@ router.get('/project/:id', async (req, res) => {
 
 router.get('/project-details/:id', async (req, res) => {
     try {
-        const project = await Project.findByPk(req.params.id);
-        if (!project) {
+        const projectWithPhases = await Project.findAll({
+            where: { id: req.params.id },
+            attributes: [
+                'id',
+                'name',
+                [Sequelize.fn('DATE_FORMAT', Sequelize.col('Project.start_date'), '%Y-%m-%d'), 'start_date'],
+                [Sequelize.fn('DATE_FORMAT', Sequelize.col('Project.end_date'), '%Y-%m-%d'), 'end_date']],
+            include: [{
+                model: Phase,
+                attributes: [
+                    'id',
+                    'name',
+                    [Sequelize.fn('DATE_FORMAT', Sequelize.col('Phases.deadline'), '%Y-%m-%d'), 'deadline'],
+                    [Sequelize.fn('DATE_FORMAT', Sequelize.col('Phases.start_date'), '%Y-%m-%d'), 'start_date'],
+                    [Sequelize.fn('DATE_FORMAT', Sequelize.col('Phases.end_date'), '%Y-%m-%d'), 'end_date'],
+                ]
+            }]
+        });
+        if (projectWithPhases.length == 0) {
             return res.status(404).json({ message: 'Project not found.' });
         }
-        const frontProject = {
-            name: project.name,
-            start_date: project.start_date,
-            end_date: project.end_date
-        }
-        //FIXME: Mandar todas las fases de desarrollo que estén asociadas con el proyecto + sus relaciones
-        res.send(frontProject);
+        res.send(projectWithPhases);
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Internal server error.' });

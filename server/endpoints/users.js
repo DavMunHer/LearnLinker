@@ -88,6 +88,9 @@ router.get('/user/:user_email/projects', async (req, res) => {
         Una vez obtenemos el array con el objeto del usuario incluyendo los proyectos, de aquí cogemos únicamente
         el array de proyectos
         */
+        if (userProjectsInfo.length == 0) {
+            return res.status(404).json({ message: 'User not found.' });
+        }
         const userProjects = userProjectsInfo[0].Projects;
         res.json(userProjects);
 

@@ -41,9 +41,13 @@ const Phase = sequelize.define('Phase', {
 );
 
 // Asociaciones con otros modelos
-Phase.hasMany(Task);
-Phase.belongsTo(Project);
+Phase.associate = function () {
+    Phase.belongsTo(Project);
+    Phase.hasMany(Task);
+}
+
 
 Phase.sync(); // Sincronizar el modelo con la base de datos
 
 module.exports = Phase;
+
