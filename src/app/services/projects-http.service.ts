@@ -20,8 +20,8 @@ export class ProjectsHttpService {
         return this.http.get<Project>(`project-details/${id}`);
     }
 
-    sendProject(project: Project): Observable<Project> {
-        return this.http.post<Project>(`create/project`, project);
+    createProject(request: any): Observable<Project> {
+        return this.http.post<Project>(`create/project`, request);
     }
 
     getUserProjects(userEmail: string): Observable<Project[]> {

@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Project = require('../models/Project');
 const Phase = require('../models/Phase');
-const { Sequelize } = require('sequelize');
+const { Sequelize, Op } = require('sequelize');
 const { formatDateAttribute } = require('./helper');
 const sequelize = require('../config/database');
 const User = require('../models/User');
@@ -13,7 +13,7 @@ Project.hasMany(Phase);
 
 router.get('/projects', async (req, res) => {
     try {
-        const projects = await Project.findAll({attributes: ['id', 'name', formatDateAttribute('start_date'), formatDateAttribute('end_date')]});
+        const projects = await Project.findAll({ attributes: ['id', 'name', formatDateAttribute('start_date'), formatDateAttribute('end_date')] });
         return res.json(projects);
     } catch (error) {
         console.error(error);
@@ -68,15 +68,27 @@ router.get('/project-details/:id', async (req, res) => {
 router.post('/create/project', async (req, res) => {
     try {
         const projectRequest = req.body;
+        if (projectRequest.user_email == projectRequest.leader_email) {
+            // Código de respuesta 409 (conflicto)
+            return res.status(409).json({ message: 'The manager cannot be the leader too!.' });
+        }
+
         console.log(projectRequest.name);
-        const loguedUser = await User.findOne({ where: { 'email': req.body.user_email } });
+        const loguedUser = await User.findOne({ where: { 'email': projectRequest.user_email } });
+        const leaderUser = await User.findOne({ where: { [Op.or]: { 'email': projectRequest.leader_email_or_username, 'username': projectRequest.leader_email_or_username } } });
+
+        if (!leaderUser) {
+            return res.status(404).json({ message: 'Leader not found.' });
+        }
 
         let newProject = await Project.create({
             'name': projectRequest.name,
             'start_date': projectRequest.start_date,
             'end_date': projectRequest.end_date
         });
-        sequelize.query(`INSERT INTO project_user (userId, projectId, role) VALUES (${loguedUser.id}, ${newProject.id},"manager")`);
+        sequelize.query(`INSERT INTO project_user (userId, projectId, role) VALUES (${loguedUser.id}, ${newProject.id}, "manager");`);
+        //FIXME: Permitir asignación de varios líderes en un mismo proyecto (ejecutar la petición tantas veces como haga falta)
+        sequelize.query(`INSERT INTO project_user (userId, projectId, role) VALUES (${leaderUser.id}, ${newProject.id}, "leader");`);
         res.status(201).json({ message: 'Project creation successful.' });
     } catch (error) {
         console.error(error);

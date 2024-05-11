@@ -5,6 +5,7 @@ import { ProjectsHttpService } from '../../services/projects-http.service';
 import { AuthService } from '../../services/auth.service';
 import { UsersHttpService } from '../../services/users-http.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { response } from 'express';
 
 @Component({
     selector: 'app-create-project',
@@ -18,11 +19,13 @@ export class CreateProjectComponent implements OnInit {
         name: '',
         start_date: '',
         end_date: '',
-        user_email: '',
     }
-    protected leaderEmail = '';
-    protected userNotFoundErrorMessage = '';
+    protected userEmail = '';
+    protected leaderEmailOrUsername = '';
+
+    protected leaderEmailErrorMessage = '';
     protected errorMessage = '';
+    protected successMessage = '';
 
     constructor(
         private projectHttpService: ProjectsHttpService,
@@ -32,26 +35,53 @@ export class CreateProjectComponent implements OnInit {
 
     private handleError(error: HttpErrorResponse) {
         if (error.status == 404) {
-            this.userNotFoundErrorMessage = 'There is no user with that email or username';
-        } else {
+            this.leaderEmailErrorMessage = 'There is no user with that email or username';
+        } else if(error.status == 409) {
+            this.leaderEmailErrorMessage = 'You can\'t be the leader and the manager at the same time!';
+        }
+        else {
             this.errorMessage = 'An error has occurred';
         }
     }
 
     ngOnInit(): void {
-        this.newProject.user_email = this.authService.getSessionUser().email;
+        this.userEmail = this.authService.getSessionUser().email;
     }
 
-    createProject() {
-        this.userHttpService.getUser(this.leaderEmail).subscribe({
-            next: (response) => {
-                if (this.leaderEmail == response.email && this.leaderEmail != this.newProject.user_email) {
-                    this.projectHttpService.sendProject(this.newProject).subscribe();
-                }
-            },
+    sendProject() {
+        this.leaderEmailErrorMessage = '';
+        this.errorMessage = '';
+        this.successMessage = '';
+
+        this.projectHttpService.createProject({
+            name: this.newProject.name,
+            start_date: this.newProject.start_date,
+            end_date: this.newProject.end_date,
+            user_email: this.userEmail,
+            leader_email_or_username: this.leaderEmailOrUsername
+        }).subscribe({
             error: (error) => {
                 this.handleError(error);
+            },
+            complete: () => {
+                this.successMessage = 'Projected created successfully!';
             }
-        })
+        });
+        // this.userHttpService.getUser(this.leaderEmail).subscribe({
+        //     next: (response) => {
+        //         if (this.leaderEmail == response.email && this.leaderEmail != this.newProject.user_email) {
+        //             this.projectHttpService.createProject({
+        //                 name: this.newProject.name,
+        //                 start_date: this.newProject.start_date,
+        //                 end_date: this.newProject.end_date,
+        //                 user_email: this.userEmail,
+        //                 leader_email: this.leaderEmail
+        //             }).subscribe();
+        //         }
+        //     },
+        //     error: (error) => {
+        //         this.handleError(error);
+        //     }
+        // })
     }
 }

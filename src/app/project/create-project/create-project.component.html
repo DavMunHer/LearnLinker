@@ -1,4 +1,4 @@
-<form (ngSubmit)="createProject()">
+<form (ngSubmit)="sendProject()">
     <label for="project-name">Project name:</label>
     <input class="border-2" type="text" name="project-name" autocomplete="project-name" [(ngModel)]="newProject.name" id="project-name">
     <br>
@@ -9,13 +9,15 @@
     <input class="border-2" type="date" autocomplete="current-project-end-date" [(ngModel)]="newProject.end_date" name="project-end-date" id="project-end-date">
     <br>
     <label for="leader-email">Project leader email or username: </label>
-    <input class="border-2" type="text" autocomplete="current-leader-email" [(ngModel)]="leaderEmail" name="leader-email" id="leader-email">
-    @if (userNotFoundErrorMessage) {
-    <p class="text-red-500">{{userNotFoundErrorMessage}}</p>
+    <input class="border-2" type="text" autocomplete="current-leader-email" [(ngModel)]="leaderEmailOrUsername" name="leader-email" id="leader-email">
+    @if (leaderEmailErrorMessage) {
+    <p class="text-red-500">{{leaderEmailErrorMessage}}</p>
     }
     <button class="block bg-blue-500 text-white font-bold py-2 px-4 rounded" type="submit">Create</button>
 </form>
-<!-- @if(errorMessage) {
+@if(errorMessage) {
     <p class="text-red-500">{{errorMessage}}</p>
-} -->
+} @else if (successMessage) {
+    <p class="text-green-800">{{successMessage}}</p>
+}
 
