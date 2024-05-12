@@ -30,6 +30,7 @@ const Project = sequelize.define('Project', {
 
 Project.associate = function () {
     Project.hasMany(Phase);
+    // FIXME: Relacionar correctamente los modelos
     Project.belongsToMany(User, {through: 'project_user'});
 }
 

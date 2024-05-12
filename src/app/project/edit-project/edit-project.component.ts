@@ -25,8 +25,7 @@ export class EditProjectComponent implements OnInit {
     constructor(
         private projectHttpService: ProjectsHttpService,
         private route: ActivatedRoute,
-        private authService: AuthService,
-        private projectUserHttpService: ProjectUserHttpService
+        private authService: AuthService
     ) { }
 
 
