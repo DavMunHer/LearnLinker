@@ -75,20 +75,40 @@ router.post('/create/project', async (req, res) => {
 
         console.log(projectRequest.name);
         const loguedUser = await User.findOne({ where: { 'email': projectRequest.user_email } });
-        const leaderUser = await User.findOne({ where: { [Op.or]: { 'email': projectRequest.leader_email_or_username, 'username': projectRequest.leader_email_or_username } } });
-
-        if (!leaderUser) {
-            return res.status(404).json({ message: 'Leader not found.' });
-        }
 
         let newProject = await Project.create({
             'name': projectRequest.name,
             'start_date': projectRequest.start_date,
             'end_date': projectRequest.end_date
         });
+        const actual_date = new Date();
+        const start_date = new Date(projectRequest.start_date);
+        const end_date = new Date(projectRequest.end_date);
+
+        if (start_date.getTime() < actual_date.getTime()) {
+            return res.status(400).json({ message: 'The start date cannot be before the current date!' });
+        }
+
+        if (end_date.getTime() < start_date.getTime()) {
+            return res.status(400).json({ message: 'The end date cannot be before the start date!' });
+        }
+
+        console.log(newProject);
         sequelize.query(`INSERT INTO project_user (userId, projectId, role) VALUES (${loguedUser.id}, ${newProject.id}, "manager");`);
-        //FIXME: Permitir asignación de varios líderes en un mismo proyecto (ejecutar la petición tantas veces como haga falta)
-        sequelize.query(`INSERT INTO project_user (userId, projectId, role) VALUES (${leaderUser.id}, ${newProject.id}, "leader");`);
+
+        if (projectRequest.leaders.length == 0) {
+            return res.status(400).json({ message: 'There must be a leader for the project!' });
+        }
+
+        for (const leaderEmailOrUsername of projectRequest.leaders) {
+            const leaderUser = await User.findOne({ where: { [Op.or]: { 'email': leaderEmailOrUsername, 'username': leaderEmailOrUsername } } });
+            // Esta comprobación no debería ser necesaria dado que los emails ya se han validado en el front previamente
+            if (!leaderUser) {
+                return res.status(404).json({ message: 'Leader not found.' });
+            }
+            sequelize.query(`INSERT INTO project_user (userId, projectId, role) VALUES (${leaderUser.id}, ${newProject.id}, "leader");`);
+        }
+
         res.status(201).json({ message: 'Project creation successful.' });
     } catch (error) {
         console.error(error);

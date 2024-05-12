@@ -40,6 +40,8 @@ export class CreateProjectComponent implements OnInit {
             this.leaderEmailErrorMessage = 'There is no user with that email or username';
         } else if (error.status == 409) {
             this.leaderEmailErrorMessage = 'You can\'t be the leader and the manager at the same time!';
+        } else if (error.status == 400) {
+            this.errorMessage = error.error.message;
         }
         else {
             this.errorMessage = 'An error has occurred';
