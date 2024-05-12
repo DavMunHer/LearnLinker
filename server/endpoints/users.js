@@ -17,6 +17,20 @@ router.get('/users', async (req, res) => {
     }
 });
 
+router.get('/user/:user_email_or_username', async (req, res) => {
+    try {
+        const usernameOrEmail = req.params.user_email_or_username;
+        const existingUser = await User.findOne({ where: { [Op.or]: { username: usernameOrEmail, email: usernameOrEmail } } });
+        if (existingUser) {
+            res.json(true);
+        } else {
+            return res.status(404).json({ message: 'User not found.' });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error.' });
+    }
+});
 
 router.get('/user/:user_email', async (req, res) => {
     try {
@@ -37,10 +51,16 @@ router.get('/user/:user_email', async (req, res) => {
 router.post('/user/signup', async (req, res) => {
     try {
         const { username, email, password } = req.body;
-        const existingUser = await User.findOne({ where: { email: email } });
+        const existingUserEmail = await User.findOne({ where: { email: email } });
 
-        if (existingUser) {
+        if (existingUserEmail) {
             return res.status(400).json({ message: 'The email is already used!' });
+        }
+
+        const existingUserUsername = await User.findOne({ where: { username: username } });
+
+        if (existingUserUsername) {
+            return res.status(400).json({ message: 'The username is already used!' });
         }
 
         const hashedPassword = await bcrypt.hash(password, 12);
@@ -51,7 +71,7 @@ router.post('/user/signup', async (req, res) => {
             password: hashedPassword
         });
 
-        await newUser.save();
+        newUser.save();
         res.status(201).json({ message: 'User registration successful.' });
     } catch (error) {
         console.error(error);

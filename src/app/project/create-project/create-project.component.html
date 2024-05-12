@@ -1,23 +1,28 @@
 <form (ngSubmit)="sendProject()">
     <label for="project-name">Project name:</label>
-    <input class="border-2" type="text" name="project-name" autocomplete="project-name" [(ngModel)]="newProject.name" id="project-name">
+    <input class="border-2" type="text" name="project-name" autocomplete="project-name" [(ngModel)]="newProject.name"
+        id="project-name">
     <br>
-    <label for="project-start-date">Project start date: </label>
-    <input class="border-2" type="date" autocomplete="current-project-start-date" [(ngModel)]="newProject.start_date" name="project-start-date" id="project-start-date">
-    <br>
-    <label for="project-end-date">Project end date: </label>
-    <input class="border-2" type="date" autocomplete="current-project-end-date" [(ngModel)]="newProject.end_date" name="project-end-date" id="project-end-date">
-    <br>
-    <label for="leader-email">Project leader email or username: </label>
-    <input class="border-2" type="text" autocomplete="current-leader-email" [(ngModel)]="leaderEmailOrUsername" name="leader-email" id="leader-email">
+    <div id="leader-container" class="flex flex-wrap" (click)="removeEmail($event)">
+        <label for="leader-email-or-username" class="self-center">Project leader email or username: </label>
+        <input (change)="checkUser()" class="border-2" type="text" autocomplete="current-leader-email-or-username"
+            [(ngModel)]="leaderEmailOrUsername" name="leader-email-or-username" id="leader-email-or-username">
+    </div>
     @if (leaderEmailErrorMessage) {
     <p class="text-red-500">{{leaderEmailErrorMessage}}</p>
     }
+    <label for="project-start-date">Project start date: </label>
+    <input class="border-2" type="date" autocomplete="current-project-start-date" [(ngModel)]="newProject.start_date"
+        name="project-start-date" id="project-start-date">
+    <br>
+    <label for="project-end-date">Project end date: </label>
+    <input class="border-2" type="date" autocomplete="current-project-end-date" [(ngModel)]="newProject.end_date"
+        name="project-end-date" id="project-end-date">
+    <br>
     <button class="block bg-blue-500 text-white font-bold py-2 px-4 rounded" type="submit">Create</button>
 </form>
 @if(errorMessage) {
-    <p class="text-red-500">{{errorMessage}}</p>
+<p class="text-red-500">{{errorMessage}}</p>
 } @else if (successMessage) {
-    <p class="text-green-800">{{successMessage}}</p>
+<p class="text-green-800">{{successMessage}}</p>
 }
-
