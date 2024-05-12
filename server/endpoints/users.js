@@ -7,6 +7,7 @@ const { where, Op } = require('sequelize');
 const Project = require('../models/Project');
 const dotenv = require('dotenv').config();
 
+// Endpoint para conseguir todos los usuarios (no se debería usar en el front)
 router.get('/users', async (req, res) => {
     try {
         const users = await User.findAll();
@@ -17,6 +18,7 @@ router.get('/users', async (req, res) => {
     }
 });
 
+// Endpoint para verificar si un usuario existe o no mediante su email o nombre de usuario
 router.get('/user/:user_email_or_username', async (req, res) => {
     try {
         const usernameOrEmail = req.params.user_email_or_username;
@@ -32,6 +34,7 @@ router.get('/user/:user_email_or_username', async (req, res) => {
     }
 });
 
+// Enpoint para recoger la información de un usuario con su email
 router.get('/user/:user_email', async (req, res) => {
     try {
         const user = await User.findOne({ where: { 'email': req.params.user_email } });
@@ -48,6 +51,7 @@ router.get('/user/:user_email', async (req, res) => {
     }
 })
 
+// Endpoint para registrar al usuario
 router.post('/user/signup', async (req, res) => {
     try {
         const { username, email, password } = req.body;
@@ -79,6 +83,7 @@ router.post('/user/signup', async (req, res) => {
     }
 });
 
+// Endpoint para verificar el login
 router.post('/user/login', async (req, res) => {
     try {
         const { usernameOrEmail, password } = req.body;
@@ -100,46 +105,45 @@ router.post('/user/login', async (req, res) => {
             username: existingUser.username,
             email: existingUser.email
         }, secretKey, { expiresIn: '30d' });
-        res.json( token );
+        res.json(token);
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Internal server error.' });
     }
 });
 
+// Endpoint para sacar los proyectos de un usuario
 router.get('/user/:user_email/projects', async (req, res) => {
     try {
         const userEmail = (req.params.user_email);
-        console.log(userEmail);
-        const userProjectsInfo = await User.findAll({
+        const userProjectsInfo = await User.findOne({
             where: { email: userEmail },
             attributes: [],
             include: [{
-              model: Project,
-              through: {
-                attributes: ['role']
-              }
+                model: Project,
+                through: {
+                    attributes: ['role']
+                }
             }]
         });
         /*
         Una vez obtenemos el array con el objeto del usuario incluyendo los proyectos, de aquí cogemos únicamente
         el array de proyectos
         */
-        if (userProjectsInfo.length == 0) {
+        if (!userProjectsInfo) {
+            // En un principio esto nunca ocurrirá porque se saca el email de la sesión -> el usuario ya está registrado
             return res.status(404).json({ message: 'User not found.' });
         }
-        const userProjects = userProjectsInfo[0].Projects;
+        const userProjects = userProjectsInfo.Projects;
         res.json(userProjects);
 
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Internal server error.' });
     }
-
 });
 
 
 
-// ... Otros endpoints
 
 module.exports = router;

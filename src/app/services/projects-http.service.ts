@@ -16,8 +16,8 @@ export class ProjectsHttpService {
     }
 
     // El id es un string porque viene de la ruta
-    getProjectDetails(id: string): Observable<Project> {
-        return this.http.get<Project>(`project-details/${id}`);
+    getProjectDetails(role: string, action: string, id: string): Observable<Project> {
+        return this.http.get<Project>(`project-${role}-${action}-details/${id}`);
     }
 
     createProject(request: any): Observable<Project> {

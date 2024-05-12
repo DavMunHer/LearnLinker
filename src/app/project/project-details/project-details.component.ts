@@ -20,7 +20,7 @@ export class ProjectDetailsComponent implements OnInit {
 
 
     ngOnInit(): void {
-        this.projectHttpService.getProjectDetails(this.route.snapshot.params['id']).subscribe((response) => {
+        this.projectHttpService.getProjectDetails('any', 'view', this.route.snapshot.params['id']).subscribe((response) => {
             this.project = response;
         });
     }

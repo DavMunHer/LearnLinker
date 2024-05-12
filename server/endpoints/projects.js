@@ -35,7 +35,7 @@ router.get('/project/:id', async (req, res) => {
     }
 });
 
-router.get('/project-details/:id', async (req, res) => {
+router.get('/project-:role-:action-details/:id', async (req, res) => {
     try {
         const projectWithPhases = await Project.findAll({
             where: { id: req.params.id },

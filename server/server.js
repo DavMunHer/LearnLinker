@@ -1,5 +1,6 @@
 const usersEndpoints = require('./endpoints/users');
 const projectsEndpoints = require('./endpoints/projects');
+const project_userEndpoints = require('./endpoints/project_user');
 const cors = require('cors');
 
 const express = require('express');
@@ -15,6 +16,7 @@ app.use(cors()); //En producción hará falta especificar el origen desde el que
 */
 app.use(usersEndpoints);
 app.use(projectsEndpoints);
+app.use(project_userEndpoints);
 
 app.listen(port, () => {
     console.log(`App listening at port ${port}`);

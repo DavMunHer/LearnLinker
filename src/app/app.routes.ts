@@ -11,6 +11,7 @@ import { CreateProjectComponent } from './project/create-project/create-project.
 import { EditProjectComponent } from './project/edit-project/edit-project.component';
 import { ProjectDetailsComponent } from './project/project-details/project-details.component';
 import { ProjectsManagementComponent } from './project/projects-management/projects-management.component';
+import { userRoleResolver } from './resolvers/user-role.resolver';
 
 export const routes: Routes = [
     {
@@ -58,6 +59,9 @@ export const routes: Routes = [
     {
         path: 'edit-project/:id',
         component: EditProjectComponent,
+        resolve: {
+            role: userRoleResolver
+        },
         canActivate: [authGuard],
         title: 'Edit an existing project'
     },

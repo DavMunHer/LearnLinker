@@ -3,6 +3,8 @@ import { Project } from '../../../interfaces/project';
 import { ProjectsHttpService } from '../../services/projects-http.service';
 import { ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../services/auth.service';
+import { ProjectUserHttpService } from '../../services/project-user-http.service';
 
 @Component({
   selector: 'app-edit-project',
@@ -17,17 +19,21 @@ export class EditProjectComponent implements OnInit {
         start_date: '',
         end_date: ''
     }
-    constructor(private projectHttpService: ProjectsHttpService, private route: ActivatedRoute) { }
+    private userEmail: string = '';
+    private userRole: string = '';
+
+    constructor(
+        private projectHttpService: ProjectsHttpService,
+        private route: ActivatedRoute,
+        private authService: AuthService,
+        private projectUserHttpService: ProjectUserHttpService
+    ) { }
 
 
     ngOnInit(): void {
-        this.projectHttpService.getProject(this.route.snapshot.params['id']).subscribe((response) => {
-            this.project = response;
+        this.userEmail = this.authService.getSessionUser().email;
+        this.userRole = this.route.snapshot.data['role'];
 
-
-            console.log(this.project);
-            console.log(typeof this.project.start_date);
-        });
     }
 
     editProject() {
