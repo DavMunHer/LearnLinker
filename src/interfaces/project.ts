@@ -1,3 +1,6 @@
+import { Phase } from "./phase"
+import { User } from "./user"
+
 export interface Project {
     id?: number,
     name: string,
@@ -5,6 +8,7 @@ export interface Project {
     end_date: string
     project_user?: {
         role: string
-    },
-    user_email?: string
+    }
+    Users?: User[],
+    Phases?: Phase[]
 }
