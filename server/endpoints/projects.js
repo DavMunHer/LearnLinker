@@ -110,10 +110,10 @@ router.get('/project/:role/:action/details/:projectId', async (req, res) => {
 router.post('/create/project', async (req, res) => {
     try {
         const projectRequest = req.body;
-        if (projectRequest.user_email == projectRequest.leader_email) {
-            // Código de respuesta 409 (conflicto)
-            return res.status(409).json({ message: 'The manager cannot be the leader too!.' });
-        }
+        // if (projectRequest.user_email == projectRequest.leader_email) {
+        //     // Código de respuesta 409 (conflicto)
+        //     return res.status(409).json({ message: 'The manager cannot be the leader too!.' });
+        // }
 
         console.log(projectRequest.name);
         const loguedUser = await User.findOne({ where: { 'email': projectRequest.user_email } });
@@ -142,8 +142,8 @@ router.post('/create/project', async (req, res) => {
             return res.status(400).json({ message: 'There must be a leader for the project!' });
         }
 
-        for (const leaderEmailOrUsername of projectRequest.leaders) {
-            const leaderUser = await User.findOne({ where: { [Op.or]: { 'email': leaderEmailOrUsername, 'username': leaderEmailOrUsername } } });
+        for (const leaderObject of projectRequest.leaders) {
+            const leaderUser = await User.findOne({ where: { 'email': leaderObject.email } });
             // Esta comprobación no debería ser necesaria dado que los emails ya se han validado en el front previamente
             if (!leaderUser) {
                 return res.status(404).json({ message: 'Leader not found.' });

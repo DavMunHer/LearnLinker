@@ -19,8 +19,8 @@ export class UsersHttpService {
         return this.http.get<User>(`user/${email}`);
     }
 
-    checkExistingUser(usernameOrEmail: string): Observable<boolean> {
-        return this.http.get<boolean>(`user/${usernameOrEmail}`);
+    checkExistingUser(usernameOrEmail: string): Observable<any> {
+        return this.http.get<any>(`user/${usernameOrEmail}`);
     }
 
     getUserProjects(email: string): Observable<Project[]> {

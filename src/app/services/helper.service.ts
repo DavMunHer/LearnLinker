@@ -1,6 +1,7 @@
 import { Injectable, Renderer2 } from '@angular/core';
 import { UsersHttpService } from './users-http.service';
 import { AuthService } from './auth.service';
+import { User } from '../../interfaces/user';
 
 @Injectable({
     providedIn: 'root'
@@ -12,13 +13,13 @@ export class HelperService {
         private authService: AuthService
     ) { }
 
-    addUser(users: &string[], leaderEmailOrUsername: string, renderer: Renderer2) {
-        users.push(leaderEmailOrUsername);
+    addUser(users: &string[], user: any, renderer: Renderer2) {
+        users.push(user);
         const emailContainerElement = document.createElement('div');
         emailContainerElement.id = `email-container-${users.length}`;
         emailContainerElement.classList.add('flex', 'mx-2', 'px-0.5', 'border-2', 'rounded-xl');
         emailContainerElement.innerHTML = `
-                        <span class="leader-info mr-1 ml-0.5">${leaderEmailOrUsername}</span>
+                        <span class="leader-info mr-1 ml-0.5">${user.username}</span>
                         <svg class="hover:bg-gray-400 rounded-xl hover:cursor-pointer" width="25px" height="25px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
                             <g id="SVGRepo_iconCarrier">

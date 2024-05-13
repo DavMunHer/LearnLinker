@@ -24,7 +24,7 @@ router.get('/user/:user_email_or_username', async (req, res) => {
         const usernameOrEmail = req.params.user_email_or_username;
         const existingUser = await User.findOne({ where: { [Op.or]: { username: usernameOrEmail, email: usernameOrEmail } } });
         if (existingUser) {
-            res.json(true);
+            res.json({username: existingUser.username, email: existingUser.email });
         } else {
             return res.status(404).json({ message: 'User not found.' });
         }

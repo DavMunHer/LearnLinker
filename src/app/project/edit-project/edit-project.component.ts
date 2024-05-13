@@ -9,6 +9,7 @@ import { response } from 'express';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { HelperService } from '../../services/helper.service';
 import { UsersHttpService } from '../../services/users-http.service';
+import { User } from '../../../interfaces/user';
 
 @Component({
   selector: 'app-edit-project',
@@ -27,8 +28,9 @@ export class EditProjectComponent implements OnInit {
     }
     protected userRole: string = '';
     protected leaderEmailOrUsername = '';
+    protected newUsers: string[] = [];
 
-    private userEmail: string = '';
+    private sessionUser!: User;
 
     protected errorMessage = '';
     protected leaderEmailErrorMessage = '';
@@ -57,7 +59,7 @@ export class EditProjectComponent implements OnInit {
 
 
     ngOnInit(): void {
-        this.userEmail = this.authService.getSessionUser().email;
+        this.sessionUser = this.authService.getSessionUser();
         this.userRole = this.route.snapshot.data['role'];
         this.projectHttpService.getProjectDetails(this.userRole, 'edit', this.route.snapshot.params['id']).subscribe({
             next: (response) => {
@@ -74,17 +76,31 @@ export class EditProjectComponent implements OnInit {
         this.project.Users = this.helper.removeUser(event, this.project.Users);
     }
 
+    private loadedUser(): boolean {
+        const loadedNow = this.newUsers.some((user: any) => {
+            return user.email === this.leaderEmailOrUsername || user.username === this.leaderEmailOrUsername;
+        })
+        if (loadedNow) {
+            return true;
+        } else {
+            return this.project.Users.some((user: any) => {
+                return user.email === this.leaderEmailOrUsername || user.username === this.leaderEmailOrUsername;
+            });
+        }
+    }
+
     checkUser() {
         this.leaderEmailErrorMessage = '';
         if (this.leaderEmailOrUsername != '') {
             this.userHttpService.checkExistingUser(this.leaderEmailOrUsername).subscribe({
-                next: (userExists) => {
-                    if (userExists && this.leaderEmailOrUsername != this.userEmail) {
-                        if (!this.project.Users.includes(this.leaderEmailOrUsername)) {
-                            this.helper.addUser(this.project.Users, this.leaderEmailOrUsername, this.renderer);
+                next: (user) => {
+                    if (user && this.leaderEmailOrUsername != this.sessionUser.email && this.leaderEmailOrUsername != this.sessionUser.username) {
+                        if (!this.loadedUser()) {
+                            this.helper.addUser(this.newUsers, user, this.renderer);
+                            console.log(this.newUsers);
                             this.leaderEmailOrUsername = '';
                         } else
-                            this.leaderEmailErrorMessage = 'The user is already added as leader!';
+                            this.leaderEmailErrorMessage = 'The user is already added in the project!';
                     }
                 },
                 error: (error) => {

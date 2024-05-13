@@ -7,6 +7,7 @@ import { UsersHttpService } from '../../services/users-http.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { response } from 'express';
 import { HelperService } from '../../services/helper.service';
+import { User } from '../../../interfaces/user';
 
 @Component({
     selector: 'app-create-project',
@@ -21,9 +22,9 @@ export class CreateProjectComponent implements OnInit {
         start_date: '',
         end_date: '',
     }
-    protected userEmail = '';
+    private sessionUser!: User;
     protected leaderEmailOrUsername = '';
-    protected leaders: string[] = [];
+    protected leaders: any[] = [];
 
     protected leaderEmailErrorMessage = '';
     protected errorMessage = '';
@@ -51,19 +52,25 @@ export class CreateProjectComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.userEmail = this.authService.getSessionUser().email;
+        this.sessionUser = this.authService.getSessionUser();
     }
 
+    loadedLeader():boolean {
+        return this.leaders.some((user: any) => {
+            return user.email === this.leaderEmailOrUsername || user.username === this.leaderEmailOrUsername;
+        })
+    }
 
     checkUser() {
         this.leaderEmailErrorMessage = '';
         if (this.leaderEmailOrUsername != '') {
             this.userHttpService.checkExistingUser(this.leaderEmailOrUsername).subscribe({
-                next: (userExists) => {
-                    if (userExists && this.leaderEmailOrUsername != this.userEmail) {
-                        if (!this.leaders.includes(this.leaderEmailOrUsername)) {
+                next: (user) => {
+                    if (user && this.leaderEmailOrUsername != this.sessionUser.email && this.leaderEmailOrUsername != this.sessionUser.username) {
+                        if (!this.loadedLeader()) {
                             console.log(this.leaders);
-                            this.helper.addUser(this.leaders, this.leaderEmailOrUsername, this.renderer);
+                            console.log(this.leaderEmailOrUsername);
+                            this.helper.addUser(this.leaders, user, this.renderer);
                             console.log(this.leaders);
                             this.leaderEmailOrUsername = '';
                         } else
@@ -91,7 +98,7 @@ export class CreateProjectComponent implements OnInit {
             name: this.newProject.name,
             start_date: this.newProject.start_date,
             end_date: this.newProject.end_date,
-            user_email: this.userEmail,
+            user_email: this.sessionUser.email,
             leaders: this.leaders
         }).subscribe({
             error: (error) => {

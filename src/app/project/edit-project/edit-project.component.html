@@ -10,21 +10,33 @@
     @if (userRole == 'manager') {
         <div id="leader-container" class="flex flex-wrap" (click)="removeUserCall($event)">
             <label for="leader-email-or-username" class="self-center">Project leader email or username: </label>
+            @if (project.Users) {
+                @if (project.Users.length > 0 ) {
+                        @for (leader of project.Users; track $index) {
+                            <div class="flex mx-2 px-0.5 border-2 rounded-xl">
+                                <span class="leader-info mr-1 ml-0.5">{{leader.username}}</span>
+                            <svg class="hover:bg-gray-400 rounded-xl hover:cursor-pointer" width="25px" height="25px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                <g id="SVGRepo_iconCarrier">
+                                    <path d="M16 8L8 16M8.00001 8L16 16" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                </g>
+                            </svg>
+                        </div>
+                    }
+                } @else {
+                    <div>The project has no leaders yet!</div>
+                }
+            }
             <input (change)="checkUser()" class="border-2" type="text" autocomplete="current-leader-email-or-username"
                 [(ngModel)]="leaderEmailOrUsername" name="leader-email-or-username" id="leader-email-or-username">
-        </div>
+            </div>
+            @if(leaderEmailErrorMessage) {
+                <p class="text-red-500">{{leaderEmailErrorMessage}}</p>
+            }
     }
 
     <button class="block bg-blue-500 text-white font-bold py-2 px-4 rounded" type="submit">Send</button>
-    @if (project.Users) {
-        @if (project.Users.length > 0) {
-            @for (leader of project.Users; track $index) {
 
-            }
-        } @else {
-            <div>The project has no leaders yet!</div>
-        }
-    }
 </form>
 <!-- @if(errorMessage) {
     <p class="text-red-500">{{errorMessage}}</p>
