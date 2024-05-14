@@ -7,11 +7,13 @@ import { E404Component } from './e404/e404.component';
 import { HomeComponent } from './home/home.component';
 import { authGuard } from './guards/auth.guard';
 import { guestGuard } from './guards/guest.guard';
-import { CreateProjectComponent } from './project/create-project/create-project.component';
-import { EditProjectComponent } from './project/edit-project/edit-project.component';
-import { ProjectDetailsComponent } from './project/project-details/project-details.component';
-import { ProjectsManagementComponent } from './project/projects-management/projects-management.component';
+import { CreateProjectComponent } from './projects/create-project/create-project.component';
+import { EditProjectComponent } from './projects/edit-project/edit-project.component';
+import { ProjectDetailsComponent } from './projects/project-details/project-details.component';
+import { ProjectsManagementComponent } from './projects/projects-management/projects-management.component';
 import { userRoleResolver } from './resolvers/user-role.resolver';
+import { EditPhaseComponent } from './phases/edit-phase/edit-phase.component';
+import { CreatePhaseComponent } from './phases/create-phase/create-phase.component';
 
 export const routes: Routes = [
     {
@@ -70,6 +72,18 @@ export const routes: Routes = [
         component: ProjectDetailsComponent,
         canActivate: [authGuard],
         title: 'Project details'
+    },
+    {
+        path: 'project/:id/create-phase',
+        component: CreatePhaseComponent,
+        canActivate: [authGuard],
+        title: 'Create a new Phase'
+    },
+    {
+        path: 'edit-phase/:id',
+        component: EditPhaseComponent,
+        canActivate: [authGuard],
+        title: 'Edit an existing phase'
     },
     { path: '', redirectTo: '/home', pathMatch: 'full' },
     { path: '**', component: E404Component, pathMatch: 'full' }

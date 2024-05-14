@@ -1,7 +1,7 @@
 import { Component, OnInit, Renderer2 } from '@angular/core';
 import { Project } from '../../../interfaces/project';
 import { ProjectsHttpService } from '../../services/projects-http.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
@@ -12,7 +12,7 @@ import { User } from '../../../interfaces/user';
 @Component({
   selector: 'app-edit-project',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, RouterLink],
   templateUrl: './edit-project.component.html',
   styleUrl: './edit-project.component.scss'
 })
@@ -37,7 +37,7 @@ export class EditProjectComponent implements OnInit {
     constructor(
         private projectHttpService: ProjectsHttpService,
         private userHttpService: UsersHttpService,
-        private route: ActivatedRoute,
+        protected route: ActivatedRoute,
         private authService: AuthService,
         private helper: HelperService,
         private renderer: Renderer2,

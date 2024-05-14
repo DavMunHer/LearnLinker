@@ -1,0 +1,68 @@
+<form (ngSubmit)="editProject()">
+    <label for="project-name">Project name:</label>
+    <input class="border-2" type="text" name="project-name" autocomplete="project-name" [(ngModel)]="project.name"
+        id="project-name">
+    <br>
+    <label for="project-start-date">Project start date: </label>
+    <input class="border-2" type="date" autocomplete="current-project-start-date" [(ngModel)]="project.start_date"
+        name="project-start-date" id="project-start-date">
+    <br>
+    <label for="project-end-date">Project end date: </label>
+    <input class="border-2" type="date" autocomplete="current-project-end-date" [(ngModel)]="project.end_date"
+        name="project-end-date" id="project-end-date">
+    @if (userRole == 'manager') {
+    <div id="leader-container" class="flex flex-wrap" (click)="removeUserCall($event)">
+        <label for="leader-email-or-username" class="self-center">Project leader email or username: </label>
+        @if (project.Users) {
+        @if (project.Users.length > 0 ) {
+        @for (leader of project.Users; track $index) {
+        <div class="flex mx-2 px-0.5 border-2 rounded-xl">
+            <span class="leader-info mr-1 ml-0.5">{{leader.username}}</span>
+            <svg class="hover:bg-gray-400 rounded-xl hover:cursor-pointer" width="25px" height="25px"
+                viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                <g id="SVGRepo_iconCarrier">
+                    <path d="M16 8L8 16M8.00001 8L16 16" stroke="#000000" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round"></path>
+                </g>
+            </svg>
+        </div>
+        }
+        } @else {
+        <div>The project has no leaders yet!</div>
+        }
+        }
+        <input (change)="checkUser()" class="border-2" type="text" autocomplete="current-leader-email-or-username"
+            [(ngModel)]="leaderEmailOrUsername" name="leader-email-or-username" id="leader-email-or-username">
+    </div>
+    @if(leaderEmailErrorMessage) {
+    <p class="text-red-500">{{leaderEmailErrorMessage}}</p>
+    }
+    } @else if(userRole == 'leader') {
+    <!-- TODO: Lógica y vista de las fases existentes y poder añadir fases nuevas -->
+    <div class="">Phases</div>
+    <div class="bg-green-500 p-2 rounded-xl w-[fit-content] hover:cursor-pointer">
+        <a [routerLink]="['/project/', route.snapshot.params['id'], 'create-phase']">
+            <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                <g id="SVGRepo_iconCarrier">
+                    <path
+                        d="M12 6C12.5523 6 13 6.44772 13 7V11H17C17.5523 11 18 11.4477 18 12C18 12.5523 17.5523 13 17 13H13V17C13 17.5523 12.5523 18 12 18C11.4477 18 11 17.5523 11 17V13H7C6.44772 13 6 12.5523 6 12C6 11.4477 6.44772 11 7 11H11V7C11 6.44772 11.4477 6 12 6Z"
+                        fill="#000000"></path>
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                        d="M1 12C1 5.92487 5.92487 1 12 1C18.0751 1 23 5.92487 23 12C23 18.0751 18.0751 23 12 23C5.92487 23 1 18.0751 1 12ZM12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3Z"
+                        fill="#000000"></path>
+                </g>
+            </svg>
+        </a>
+    </div>
+    }
+
+    <button class="block bg-blue-500 text-white font-bold py-2 px-4 rounded" type="submit">Update</button>
+
+</form>
+<!-- @if(errorMessage) {
+    <p class="text-red-500">{{errorMessage}}</p>
+} -->
