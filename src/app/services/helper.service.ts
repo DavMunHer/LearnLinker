@@ -31,11 +31,11 @@ export class HelperService {
         renderer.insertBefore(parentElement, emailContainerElement, document.querySelector('#leader-email-or-username'));
     }
 
-    private parentEmailContainerLogic(parentContainer: any, childContainer: any, leaders: string[]): string[] {
+    private parentEmailContainerLogic(parentContainer: any, childContainer: any, leaders: any[]): string[] {
         const emailOrUsername = childContainer.querySelector('.leader-info').textContent;
         parentContainer.removeChild(childContainer);
         return leaders.filter(leaderInfo => {
-            return leaderInfo != emailOrUsername;
+            return leaderInfo.username != emailOrUsername;
         });
     }
 

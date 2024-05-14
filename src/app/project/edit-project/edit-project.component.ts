@@ -4,8 +4,6 @@ import { ProjectsHttpService } from '../../services/projects-http.service';
 import { ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
-import { ProjectUserHttpService } from '../../services/project-user-http.service';
-import { response } from 'express';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { HelperService } from '../../services/helper.service';
 import { UsersHttpService } from '../../services/users-http.service';
@@ -28,7 +26,7 @@ export class EditProjectComponent implements OnInit {
     }
     protected userRole: string = '';
     protected leaderEmailOrUsername = '';
-    protected newUsers: string[] = [];
+    protected updatedUsers: any[] = [];
 
     private sessionUser!: User;
 
@@ -64,7 +62,9 @@ export class EditProjectComponent implements OnInit {
         this.projectHttpService.getProjectDetails(this.userRole, 'edit', this.route.snapshot.params['id']).subscribe({
             next: (response) => {
                 this.project = response;
-                console.log(this.project);
+                if (this.project.Users) {
+                    this.updatedUsers = [...this.project.Users];
+                }
             },
             error: (error) => {
                 this.handleError(error);
@@ -72,21 +72,16 @@ export class EditProjectComponent implements OnInit {
         });
     }
 
-    removeUserCall(event:any) {
-        this.project.Users = this.helper.removeUser(event, this.project.Users);
+    removeUserCall(event: any) {
+        console.log(this.updatedUsers);
+        this.updatedUsers = this.helper.removeUser(event, this.updatedUsers);
+        console.log(this.updatedUsers);
     }
 
     private loadedUser(): boolean {
-        const loadedNow = this.newUsers.some((user: any) => {
+        return  this.updatedUsers.some((user: any) => {
             return user.email === this.leaderEmailOrUsername || user.username === this.leaderEmailOrUsername;
         })
-        if (loadedNow) {
-            return true;
-        } else {
-            return this.project.Users.some((user: any) => {
-                return user.email === this.leaderEmailOrUsername || user.username === this.leaderEmailOrUsername;
-            });
-        }
     }
 
     checkUser() {
@@ -96,8 +91,8 @@ export class EditProjectComponent implements OnInit {
                 next: (user) => {
                     if (user && this.leaderEmailOrUsername != this.sessionUser.email && this.leaderEmailOrUsername != this.sessionUser.username) {
                         if (!this.loadedUser()) {
-                            this.helper.addUser(this.newUsers, user, this.renderer);
-                            console.log(this.newUsers);
+                            this.helper.addUser(this.updatedUsers, user, this.renderer);
+                            console.log(this.updatedUsers);
                             this.leaderEmailOrUsername = '';
                         } else
                             this.leaderEmailErrorMessage = 'The user is already added in the project!';
