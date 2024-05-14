@@ -9,7 +9,7 @@ const User = require('../models/User');
 
 Phase.belongsTo(Project);
 Project.hasMany(Phase);
-Project.belongsToMany(User, {through: 'project_user'});
+Project.belongsToMany(User, { through: 'project_user' });
 
 router.get('/projects', async (req, res) => {
     try {
@@ -35,6 +35,7 @@ router.get('/project/:id', async (req, res) => {
     }
 });
 
+// Obtener los datos de edición de proyectos dependiendo del rol
 router.get('/project/:role/:action/details/:projectId', async (req, res) => {
     //FIXME: Revisar si el usuario tiene realmente acceso al proyecto
     try {
@@ -105,6 +106,75 @@ router.get('/project/:role/:action/details/:projectId', async (req, res) => {
         console.error(error);
         res.status(500).json({ message: 'Internal server error.' });
     }
+});
+
+
+router.put(`/update/project/:id`, async (req, res) => {
+    try {
+        const projectRequest = req.body;
+        const projectId = req.params.id;
+
+        const project = await Project.findByPk(projectId);
+        if (!project) {
+            return req.status(404).json({ message: 'Project not found.' });
+        }
+
+        const projectRequestData = {
+            name: projectRequest.name,
+            start_date: projectRequest.start_date,
+            end_date: projectRequest.end_date
+        }
+
+        await project.update(projectRequestData);
+
+        // Inicio lógica editar los líderes de proyecto
+        if (projectRequest.Users) {
+            // En este caso se podrán haber actualizado los usuarios frente a los que había previamente
+            // Obtenemos los usuarios que habían previamente en el proyecto
+            const projectWithLeaders = await Project.findOne({
+                where: { id: projectId },
+                attributes: [
+                    'name',
+                    formatDateAttribute('Project.start_date', 'start_date'),
+                    formatDateAttribute('Project.end_date', 'end_date')
+                ],
+                include: {
+                    model: User,
+                    attributes: [
+                        'id',
+                        'email',
+                    ],
+                    through: {
+                        attributes: [],
+                        where: {
+                            role: 'leader'
+                        }
+                    }
+                }
+            });
+            const previousLeaders = projectWithLeaders.Users;
+            for (const leader of projectRequest.Users) {
+                if (!previousLeaders.find(previousLeader => previousLeader.email === leader.email)) {
+                    // Cuando el líder no estaba presente previamente en la base de datos lo insertaremos
+                    const leaderUser = await User.findOne({ where: { 'email': leader.email } });
+                    sequelize.query(`INSERT INTO project_user (userId, projectId, role) VALUES (${leaderUser.id}, ${projectId}, "leader");`);
+                }
+            }
+
+            for (const previousLeader of previousLeaders) {
+                if (!projectRequest.Users.find(leader => previousLeader.email === leader.email)) {
+                    sequelize.query(`DELETE FROM project_user WHERE userId = ${previousLeader.id};`);
+                }
+            }
+        }
+        // Fin lógica editar los líderes de proyecto
+
+        //TODO: Lógica para editar las fases poniendo las fases que este tendrá
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error.' });
+    }
+
 });
 
 router.post('/create/project', async (req, res) => {

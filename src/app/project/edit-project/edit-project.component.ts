@@ -65,6 +65,7 @@ export class EditProjectComponent implements OnInit {
                 if (this.project.Users) {
                     this.updatedUsers = [...this.project.Users];
                 }
+                console.log(this.project);
             },
             error: (error) => {
                 this.handleError(error);
@@ -73,9 +74,7 @@ export class EditProjectComponent implements OnInit {
     }
 
     removeUserCall(event: any) {
-        console.log(this.updatedUsers);
         this.updatedUsers = this.helper.removeUser(event, this.updatedUsers);
-        console.log(this.updatedUsers);
     }
 
     private loadedUser(): boolean {
@@ -107,7 +106,10 @@ export class EditProjectComponent implements OnInit {
     }
 
     editProject() {
-
+        if (this.project.Users) {
+            this.project.Users = [...this.updatedUsers];
+            this.projectHttpService.updateProject(this.project, this.route.snapshot.params['id']).subscribe();
+        }
     }
 
 }

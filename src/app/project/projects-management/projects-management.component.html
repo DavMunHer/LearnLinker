@@ -4,7 +4,7 @@
 <div class="card">
     <div class="card-header flex">
         <div class="project-name">{{project.name}}</div>
-        @if (project.project_user?.role == 'manager') {
+        @if (project.project_user?.role == 'manager' || project.project_user?.role == 'leader') {
         <a [routerLink]='["/edit-project", project.id]'>
             <svg class="hover:bg-gray-400 rounded-md hover:cursor-pointer" width="25px" height="25px"
                 viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -20,7 +20,8 @@
                 </g>
             </svg>
         </a>
-
+        }
+        @if (project.project_user?.role == 'manager') {
         <svg class="hover:bg-gray-400 rounded-xl hover:cursor-pointer" (click)="deleteProject(project.id!)" width="30px"
             height="30px" fill="#000000" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
             <g id="SVGRepo_bgCarrier" stroke-width="0"></g>

@@ -28,4 +28,8 @@ export class ProjectsHttpService {
         return this.http.get<Project[]>(`user/${userEmail}/projects`);
     }
 
+    updateProject(projectRequest: any, projectId: string) {
+        return this.http.put(`update/project/${projectId}`, projectRequest);
+    }
+
 }
