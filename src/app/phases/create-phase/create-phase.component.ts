@@ -1,12 +1,30 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
+import { Phase } from '../../../interfaces/phase';
+import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-create-phase',
-  standalone: true,
-  imports: [],
-  templateUrl: './create-phase.component.html',
-  styleUrl: './create-phase.component.scss'
+    selector: 'app-create-phase',
+    standalone: true,
+    imports: [FormsModule],
+    templateUrl: './create-phase.component.html',
+    styleUrl: './create-phase.component.scss'
 })
 export class CreatePhaseComponent {
+    @Output() phaseCreation = new EventEmitter<Phase>();
+    protected phase: Phase = {
+        name: '',
+        deadline: '',
+        start_date: '',
+        end_date: ''
+    }
 
+    sendPhase() {
+        this.phaseCreation.emit(this.phase);
+        this.phase = {
+            name: '',
+            deadline: '',
+            start_date: '',
+            end_date: ''
+        }
+    }
 }

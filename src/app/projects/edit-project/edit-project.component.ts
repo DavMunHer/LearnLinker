@@ -8,11 +8,13 @@ import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { HelperService } from '../../services/helper.service';
 import { UsersHttpService } from '../../services/users-http.service';
 import { User } from '../../../interfaces/user';
+import { CreatePhaseComponent } from '../../phases/create-phase/create-phase.component';
+import { Phase } from '../../../interfaces/phase';
 
 @Component({
   selector: 'app-edit-project',
   standalone: true,
-  imports: [FormsModule, RouterLink],
+  imports: [FormsModule, RouterLink, CreatePhaseComponent],
   templateUrl: './edit-project.component.html',
   styleUrl: './edit-project.component.scss'
 })
@@ -103,6 +105,16 @@ export class EditProjectComponent implements OnInit {
             });
         }
 
+    }
+
+    savePhase(phase: Phase) {
+        this.project.Phases.push(phase);
+    }
+
+    deletePhase(phase: Phase) {
+        this.project.Phases = this.project.Phases.filter((storedPhase: Phase) => {
+            return storedPhase != phase;
+        });
     }
 
     editProject() {
