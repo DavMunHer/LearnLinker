@@ -1,0 +1,20 @@
+<form (ngSubmit)="sendTask()">
+    <div>
+        <label for="phase-name">Task name:</label>
+        <input type="text" class="border-2" [(ngModel)]="task.name" name="phase-name" id="phase-name">
+    </div>
+
+    <div>
+        <label for="phase-deadline">Deadline: </label>
+        <input type="date" class="border-2" [(ngModel)]="task.deadline" name="phase-deadline" id="phase-deadline">
+    </div>
+
+    <div>
+        <label for="phase-start-date">Start date: </label>
+        <input type="date" class="border-2" [(ngModel)]="task.start_date" name="phase-start-date" id="phase-start-date">
+    </div>
+
+    <button class="block bg-blue-500 text-white font-bold py-2 px-4 rounded" type="submit">Create</button>
+
+</form>
+

@@ -5,5 +5,5 @@ export interface Phase {
     deadline: string,
     start_date: string,
     end_date: string,
-    Tasks?: Task[]
+    Tasks: Task[]
 }

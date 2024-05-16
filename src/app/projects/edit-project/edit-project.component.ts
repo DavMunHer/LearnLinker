@@ -29,6 +29,7 @@ export class EditProjectComponent implements OnInit {
     protected userRole: string = '';
     protected leaderEmailOrUsername = '';
     protected updatedUsers: any[] = [];
+    protected phaseCreationMode: boolean = false;
 
     private sessionUser!: User;
 
@@ -105,6 +106,10 @@ export class EditProjectComponent implements OnInit {
             });
         }
 
+    }
+
+    togglePhaseCreation() {
+        this.phaseCreationMode ? this.phaseCreationMode = false : this.phaseCreationMode = true;
     }
 
     savePhase(phase: Phase) {

@@ -111,9 +111,7 @@
             <div>The project has no phases yet!</div>
         }
     }
-    <app-create-phase (phaseCreation)="savePhase($event)"></app-create-phase>
-    <!-- <div class="bg-green-500 p-2 rounded-xl w-[fit-content] hover:cursor-pointer">
-        <a [routerLink]="['/project/', route.snapshot.params['id'], 'create-phase']">
+    <div class="bg-green-500 p-2 rounded-xl w-[fit-content] hover:cursor-pointer" (click)="togglePhaseCreation()">
             <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                 <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
@@ -126,11 +124,14 @@
                         fill="#000000"></path>
                 </g>
             </svg>
-        </a>
-    </div> -->
+    </div>
+        @if (phaseCreationMode) {
+            <app-create-phase (phaseCreation)="savePhase($event)"></app-create-phase>
+        }
     }
-
-    <button class="block bg-blue-500 text-white font-bold py-2 px-4 rounded" type="submit">Update</button>
+    @if (userRole == 'manager') {
+        <button class="block bg-blue-500 text-white font-bold py-2 px-4 rounded" type="submit">Update</button>
+    }
 
 </form>
 <!-- @if(errorMessage) {
