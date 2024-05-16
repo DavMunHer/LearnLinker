@@ -15,7 +15,8 @@ export class CreatePhaseComponent {
         name: '',
         deadline: '',
         start_date: '',
-        end_date: ''
+        end_date: '',
+        Tasks: []
     }
 
     sendPhase() {
@@ -24,7 +25,8 @@ export class CreatePhaseComponent {
             name: '',
             deadline: '',
             start_date: '',
-            end_date: ''
+            end_date: '',
+            Tasks: []
         }
     }
 }

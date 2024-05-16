@@ -236,7 +236,7 @@ router.delete('/delete/project/:id', async (req, res) => {
             return res.status(404).json({ message: 'Project not found.' });
         }
         projectObject.destroy();
-        res.status(201).json({ message: 'Project successfully deleted.' });
+        res.status(204).json({ message: 'Project successfully deleted.' });
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: 'Internal server error.' });

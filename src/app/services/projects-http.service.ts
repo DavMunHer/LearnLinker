@@ -32,4 +32,8 @@ export class ProjectsHttpService {
         return this.http.put(`update/project/${projectId}`, projectRequest);
     }
 
+    deleteProject(projectId: number): Observable<void> {
+        return this.http.delete<void>(`delete/project/${projectId}`);
+    }
+
 }

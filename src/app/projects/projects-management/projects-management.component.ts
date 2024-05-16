@@ -3,6 +3,7 @@ import { RouterLink } from '@angular/router';
 import { Project } from '../../../interfaces/project';
 import { ProjectsHttpService } from '../../services/projects-http.service';
 import { AuthService } from '../../services/auth.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
     selector: 'app-projects-management',
@@ -13,20 +14,37 @@ import { AuthService } from '../../services/auth.service';
 })
 export class ProjectsManagementComponent implements OnInit {
     protected userProjects: Project[] = [];
-
+    private errorMessage = '';
     constructor(private projectHttpService: ProjectsHttpService, private authService: AuthService) { }
+
+    private handleError(error: HttpErrorResponse) {
+        if (error.status == 404) {
+            this.errorMessage = 'Project not found';
+        } else if (error.status == 500) {
+            this.errorMessage = 'Internal server error';
+        }
+
+    }
 
     ngOnInit(): void {
         this.projectHttpService.getUserProjects(this.authService.getSessionUser().email).subscribe((response) => {
             this.userProjects = response;
         });
     }
-    editProject(projectId: number) {
-        console.log('editando');
-    }
+
     deleteProject(projectId: number) {
-        console.log('borrando');
+        if (confirm('Are you sure that you want to delete this project?')) {
+            this.projectHttpService.deleteProject(projectId).subscribe({
+                next: (response) => {
+                    this.userProjects = this.userProjects.filter(project => {
+                        return project.id != projectId;
+                    });
+                },
+                error: (error) => {
+                    this.handleError(error);
+                    console.log(this.errorMessage);
+                }
+            });
+        }
     }
-
-
 }
