@@ -10,6 +10,6 @@ export class PhasesHttpService {
     constructor(private http: HttpClient) { }
 
     createPhase(projectId: string, phase: Phase) {
-        return this.http.post(`/project/${projectId}/phase`, phase);
+        return this.http.post(`project/${projectId}/phase`, phase);
     }
 }

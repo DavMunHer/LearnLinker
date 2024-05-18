@@ -13,7 +13,8 @@
         <label for="phase-start-date">Start date: </label>
         <input type="date" class="border-2" [(ngModel)]="phase.start_date" name="phase-start-date" id="phase-start-date">
     </div>
-
+        <button class="block bg-green-500 text-white font-bold py-2 px-4 rounded" type="submit">Create</button>
+</form>
 <div class="">tasks</div>
 <app-task-list [taskList]="phase.Tasks"></app-task-list>
     <div class="bg-blue-500 p-2 rounded-xl w-[fit-content] hover:cursor-pointer" (click)="toggleTaskCreation()">
@@ -29,11 +30,9 @@
                     fill="#000000"></path>
             </g>
         </svg>
-</div>
+    </div>
     @if (taskCreationMode) {
         <app-create-task (taskCreation)="addTask($event)"></app-create-task>
-    } @else {
-        <button class="block bg-green-500 text-white font-bold py-2 px-4 rounded" type="submit">Create</button>
     }
 
-</form>
+

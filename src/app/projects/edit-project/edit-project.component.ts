@@ -67,7 +67,6 @@ export class EditProjectComponent implements OnInit {
     ngOnInit(): void {
         this.sessionUser = this.authService.getSessionUser();
         this.userRole = this.route.snapshot.data['role'];
-        console.log(this.userRole);
         this.projectHttpService.getProjectDetails(this.userRole, 'edit', this.route.snapshot.params['id']).subscribe({
             next: (response) => {
                 this.project = response;
