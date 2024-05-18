@@ -1,11 +1,9 @@
-import { Component, OnInit, Renderer2 } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Project } from '../../../interfaces/project';
 import { FormsModule } from '@angular/forms';
 import { ProjectsHttpService } from '../../services/projects-http.service';
 import { AuthService } from '../../services/auth.service';
-import { UsersHttpService } from '../../services/users-http.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { response } from 'express';
 import { HelperService } from '../../services/helper.service';
 import { User } from '../../../interfaces/user';
 
@@ -68,7 +66,6 @@ export class CreateProjectComponent implements OnInit {
     }
 
     removeUser(username: any) {
-        // this.updatedUsers = this.helper.removeUser(event, this.updatedUsers);
         this.leaders = this.leaders.filter((storedUser: any) => {
             return storedUser.username != username;
         });

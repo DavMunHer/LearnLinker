@@ -4,9 +4,8 @@ import { ProjectsHttpService } from '../../services/projects-http.service';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
-import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import { HelperService } from '../../services/helper.service';
-import { UsersHttpService } from '../../services/users-http.service';
 import { User } from '../../../interfaces/user';
 import { CreatePhaseComponent } from '../../phases/create-phase/create-phase.component';
 import { Phase } from '../../../interfaces/phase';
@@ -20,28 +19,25 @@ import { Phase } from '../../../interfaces/phase';
 })
 export class EditProjectComponent implements OnInit {
     protected projectId: string;
-    protected project: any = {
+    protected project: Project = {
         name: '',
         start_date: '',
         end_date: '',
-        Users: null,
-        Phases: null
+        Users: [],
+        Phases: []
     }
     protected userRole: string = '';
     protected leaderEmailOrUsername = '';
-    // protected updatedUsers: any[] = [];
     protected phaseCreationMode: boolean = false;
 
 
     private sessionUser!: User;
 
     protected errorMessage = '';
-    // protected leaderEmailErrorMessage = '';
 
 
     constructor(
         private projectHttpService: ProjectsHttpService,
-        private userHttpService: UsersHttpService,
         protected route: ActivatedRoute,
         private authService: AuthService,
         private helper: HelperService,
@@ -71,10 +67,6 @@ export class EditProjectComponent implements OnInit {
         this.projectHttpService.getProjectDetails(this.userRole, 'edit', this.route.snapshot.params['id']).subscribe({
             next: (response) => {
                 this.project = response;
-                // if (this.project.Users) {
-                //     this.updatedUsers = [...this.project.Users];
-                // }
-                console.log(this.project);
             },
             error: (error) => {
                 this.handleError(error);
@@ -83,14 +75,13 @@ export class EditProjectComponent implements OnInit {
     }
 
     removeUser(username: any) {
-        // this.updatedUsers = this.helper.removeUser(event, this.updatedUsers);
-        this.project.Users = this.project.Users.filter((storedUser: any) => {
+        this.project.Users = this.project.Users!.filter((storedUser: any) => {
             return storedUser.username != username;
         });
     }
 
     async addUser() {
-        this.errorMessage = await this.helper.checkAndAddUser(this.leaderEmailOrUsername, this.project.Users, this.sessionUser, this.handleError);
+        this.errorMessage = await this.helper.checkAndAddUser(this.leaderEmailOrUsername, this.project.Users!, this.sessionUser, this.handleError);
         if (this.errorMessage == '') {
             this.leaderEmailOrUsername = '';
         }
@@ -101,20 +92,18 @@ export class EditProjectComponent implements OnInit {
     }
 
     savePhase(phase: Phase) {
-        this.project.Phases.push(phase);
+        this.project.Phases!.push(phase);
     }
 
     deletePhase(phase: Phase) {
-        this.project.Phases = this.project.Phases.filter((storedPhase: Phase) => {
+        this.project.Phases = this.project.Phases!.filter((storedPhase: Phase) => {
             return storedPhase != phase;
         });
     }
 
     editProject() {
         if (this.project.Users) {
-            // this.project.Users = [...this.updatedUsers];
             this.projectHttpService.updateProject(this.project, this.route.snapshot.params['id']).subscribe();
         }
     }
-
 }

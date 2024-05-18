@@ -10,7 +10,6 @@ export class HelperService {
 
     constructor(
         private userHttpService: UsersHttpService,
-        private authService: AuthService
     ) { }
 
     private loadedUser(users: any, usernameOrEmail: string): boolean {
@@ -27,30 +26,6 @@ export class HelperService {
      * @param handleError Function that handles the error returning the error message
      * @returns The error message if the user cannot be added to the users array
      */
-    // checkUser(usernameOrEmail: string, users: any[], sessionUser: User, handleError: Function): string {
-    //     let userEmailErrorMessage = '';
-    //     if (usernameOrEmail != '') {
-    //         this.userHttpService.checkExistingUser(usernameOrEmail).subscribe({
-    //             next: () => {
-    //                 if (usernameOrEmail != sessionUser.email && usernameOrEmail != sessionUser.username) {
-    //                     if (this.loadedUser(users, usernameOrEmail)) {
-    //                         // this.project.Users.push(user);
-    //                         // // this.helper.addUser(this.updatedUsers, user, this.renderer);
-    //                         // // console.log(this.updatedUsers);
-    //                         // usernameOrEmail = '';
-    //                         userEmailErrorMessage = 'The user is already added in the project!';
-    //                     }
-    //                 } else
-    //                     userEmailErrorMessage = 'You are the manager of the project!';
-    //             },
-    //             error: (error) => {
-    //                 userEmailErrorMessage = handleError(error);
-    //             }
-    //         });
-    //     }
-    //     return userEmailErrorMessage;
-    // }
-
     async checkAndAddUser(usernameOrEmail: string, users: &any[], sessionUser: User, handleError: Function): Promise<string> {
         let errorMessage = '';
 

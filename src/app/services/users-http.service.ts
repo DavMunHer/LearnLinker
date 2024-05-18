@@ -31,7 +31,7 @@ export class UsersHttpService {
         return this.http.post<User>(`user/signup`, user);
     }
 
-    // Esta función devolverá el jwt para posteriormente guardar el token en localstorage
+    // Esta función devolverá el jwt para posteriormente guardar el token en localStorage
     login(user: any): Observable<string> {
         return this.http.post<string>(`user/login`, user);
     }
