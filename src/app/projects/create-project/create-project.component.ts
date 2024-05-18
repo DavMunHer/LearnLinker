@@ -33,22 +33,21 @@ export class CreateProjectComponent implements OnInit {
     constructor(
         private projectHttpService: ProjectsHttpService,
         private authService: AuthService,
-        private userHttpService: UsersHttpService,
         private helper: HelperService,
-        private renderer: Renderer2
     ) { }
 
     private handleError(error: HttpErrorResponse) {
+        let errorMessage = '';
         if (error.status == 404) {
-            this.leaderEmailErrorMessage = 'There is no user with that email or username';
+            errorMessage = 'There is no user with that email or username';
         } else if (error.status == 409) {
-            this.leaderEmailErrorMessage = 'You can\'t be the leader and the manager at the same time!';
+            errorMessage = 'You can\'t be the leader and the manager at the same time!';
         } else if (error.status == 400) {
-            this.errorMessage = error.error.message;
+            errorMessage = error.error.message;
+        } else {
+            errorMessage = 'An error has occurred';
         }
-        else {
-            this.errorMessage = 'An error has occurred';
-        }
+        return errorMessage;
     }
 
     ngOnInit(): void {
@@ -61,32 +60,18 @@ export class CreateProjectComponent implements OnInit {
         })
     }
 
-    checkUser() {
-        this.leaderEmailErrorMessage = '';
-        if (this.leaderEmailOrUsername != '') {
-            this.userHttpService.checkExistingUser(this.leaderEmailOrUsername).subscribe({
-                next: (user) => {
-                    if (user && this.leaderEmailOrUsername != this.sessionUser.email && this.leaderEmailOrUsername != this.sessionUser.username) {
-                        if (!this.loadedLeader()) {
-                            console.log(this.leaders);
-                            console.log(this.leaderEmailOrUsername);
-                            this.helper.addUser(this.leaders, user, this.renderer);
-                            console.log(this.leaders);
-                            this.leaderEmailOrUsername = '';
-                        } else
-                            this.leaderEmailErrorMessage = 'The user is already added as leader!';
-                    }
-                },
-                error: (error) => {
-                    this.handleError(error);
-                }
-            });
+    async addUser() {
+        this.errorMessage = await this.helper.checkAndAddUser(this.leaderEmailOrUsername, this.leaders, this.sessionUser, this.handleError);
+        if (this.errorMessage === '') {
+            this.leaderEmailOrUsername = '';
         }
-
     }
 
-    removeUserCall(event: any) {
-        this.leaders = this.helper.removeUser(event, this.leaders);
+    removeUser(username: any) {
+        // this.updatedUsers = this.helper.removeUser(event, this.updatedUsers);
+        this.leaders = this.leaders.filter((storedUser: any) => {
+            return storedUser.username != username;
+        });
     }
 
     sendProject() {

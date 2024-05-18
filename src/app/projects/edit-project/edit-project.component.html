@@ -11,14 +11,14 @@
         <label for="project-end-date">Project end date: </label>
         <input class="border-2" type="date" autocomplete="current-project-end-date" [(ngModel)]="project.end_date"
             name="project-end-date" id="project-end-date">
-        <div id="leader-container" class="flex flex-wrap" (click)="removeUserCall($event)">
+        <div id="leader-container" class="flex flex-wrap" >
             <label for="leader-email-or-username" class="self-center">Project leader email or username: </label>
             @if (project.Users) {
                 @if (project.Users.length > 0 ) {
                     @for (leader of project.Users; track $index) {
                         <div class="flex mx-2 px-0.5 border-2 rounded-xl">
                             <span class="leader-info mr-1 ml-0.5">{{leader.username}}</span>
-                            <svg class="hover:bg-gray-400 rounded-xl hover:cursor-pointer" width="25px" height="25px"
+                            <svg (click)="removeUser(leader.username)" class="hover:bg-gray-400 rounded-xl hover:cursor-pointer" width="25px" height="25px"
                                 viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                                 <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
@@ -33,11 +33,11 @@
                     <div>The project has no leaders yet!</div>
                 }
             }
-            <input (change)="checkUser()" class="border-2" type="text" autocomplete="current-leader-email-or-username"
+            <input (change)="addUser()" class="border-2" type="text" autocomplete="current-leader-email-or-username"
                 [(ngModel)]="leaderEmailOrUsername" name="leader-email-or-username" id="leader-email-or-username">
         </div>
-            @if(leaderEmailErrorMessage) {
-                <p class="text-red-500">{{leaderEmailErrorMessage}}</p>
+            @if(errorMessage) {
+                <p class="text-red-500">{{errorMessage}}</p>
             }
     } @else if(userRole == 'leader') {
         <div class="project-name-container mb-2">

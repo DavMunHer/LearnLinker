@@ -29,14 +29,14 @@ export class EditProjectComponent implements OnInit {
     }
     protected userRole: string = '';
     protected leaderEmailOrUsername = '';
-    protected updatedUsers: any[] = [];
+    // protected updatedUsers: any[] = [];
     protected phaseCreationMode: boolean = false;
 
 
     private sessionUser!: User;
 
     protected errorMessage = '';
-    protected leaderEmailErrorMessage = '';
+    // protected leaderEmailErrorMessage = '';
 
 
     constructor(
@@ -45,22 +45,23 @@ export class EditProjectComponent implements OnInit {
         protected route: ActivatedRoute,
         private authService: AuthService,
         private helper: HelperService,
-        private renderer: Renderer2,
     ) {
         this.projectId = this.route.snapshot.params['id'];
     }
 
 
-    private handleError(error: HttpErrorResponse) {
+    private handleError(error: HttpErrorResponse): string {
+        let errorMessage = '';
         if (error.status == 404) {
-            this.errorMessage = 'Project not found!';
+            errorMessage = 'Project not found!';
         } else if (error.status == 403) {
-            this.errorMessage = 'A developer cannot edit the project!';
+            errorMessage = 'A developer cannot edit the project!';
         } else if (error.status == 401) {
-            this.errorMessage = 'Unexpected role!';
+            errorMessage = 'Unexpected user role!';
         } else {
-            this.errorMessage = 'Internal server error.';
+            errorMessage = 'Internal server error.';
         }
+        return errorMessage;
     }
 
 
@@ -70,9 +71,9 @@ export class EditProjectComponent implements OnInit {
         this.projectHttpService.getProjectDetails(this.userRole, 'edit', this.route.snapshot.params['id']).subscribe({
             next: (response) => {
                 this.project = response;
-                if (this.project.Users) {
-                    this.updatedUsers = [...this.project.Users];
-                }
+                // if (this.project.Users) {
+                //     this.updatedUsers = [...this.project.Users];
+                // }
                 console.log(this.project);
             },
             error: (error) => {
@@ -81,36 +82,18 @@ export class EditProjectComponent implements OnInit {
         });
     }
 
-    removeUserCall(event: any) {
-        this.updatedUsers = this.helper.removeUser(event, this.updatedUsers);
+    removeUser(username: any) {
+        // this.updatedUsers = this.helper.removeUser(event, this.updatedUsers);
+        this.project.Users = this.project.Users.filter((storedUser: any) => {
+            return storedUser.username != username;
+        });
     }
 
-    private loadedUser(): boolean {
-        return  this.updatedUsers.some((user: any) => {
-            return user.email === this.leaderEmailOrUsername || user.username === this.leaderEmailOrUsername;
-        })
-    }
-
-    checkUser() {
-        this.leaderEmailErrorMessage = '';
-        if (this.leaderEmailOrUsername != '') {
-            this.userHttpService.checkExistingUser(this.leaderEmailOrUsername).subscribe({
-                next: (user) => {
-                    if (user && this.leaderEmailOrUsername != this.sessionUser.email && this.leaderEmailOrUsername != this.sessionUser.username) {
-                        if (!this.loadedUser()) {
-                            this.helper.addUser(this.updatedUsers, user, this.renderer);
-                            console.log(this.updatedUsers);
-                            this.leaderEmailOrUsername = '';
-                        } else
-                            this.leaderEmailErrorMessage = 'The user is already added in the project!';
-                    }
-                },
-                error: (error) => {
-                    this.handleError(error);
-                }
-            });
+    async addUser() {
+        this.errorMessage = await this.helper.checkAndAddUser(this.leaderEmailOrUsername, this.project.Users, this.sessionUser, this.handleError);
+        if (this.errorMessage == '') {
+            this.leaderEmailOrUsername = '';
         }
-
     }
 
     togglePhaseCreation() {
@@ -129,7 +112,7 @@ export class EditProjectComponent implements OnInit {
 
     editProject() {
         if (this.project.Users) {
-            this.project.Users = [...this.updatedUsers];
+            // this.project.Users = [...this.updatedUsers];
             this.projectHttpService.updateProject(this.project, this.route.snapshot.params['id']).subscribe();
         }
     }
