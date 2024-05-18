@@ -126,7 +126,7 @@
             </svg>
     </div>
         @if (phaseCreationMode) {
-            <app-create-phase (phaseCreation)="savePhase($event)"></app-create-phase>
+            <app-create-phase [projectId]="projectId" (phaseCreation)="savePhase($event)"></app-create-phase>
         }
     }
     @if (userRole == 'manager') {

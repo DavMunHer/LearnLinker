@@ -19,6 +19,7 @@ import { Phase } from '../../../interfaces/phase';
   styleUrl: './edit-project.component.scss'
 })
 export class EditProjectComponent implements OnInit {
+    protected projectId: string;
     protected project: any = {
         name: '',
         start_date: '',
@@ -30,6 +31,7 @@ export class EditProjectComponent implements OnInit {
     protected leaderEmailOrUsername = '';
     protected updatedUsers: any[] = [];
     protected phaseCreationMode: boolean = false;
+
 
     private sessionUser!: User;
 
@@ -44,7 +46,10 @@ export class EditProjectComponent implements OnInit {
         private authService: AuthService,
         private helper: HelperService,
         private renderer: Renderer2,
-    ) { }
+    ) {
+        this.projectId = this.route.snapshot.params['id'];
+    }
+
 
     private handleError(error: HttpErrorResponse) {
         if (error.status == 404) {
@@ -62,6 +67,7 @@ export class EditProjectComponent implements OnInit {
     ngOnInit(): void {
         this.sessionUser = this.authService.getSessionUser();
         this.userRole = this.route.snapshot.data['role'];
+        console.log(this.userRole);
         this.projectHttpService.getProjectDetails(this.userRole, 'edit', this.route.snapshot.params['id']).subscribe({
             next: (response) => {
                 this.project = response;

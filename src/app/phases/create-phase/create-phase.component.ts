@@ -1,9 +1,10 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Phase } from '../../../interfaces/phase';
 import { FormsModule } from '@angular/forms';
 import { CreateTaskComponent } from '../../tasks/create-task/create-task.component';
 import { Task } from '../../../interfaces/task';
 import { TaskListComponent } from '../../tasks/task-list/task-list.component';
+import { PhasesHttpService } from '../../services/phases-http.service';
 
 @Component({
     selector: 'app-create-phase',
@@ -14,6 +15,7 @@ import { TaskListComponent } from '../../tasks/task-list/task-list.component';
 })
 export class CreatePhaseComponent {
     @Output() phaseCreation = new EventEmitter<Phase>();
+    @Input() projectId!: string;
     protected taskCreationMode: boolean = false;
 
     protected phase: Phase = {
@@ -24,8 +26,11 @@ export class CreatePhaseComponent {
         Tasks: []
     }
 
-    sendPhase() {
+    constructor(private phaseService: PhasesHttpService) { }
+
+    sendAndCreatePhase() {
         this.phaseCreation.emit(this.phase);
+        this.phaseService.createPhase(this.projectId, this.phase).subscribe();
         this.phase = {
             name: '',
             deadline: '',
@@ -42,5 +47,9 @@ export class CreatePhaseComponent {
     addTask(task: Task) {
         this.phase.Tasks?.push(task);
         this.taskCreationMode = false;
+    }
+
+    removeTask(task: Task) {
+        this.phase.Tasks = this.phase.Tasks?.filter(t => t !== task);
     }
 }
