@@ -16,14 +16,13 @@ import { PhasesHttpService } from '../../services/phases-http.service';
 export class CreatePhaseComponent {
     @Output() phaseCreation = new EventEmitter<Phase>();
     @Input() projectId!: string;
-    protected taskCreationMode: boolean = false;
-
     protected phase: Phase = {
         name: '',
         deadline: '',
         start_date: '',
         end_date: '',
-        Tasks: []
+        Tasks: [],
+        taskCreationMode: false
     }
 
     constructor(private phaseService: PhasesHttpService) { }
@@ -41,12 +40,16 @@ export class CreatePhaseComponent {
     }
 
     toggleTaskCreation() {
-        this.taskCreationMode ? this.taskCreationMode = false : this.taskCreationMode = true;
+        this.phase.taskCreationMode ? this.phase.taskCreationMode = false : this.phase.taskCreationMode = true;
+    }
+
+    getPhaseTaks() {
+        return this.phase.Tasks;
     }
 
     addTask(task: Task) {
         this.phase.Tasks?.push(task);
-        this.taskCreationMode = false;
+        this.phase.taskCreationMode = false;
     }
 
     removeTask(task: Task) {

@@ -10,11 +10,13 @@ import { User } from '../../../interfaces/user';
 import { CreatePhaseComponent } from '../../phases/create-phase/create-phase.component';
 import { Phase } from '../../../interfaces/phase';
 import { PhasesHttpService } from '../../services/phases-http.service';
+import { CreateTaskComponent } from '../../tasks/create-task/create-task.component';
+import { TaskListComponent } from '../../tasks/task-list/task-list.component';
 
 @Component({
   selector: 'app-edit-project',
   standalone: true,
-  imports: [FormsModule, RouterLink, CreatePhaseComponent],
+  imports: [FormsModule, RouterLink, CreatePhaseComponent, CreateTaskComponent, TaskListComponent],
   templateUrl: './edit-project.component.html',
   styleUrl: './edit-project.component.scss'
 })
@@ -69,6 +71,7 @@ export class EditProjectComponent implements OnInit {
         this.projectHttpService.getProjectDetails(this.userRole, 'edit', this.route.snapshot.params['id']).subscribe({
             next: (response) => {
                 this.project = response;
+                console.log(this.project);
             },
             error: (error) => {
                 this.handleError(error);
@@ -80,6 +83,12 @@ export class EditProjectComponent implements OnInit {
         this.project.Users = this.project.Users!.filter((storedUser: any) => {
             return storedUser.username != username;
         });
+    }
+
+    editProject() {
+        if (this.project.Users) {
+            this.projectHttpService.updateProject(this.project, this.route.snapshot.params['id']).subscribe();
+        }
     }
 
     async addUser() {
@@ -98,15 +107,27 @@ export class EditProjectComponent implements OnInit {
     }
 
     deletePhase(phase: Phase) {
+        // Eliminamos la fase en local
         this.project.Phases = this.project.Phases!.filter((storedPhase: Phase) => {
             return storedPhase != phase;
         });
+        // Eliminamos la fase en el servidor
         this.phaseHttpService.deletePhase(phase.id!).subscribe();
     }
 
-    editProject() {
-        if (this.project.Users) {
-            this.projectHttpService.updateProject(this.project, this.route.snapshot.params['id']).subscribe();
-        }
+    toggleTaskCreation(phase: Phase) {
+        phase.taskCreationMode ? phase.taskCreationMode = false : phase.taskCreationMode = true;
     }
+
+    saveTask(task: any, phase: Phase) {
+        if (phase.Tasks) {
+            phase.Tasks.push(task);
+        } else {
+            phase.Tasks = [task];
+        }
+        console.log(phase);
+        console.log(this.project.Phases);
+        phase.taskCreationMode = false;
+    }
+
 }

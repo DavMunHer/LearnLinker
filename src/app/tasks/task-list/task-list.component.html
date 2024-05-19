@@ -3,12 +3,14 @@
         <div class="task-container">
             <div class="task-header flex">
                 <div class="task-name">{{task.name}}</div>
-                <div class="task-header-actions">x</div>
+                <div class="task-header-actions">----!---x</div>
             </div>
             <div class="task-body">
                 <div class="task-deadline">{{task.deadline}}</div>
                 <div class="task-start-date">{{task.start_date}}</div>
             </div>
         </div>
+    } @empty {
+        <div class="text-gray-500">The phase has no tasks yet!</div>
     }
 </div>

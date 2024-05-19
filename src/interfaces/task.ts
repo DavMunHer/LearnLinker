@@ -1,6 +1,6 @@
 export interface Task {
     name: string,
-    phaseId?: number,
+    phaseId?: number | string,
     start_date: string,
     deadline: string,
     end_date?: string,
