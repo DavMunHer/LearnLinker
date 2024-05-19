@@ -9,6 +9,7 @@ import { HelperService } from '../../services/helper.service';
 import { User } from '../../../interfaces/user';
 import { CreatePhaseComponent } from '../../phases/create-phase/create-phase.component';
 import { Phase } from '../../../interfaces/phase';
+import { PhasesHttpService } from '../../services/phases-http.service';
 
 @Component({
   selector: 'app-edit-project',
@@ -41,6 +42,7 @@ export class EditProjectComponent implements OnInit {
         protected route: ActivatedRoute,
         private authService: AuthService,
         private helper: HelperService,
+        private phaseHttpService: PhasesHttpService
     ) {
         this.projectId = this.route.snapshot.params['id'];
     }
@@ -99,6 +101,7 @@ export class EditProjectComponent implements OnInit {
         this.project.Phases = this.project.Phases!.filter((storedPhase: Phase) => {
             return storedPhase != phase;
         });
+        this.phaseHttpService.deletePhase(phase.id!).subscribe();
     }
 
     editProject() {

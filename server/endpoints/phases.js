@@ -44,4 +44,19 @@ router.post('/project/:id/phase', async (req, res) => {
     }
 });
 
+router.delete('/phase/:id', async (req, res) => {
+    try {
+        const phase = await Phase.findOne({ where: { id: req.params.id } });
+        if (!phase) {
+            return res.status(404).json({ message: 'Phase not found.' });
+        }
+
+        await phase.destroy();
+        return res.status(204).json({ message: 'Phase successfully deleted.' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error.' });
+    }
+});
+
 module.exports = router;
