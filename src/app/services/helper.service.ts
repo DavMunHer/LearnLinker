@@ -26,7 +26,7 @@ export class HelperService {
      * @param handleError Function that handles the error returning the error message
      * @returns The error message if the user cannot be added to the users array
      */
-    async checkAndAddUser(usernameOrEmail: string, users: &any[], sessionUser: User, handleError: Function): Promise<string> {
+    async checkAndAddProjectUser(usernameOrEmail: string, users: &any[], sessionUser: User, handleError: Function): Promise<string> {
         let errorMessage = '';
 
         if (usernameOrEmail !== '') {
@@ -49,6 +49,37 @@ export class HelperService {
         return errorMessage;
     }
 
+
+    /**
+     *
+     * @param usernameOrEmail The username or email requested in the form
+     * @param users The users array that contains the current loaded users
+     * @param sessionUser The information of the user that is currently logged in
+     * @param handleError Function that handles the error returning the error message
+     * @returns The error message if the user cannot be added to the users array
+     */
+    async checkAndAddTaskUser(usernameOrEmail: string, users: &any[], sessionUser: User, handleError: Function): Promise<string> {
+        let errorMessage = '';
+
+        if (usernameOrEmail !== '') {
+            try {
+                const user = await this.userHttpService.checkExistingUser(usernameOrEmail).toPromise();
+
+                if (usernameOrEmail !== sessionUser.email && usernameOrEmail !== sessionUser.username) {
+                    if (!this.loadedUser(users, usernameOrEmail)) {
+                        users.push(user);
+                    } else
+                        errorMessage = 'The user is already added in the task!';
+                } else {
+                    errorMessage = 'You are the leader of the project!';
+                }
+            } catch (error) {
+                errorMessage = handleError(error);
+            }
+        }
+
+        return errorMessage;
+    }
 
     addUser(users: & string[], user: any, renderer: Renderer2) {
         users.push(user);

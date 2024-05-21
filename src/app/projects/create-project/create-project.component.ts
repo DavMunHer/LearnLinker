@@ -59,7 +59,7 @@ export class CreateProjectComponent implements OnInit {
     }
 
     async addUser() {
-        this.errorMessage = await this.helper.checkAndAddUser(this.leaderEmailOrUsername, this.leaders, this.sessionUser, this.handleError);
+        this.errorMessage = await this.helper.checkAndAddProjectUser(this.leaderEmailOrUsername, this.leaders, this.sessionUser, this.handleError);
         if (this.errorMessage === '') {
             this.leaderEmailOrUsername = '';
         }

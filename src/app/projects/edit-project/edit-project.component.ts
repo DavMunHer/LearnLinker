@@ -92,7 +92,7 @@ export class EditProjectComponent implements OnInit {
     }
 
     async addUser() {
-        this.errorMessage = await this.helper.checkAndAddUser(this.leaderEmailOrUsername, this.project.Users!, this.sessionUser, this.handleError);
+        this.errorMessage = await this.helper.checkAndAddProjectUser(this.leaderEmailOrUsername, this.project.Users!, this.sessionUser, this.handleError);
         if (this.errorMessage == '') {
             this.leaderEmailOrUsername = '';
         }
@@ -104,6 +104,7 @@ export class EditProjectComponent implements OnInit {
 
     savePhase(phase: Phase) {
         this.project.Phases!.push(phase);
+        this.phaseCreationMode = false;
     }
 
     deletePhase(phase: Phase) {

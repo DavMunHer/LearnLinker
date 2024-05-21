@@ -1,18 +1,50 @@
 <form (ngSubmit)="sendAndCreateTask()">
     <div>
-        <label for="phase-name">Task name:</label>
-        <input type="text" class="border-2" [(ngModel)]="task.name" name="phase-name" id="phase-name">
+        <label for="task-name">Task name:</label>
+        <input type="text" class="border-2" [(ngModel)]="task.name" name="task-name" id="task-name">
     </div>
 
     <div>
-        <label for="phase-deadline">Deadline: </label>
-        <input type="date" class="border-2" [(ngModel)]="task.deadline" name="phase-deadline" id="phase-deadline">
+        <label for="task-deadline">Deadline: </label>
+        <input type="date" class="border-2" [(ngModel)]="task.deadline" name="task-deadline" id="task-deadline">
     </div>
 
     <div>
-        <label for="phase-start-date">Start date: </label>
-        <input type="date" class="border-2" [(ngModel)]="task.start_date" name="phase-start-date" id="phase-start-date">
+        <label for="task-start-date">Start date: </label>
+        <input type="date" class="border-2" [(ngModel)]="task.start_date" name="task-start-date" id="task-start-date">
     </div>
+
+    <div>
+        <label for="task-developers">Developer email or username: </label>
+        @if (task.users) {
+            @if (task.users.length > 0 ) {
+                <div class="flex flex-wrap">
+                    @for (developer of task.users; track $index) {
+                        <div class="flex mx-2 px-0.5 border-2 rounded-xl">
+                            <span class="developer-info mr-1 ml-0.5">{{developer.username}}</span>
+                            <svg (click)="removeUser(developer.username)" class="hover:bg-gray-400 rounded-xl hover:cursor-pointer" width="25px" height="25px"
+                                viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                <g id="SVGRepo_iconCarrier">
+                                    <path d="M16 8L8 16M8.00001 8L16 16" stroke="#000000" stroke-width="1.5" stroke-linecap="round"
+                                        stroke-linejoin="round"></path>
+                                </g>
+                            </svg>
+                        </div>
+                    }
+            </div>
+            } @else {
+                <div>The task has no developers yet!</div>
+            }
+        }
+
+        <input (change)="addUser()" class="border-2" type="text" autocomplete="current-leader-email-or-username"
+               [(ngModel)]="developerEmailOrUsername" name="leader-email-or-username" id="leader-email-or-username">
+        @if(errorMessage) {
+            <div class="text-red-500">{{errorMessage}}</div>
+        }
+            </div>
 
     <button class="block bg-blue-500 text-white font-bold py-2 px-4 rounded" type="submit">Create</button>
 
