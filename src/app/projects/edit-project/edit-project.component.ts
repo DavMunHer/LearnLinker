@@ -53,7 +53,8 @@ export class EditProjectComponent implements OnInit {
     private handleError(error: HttpErrorResponse): string {
         let errorMessage = '';
         if (error.status == 404) {
-            errorMessage = 'Project not found!';
+            // Ponemos el mensaje de error del servidor dado que puede no encontrar el proyecto o el usuario
+            errorMessage = error.error.message;
         } else if (error.status == 403) {
             errorMessage = 'A developer cannot edit the project!';
         } else if (error.status == 401) {

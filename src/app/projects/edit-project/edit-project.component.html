@@ -137,7 +137,7 @@
                         </div>
                     </div>
                     @if (phase.taskCreationMode) {
-                        <app-create-task [phaseId]="phase.id" (taskCreation)="saveTask($event, phase)"></app-create-task>
+                        <app-create-task [phaseId]="phase.id" [projectId]="projectId" (taskCreation)="saveTask($event, phase)"></app-create-task>
                     }
                 </div>
                 }

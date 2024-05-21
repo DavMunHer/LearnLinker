@@ -34,6 +34,41 @@ router.get('/user/:user_email_or_username', async (req, res) => {
     }
 });
 
+
+// Endpoint para verificar si un usuario existe o no mediante su email o nombre de usuario y si está en un proyecto
+router.get('/user/check/:user_email_or_username/project/:projectId', async (req, res) => {
+    try {
+        const usernameOrEmail = req.params.user_email_or_username;
+        const existingUserInProject = await User.findOne({
+            where: { [Op.or]: { username: usernameOrEmail, email: usernameOrEmail } },
+            include: [{
+                model: Project,
+                where: { id: req.params.projectId },
+                through: {
+                    attributes: ['role']
+                }
+            }]
+        });
+
+        // Primeramente comprobamos si el usuario está en el proyecto y si es así, lo devolvemos con su rol
+        if (existingUserInProject) {
+            res.json({username: existingUserInProject.username, email: existingUserInProject.email, role: existingUserInProject.Projects[0].project_user.dataValues.role });
+        } else {
+            // Cuando el usuario no está en el proyecto vemos si se ha registrado en la plataforma y si es así lo devolvemos
+            const existingUser = await User.findOne({ where: { [Op.or]: { username: usernameOrEmail, email: usernameOrEmail } } });
+            if (existingUser) {
+                res.json({username: existingUser.username, email: existingUser.email });
+            } else {
+                return res.status(404).json({ message: 'User not found.' });
+            }
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error.' });
+    }
+});
+
+
 // Enpoint para recoger la información de un usuario con su email
 router.get('/user/:user_email', async (req, res) => {
     try {

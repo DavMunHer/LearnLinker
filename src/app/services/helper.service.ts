@@ -58,17 +58,25 @@ export class HelperService {
      * @param handleError Function that handles the error returning the error message
      * @returns The error message if the user cannot be added to the users array
      */
-    async checkAndAddTaskUser(usernameOrEmail: string, users: &any[], sessionUser: User, handleError: Function): Promise<string> {
+    async checkAndAddTaskUser(usernameOrEmail: string, users: &any[], sessionUser: User, projectId: string, handleError: Function): Promise<string> {
         let errorMessage = '';
 
         if (usernameOrEmail !== '') {
             try {
-                const user = await this.userHttpService.checkExistingUser(usernameOrEmail).toPromise();
+                const user = await this.userHttpService.checkExistingUserWithRole(usernameOrEmail, projectId).toPromise();
 
                 if (usernameOrEmail !== sessionUser.email && usernameOrEmail !== sessionUser.username) {
-                    if (!this.loadedUser(users, usernameOrEmail)) {
-                        users.push(user);
-                    } else
+                    if (user.role) {
+                        // Cuando la respuesta devuelva el atributo de rol es porque el usuario ya estaba en el proyecto
+                        if (user.role === 'manager') {
+                            return 'This user is the manager of the project!';
+                        } else if (user.role === 'leader') {
+                            return 'This user is a leader of the project!';
+                        }
+                    }
+                        if (!this.loadedUser(users, usernameOrEmail)) {
+                            users.push(user);
+                        } else
                         errorMessage = 'The user is already added in the task!';
                 } else {
                     errorMessage = 'You are the leader of the project!';

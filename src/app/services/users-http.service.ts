@@ -23,6 +23,10 @@ export class UsersHttpService {
         return this.http.get<any>(`user/${usernameOrEmail}`);
     }
 
+    checkExistingUserWithRole(usernameOrEmail: string, projectId: string): Observable<any> {
+        return this.http.get<any>(`user/check/${usernameOrEmail}/project/${projectId}`);
+    }
+
     getUserProjects(email: string): Observable<Project[]> {
         return this.http.get<Project[]>(`user/${email}/projects`);
     }

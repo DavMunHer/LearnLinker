@@ -16,6 +16,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 export class CreateTaskComponent implements OnInit {
     @Output() taskCreation = new EventEmitter<Task>();
     @Input() phaseId!: any;
+    @Input() projectId!: any;
 
     private sessionUser!: any;
     protected task: Task = {
@@ -39,11 +40,7 @@ export class CreateTaskComponent implements OnInit {
     private handleError(error: HttpErrorResponse): string {
         let errorMessage = '';
         if (error.status == 404) {
-            errorMessage = 'Project not found!';
-        } else if (error.status == 403) {
-            errorMessage = 'A developer cannot edit the project!';
-        } else if (error.status == 401) {
-            errorMessage = 'Unexpected user role!';
+            errorMessage = 'User not found!';
         } else {
             errorMessage = 'Internal server error.';
         }
@@ -57,7 +54,7 @@ export class CreateTaskComponent implements OnInit {
 
 
     async addUser() {
-        this.errorMessage = await this.helper.checkAndAddTaskUser(this.developerEmailOrUsername, this.task.users, this.sessionUser, this.handleError);
+        this.errorMessage = await this.helper.checkAndAddTaskUser(this.developerEmailOrUsername, this.task.users, this.sessionUser, this.projectId, this.handleError);
         if (this.errorMessage == '') {
             this.developerEmailOrUsername = '';
         }
