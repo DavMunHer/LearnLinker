@@ -93,7 +93,7 @@ export class EditProjectComponent implements OnInit {
     }
 
     async addUser() {
-        this.errorMessage = await this.helper.checkAndAddProjectUser(this.leaderEmailOrUsername, this.project.Users!, this.sessionUser, this.handleError);
+        this.errorMessage = await this.helper.checkAndAddProjectUser(this.leaderEmailOrUsername, this.project.Users!, this.sessionUser, this.projectId, this.handleError);
         if (this.errorMessage == '') {
             this.leaderEmailOrUsername = '';
         }

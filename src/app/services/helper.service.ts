@@ -26,7 +26,34 @@ export class HelperService {
      * @param handleError Function that handles the error returning the error message
      * @returns The error message if the user cannot be added to the users array
      */
-    async checkAndAddProjectUser(usernameOrEmail: string, users: &any[], sessionUser: User, handleError: Function): Promise<string> {
+    async checkAndAddProjectUser(usernameOrEmail: string, users: &any[], sessionUser: User, projectId: string, handleError: Function): Promise<string> {
+        let errorMessage = '';
+
+        if (usernameOrEmail !== '') {
+            try {
+                const user = await this.userHttpService.checkExistingUserWithRole(usernameOrEmail, projectId).toPromise();
+
+                if (usernameOrEmail !== sessionUser.email && usernameOrEmail !== sessionUser.username) {
+                    if (user.role == 'developer') {
+                        return 'The user is a already a developer on this project!';
+                    }
+                    if (!this.loadedUser(users, usernameOrEmail)) {
+                        users.push(user);
+                    } else
+                        errorMessage = 'The user is already added in the project!';
+                } else {
+                    errorMessage = 'You are the manager of the project!';
+                }
+            } catch (error) {
+                errorMessage = handleError(error);
+            }
+        }
+
+        return errorMessage;
+    }
+
+
+    async checkAndAddNewProjectWithUser(usernameOrEmail: string, users: &any[], sessionUser: User, handleError: Function): Promise<string> {
         let errorMessage = '';
 
         if (usernameOrEmail !== '') {
@@ -48,7 +75,6 @@ export class HelperService {
 
         return errorMessage;
     }
-
 
     /**
      *

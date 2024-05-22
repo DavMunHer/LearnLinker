@@ -166,18 +166,19 @@ router.put(`/update/project/:id`, async (req, res) => {
                     }
                 }
             });
-            const previousLeaders = projectWithLeaders.Users;
+            const previousUsers = projectWithLeaders.Users;
             for (const leader of projectRequest.Users) {
-                if (!previousLeaders.find(previousLeader => previousLeader.email === leader.email)) {
+                if (!previousUsers.find(previousLeader => previousLeader.email === leader.email)) {
                     // Cuando el líder no estaba presente previamente en la base de datos lo insertaremos
                     const leaderUser = await User.findOne({ where: { 'email': leader.email } });
                     sequelize.query(`INSERT INTO project_user (userId, projectId, role) VALUES (${leaderUser.id}, ${projectId}, "leader");`);
                 }
             }
 
-            for (const previousLeader of previousLeaders) {
+            for (const previousLeader of previousUsers) {
                 if (!projectRequest.Users.find(leader => previousLeader.email === leader.email)) {
-                    sequelize.query(`DELETE FROM project_user WHERE userId = ${previousLeader.id};`);
+                    //Si el usuario se encontraba antes en la relación pero no en la request se eliminará
+                    sequelize.query(`DELETE FROM project_user WHERE userId = ${previousLeader.id} AND projectId = ${projectId};`);
                 }
             }
         }
