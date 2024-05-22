@@ -12,6 +12,7 @@ import { Phase } from '../../../interfaces/phase';
 import { PhasesHttpService } from '../../services/phases-http.service';
 import { CreateTaskComponent } from '../../tasks/create-task/create-task.component';
 import { TaskListComponent } from '../../tasks/task-list/task-list.component';
+import { Task } from '../../../interfaces/task';
 
 @Component({
   selector: 'app-edit-project',
@@ -72,7 +73,6 @@ export class EditProjectComponent implements OnInit {
         this.projectHttpService.getProjectDetails(this.userRole, 'edit', this.route.snapshot.params['id']).subscribe({
             next: (response) => {
                 this.project = response;
-                console.log(this.project);
             },
             error: (error) => {
                 this.handleError(error);
@@ -127,9 +127,13 @@ export class EditProjectComponent implements OnInit {
         } else {
             phase.Tasks = [task];
         }
-        console.log(phase);
         console.log(this.project.Phases);
         phase.taskCreationMode = false;
+    }
+
+    updatePhaseTasks(phaseTasks: Task[], phase: Phase) {
+        console.log(phaseTasks);
+        phase.Tasks = phaseTasks;
     }
 
 }

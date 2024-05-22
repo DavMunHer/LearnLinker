@@ -28,11 +28,28 @@ router.post('/create/task', async (req, res) => {
                 }
             }
         }
-        res.status(201).json({ message: 'Task creation successful.' });
+        res.json(task);
+        // res.status(201).json({ message: 'Task creation successful.' });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Internal server error.' });
     }
-})
+});
+
+router.delete('/delete/task/:id', async (req, res) => {
+    try {
+        const taskId = req.params.id;
+        const task = Task.findOne({ where: { id: taskId } });
+        if (!task) {
+            return res.status(404).json({ message: 'Task not found.' });
+        }
+        await Task.destroy({ where: { id: taskId } });
+        res.status(204).json({ message: 'Task deletion successful.' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error.' });
+    }
+});
+
 
 module.exports = router;
