@@ -10,12 +10,22 @@ const User = require('../models/User');
 
 router.post('/create/task', async (req, res) => {
     try {
-        const { name, start_date, deadline, phaseId, users } = req.body;
+        const { name, start_date, deadline, phaseId, users, projectId } = req.body;
         const task = await Task.create({ name, start_date, deadline, phaseId });
         if (users) {
             for (const user of users) {
                 const developer = await User.findOne({ where: { 'email': user.email } });
                 sequelize.query(`INSERT INTO task_user (userId, taskId) VALUES (${developer.id}, ${task.id});`);
+                const existingUserInProject = await User.findOne({
+                    where: { 'email': user.email },
+                    include: [{
+                        model: Project,
+                        where: { 'id': projectId },
+                    }]
+                });
+                if (!existingUserInProject) {
+                    sequelize.query(`INSERT INTO project_user (userId, projectId, role) VALUES (${developer.id}, ${projectId}, "developer");`);
+                }
             }
         }
         res.status(201).json({ message: 'Task creation successful.' });

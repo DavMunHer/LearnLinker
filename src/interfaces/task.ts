@@ -6,5 +6,6 @@ export interface Task {
     start_date: string,
     deadline: string,
     end_date?: string,
+    projectId?: number | string,
     users: User[]
 }

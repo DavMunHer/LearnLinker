@@ -24,7 +24,8 @@ export class CreateTaskComponent implements OnInit {
         start_date: '',
         deadline: '',
         phaseId: 0,
-        users: []
+        users: [],
+        projectId: 0
     }
     protected developerEmailOrUsername = '';
 
@@ -68,6 +69,7 @@ export class CreateTaskComponent implements OnInit {
 
     sendAndCreateTask() {
         this.task.phaseId = this.phaseId;
+        this.task.projectId = this.projectId;
         this.taskCreation.emit(this.task);
         this.taskHttpService.createTask(this.task).subscribe();
     }
