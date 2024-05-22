@@ -27,6 +27,5 @@ export class TaskListComponent {
                 console.error(error);
             }
         });
-
     }
 }

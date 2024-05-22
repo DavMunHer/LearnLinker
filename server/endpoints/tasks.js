@@ -12,6 +12,17 @@ router.post('/create/task', async (req, res) => {
     try {
         const { name, start_date, deadline, phaseId, users, projectId } = req.body;
         const task = await Task.create({ name, start_date, deadline, phaseId });
+        const formattedTask = await Task.findOne({
+            where: { 'id': task.id },
+            attributes: [
+                'id',
+                'name',
+                'phaseId',
+                formatDateAttribute('start_date', 'start_date'),
+                formatDateAttribute('deadline', 'deadline'),
+                formatDateAttribute('end_date', 'end_date')
+            ]
+        });
         if (users) {
             for (const user of users) {
                 const developer = await User.findOne({ where: { 'email': user.email } });
@@ -28,7 +39,7 @@ router.post('/create/task', async (req, res) => {
                 }
             }
         }
-        res.json(task);
+        res.json(formattedTask);
         // res.status(201).json({ message: 'Task creation successful.' });
     } catch (error) {
         console.error(error);
