@@ -5,10 +5,11 @@ import { UsersHttpService } from '../services/users-http.service';
 import {MatSelectModule} from '@angular/material/select';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { ActivatedRoute, Router } from '@angular/router';
+import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [MatFormFieldModule, MatSelectModule],
+  imports: [MatFormFieldModule, MatSelectModule, LoadingSpinnerComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
@@ -16,6 +17,7 @@ export class HomeComponent implements OnInit {
     protected userProjects!: Project[];
     protected selectedProjectId!: any;
     protected selectedProject!: Project;
+    protected isLoading: boolean = true;
 
     constructor(private route: ActivatedRoute) { }
 
