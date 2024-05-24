@@ -25,6 +25,10 @@ const Task = sequelize.define('Task', {
         type: Sequelize.DATE,
         allowNull: false
     },
+    description: {
+        type: Sequelize.STRING,
+        allowNull: false
+    },
     deadline: {
         type: Sequelize.DATE,
         allowNull: true,
@@ -45,6 +49,5 @@ Task.belongsTo(Phase);
 Task.associate = function (models) {
     Task.belongsToMany(models.User);
 }
-Task.sync(); // Sincronizar el modelo con la base de datos
 
 module.exports = Task;
