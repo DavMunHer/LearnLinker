@@ -2,6 +2,7 @@ import { Component, ErrorHandler } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { UsersHttpService } from '../services/users-http.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-login',
@@ -17,7 +18,7 @@ export class LoginComponent {
     }
     protected errorMessage: string = '';
 
-    constructor(private usersHttpService: UsersHttpService, private httpError: ErrorHandler) { }
+    constructor(private usersHttpService: UsersHttpService, private router: Router) { }
 
     private handleError(error: HttpErrorResponse): void {
         if (error.status === 401) {
@@ -35,6 +36,9 @@ export class LoginComponent {
             },
             error: (error) => {
                 this.handleError(error);
+            },
+            complete: () => {
+                this.router.navigate(['/home']);
             }
         });
     }

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { User } from '../../interfaces/user';
 import { UsersHttpService } from '../services/users-http.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-signup',
@@ -20,12 +21,16 @@ export class SignupComponent {
         password: ''
     }
 
-    constructor(private usersHttpService : UsersHttpService) { }
+    constructor(private usersHttpService : UsersHttpService, private router: Router) { }
 
     signup() {
         this.errorMessage = '';
         if (this.user.password === this.passwordConfirmation) {
-            this.usersHttpService.signUp(this.user).subscribe();
+            this.usersHttpService.signUp(this.user).subscribe({
+                next: () => {
+                    this.router.navigate(['/login']);
+                }
+            });
         } else {
             this.errorMessage = 'The password confirmation is not the same as the password one!';
         }
