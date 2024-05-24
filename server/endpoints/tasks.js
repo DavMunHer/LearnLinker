@@ -10,13 +10,14 @@ const User = require('../models/User');
 
 router.post('/create/task', async (req, res) => {
     try {
-        const { name, start_date, deadline, phaseId, users, projectId } = req.body;
-        const task = await Task.create({ name, start_date, deadline, phaseId });
+        const { name, description, start_date, deadline, phaseId, users, projectId } = req.body;
+        const task = await Task.create({ name, description, start_date, deadline, phaseId });
         const formattedTask = await Task.findOne({
             where: { 'id': task.id },
             attributes: [
                 'id',
                 'name',
+                'description',
                 'phaseId',
                 formatDateAttribute('start_date', 'start_date'),
                 formatDateAttribute('deadline', 'deadline'),

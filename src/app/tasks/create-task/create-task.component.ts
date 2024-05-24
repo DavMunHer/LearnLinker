@@ -23,6 +23,7 @@ export class CreateTaskComponent implements OnInit {
         name: '',
         start_date: '',
         deadline: '',
+        description: '',
         phaseId: 0,
         users: [],
         projectId: 0

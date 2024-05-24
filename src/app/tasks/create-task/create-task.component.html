@@ -5,6 +5,11 @@
     </div>
 
     <div>
+        <label for="task-description">Description: </label>
+        <input type="text" class="border-2" [(ngModel)]="task.description" name="task-description" id="task-description">
+    </div>
+
+    <div>
         <label for="task-deadline">Deadline: </label>
         <input type="date" class="border-2" [(ngModel)]="task.deadline" name="task-deadline" id="task-deadline">
     </div>
@@ -13,6 +18,8 @@
         <label for="task-start-date">Start date: </label>
         <input type="date" class="border-2" [(ngModel)]="task.start_date" name="task-start-date" id="task-start-date">
     </div>
+
+
 
     <div>
         <label for="task-developers">Developer email or username: </label>
