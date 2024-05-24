@@ -14,6 +14,7 @@ import { ProjectsManagementComponent } from './projects/projects-management/proj
 import { userRoleResolver } from './resolvers/user-role.resolver';
 import { EditPhaseComponent } from './phases/edit-phase/edit-phase.component';
 import { CreatePhaseComponent } from './phases/create-phase/create-phase.component';
+import { userProjectsResolver } from './resolvers/user-projects.resolver';
 
 export const routes: Routes = [
     {
@@ -26,6 +27,9 @@ export const routes: Routes = [
         path: 'home',
         component: HomeComponent,
         canActivate: [authGuard],
+        resolve: {
+            projects: userProjectsResolver
+        },
         title: 'Home'
     },
     {

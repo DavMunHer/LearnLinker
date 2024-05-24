@@ -5,15 +5,14 @@
             <div class="">hola</div>
         </div>
         <div class="project-filters">
-                <mat-form-field>
-                    <mat-label>Select an option</mat-label>
-                    <mat-select [(value)]="userProjects[0].id">
-                        <mat-option>None</mat-option>
-                        @for (project of userProjects; track $index) {
-                            <mat-option value="{{project.id}}">{{project.name}}</mat-option>
-                        }
-                    </mat-select>
-                </mat-form-field>
+            <mat-form-field>
+                <mat-label>Select a project</mat-label>
+                <mat-select [(value)]="selectedProjectId" (valueChange)="loadProject()">
+                    @for (project of userProjects; track $index) {
+                        <mat-option value="{{project.id}}">{{project.name}}</mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
         </div>
     </div>
     <div class="project-info bg-gray-200 p-4 mb-4">
