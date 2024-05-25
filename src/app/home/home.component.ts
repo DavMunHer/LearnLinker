@@ -20,6 +20,8 @@ export class HomeComponent implements OnInit {
     protected selectedProjectId!: any;
     protected selectedProject!: Project;
     protected isLoading: boolean = false;
+    protected timeMode: 'current' | 'past' = 'current';
+    protected viewMode: 'phases' | 'tasks' = 'tasks';
 
     constructor(private route: ActivatedRoute, private projectHttpService: ProjectsHttpService) { }
 

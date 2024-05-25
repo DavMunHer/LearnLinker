@@ -1,6 +1,6 @@
 <div class="board">
     <h1 class="text-2xl font-bold mb-4 text-center">Your Board</h1>
-    <div class="flex">
+    <div class="flex justify-around">
         <div class="project-filters">
             <mat-form-field>
                 <mat-label>Select a project</mat-label>
@@ -8,6 +8,25 @@
                     @for (project of userProjects; track $index) {
                         <mat-option value="{{project.id}}">{{project.name}}</mat-option>
                     }
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div class="project-time-mode">
+            <mat-form-field>
+                <mat-label>Time</mat-label>
+                <mat-select [(value)]="timeMode" (valueChange)="loadProject()">
+                    <mat-option value="current">Current {{viewMode}}</mat-option>
+                    <mat-option value="past">Past {{viewMode}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <div class="project-view">
+            <mat-form-field>
+                <mat-label>View</mat-label>
+                <mat-select [(value)]="viewMode" (valueChange)="loadProject()">
+                    <mat-option value="tasks">Tasks</mat-option>
+                    <mat-option value="phases">Phases</mat-option>
                 </mat-select>
             </mat-form-field>
         </div>
