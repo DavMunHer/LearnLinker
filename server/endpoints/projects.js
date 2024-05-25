@@ -5,14 +5,18 @@ const Phase = require('../models/Phase');
 const { Sequelize, Op } = require('sequelize');
 const { formatDateAttribute } = require('./helper');
 const sequelize = require('../config/database');
-const User = require('../models/User');
 const Task = require('../models/Task');
+const User = require('../models/User');
+const TaskUser = require('../models/task_user');
 
 Phase.belongsTo(Project);
 Project.hasMany(Phase);
 Project.belongsToMany(User, { through: 'project_user' });
 Task.belongsTo(Phase);
 Phase.hasMany(Task);
+Task.belongsToMany(User, { through: 'task_user' });
+// User.belongsToMany(Task, { through: 'task_user' });
+
 
 router.get('/projects', async (req, res) => {
     try {
@@ -32,6 +36,96 @@ router.get('/project/:id', async (req, res) => {
         }
 
         res.send(project);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error.' });
+    }
+});
+
+// Ruta para dar los detalles de un proyecto para el home
+router.get('/user/:user_email/project/:id/:role/details', async (req, res) => {
+    try {
+        const role = req.params.role;
+        if (role == 'manager' || role == 'leader') {
+            const project = await Project.findOne({
+                where: { id: req.params.id },
+                attributes: [],
+                include: [{
+                    model: Phase,
+                    attributes: ['id', 'name', formatDateAttribute('Phases.start_date', 'start_date'), formatDateAttribute('Phases.end_date', 'end_date')],
+                    include: {
+                        model: Task,
+                        attributes: [
+                            'id', 'name', 'description',
+                            formatDateAttribute('Phases->Tasks.deadline', 'deadline'),
+                            formatDateAttribute('Phases->Tasks.start_date', 'start_date'),
+                            formatDateAttribute('Phases->Tasks.end_date', 'end_date')
+                        ]
+                    }
+                }]
+            });
+            if (!project) {
+                return res.status(404).json({ message: 'Project not found.' });
+            }
+            // Devolvemos las fases del proyecto junto a sus tareas dado que ya tenemos el proyecto
+            return res.json(project.Phases);
+        } else if (role == 'developer') {
+            const user = await User.findOne({ where: { email: req.params.user_email } });
+            const project = await Project.findOne({
+                where: { id: req.params.id },
+                attributes: [],
+                include: [{
+                  model: User,
+                    where: { id: user.id },
+                    attributes: ['email'],
+                    include: [{
+                      model: Task,
+                      attributes: [
+                        'id', 'name', 'description',
+                        formatDateAttribute('Users->Tasks.deadline', 'deadline'),
+                        formatDateAttribute('Users->Tasks.start_date', 'start_date'),
+                          formatDateAttribute('Users->Tasks.end_date', 'end_date')
+                        ],
+                      through: { attributes: [] },
+                      include: [{
+                        model: Phase,
+                          attributes: ['id', 'name',
+                              formatDateAttribute('Users->Tasks->Phase.start_date', 'start_date'),
+                              formatDateAttribute('Users->Tasks->Phase.end_date', 'end_date')],
+                      }]
+                    }]
+                }]
+              });
+              // Esta consulta no funciona porque no se relaciona correctamente el modelo tarea con usuario
+            // const project = await Project.findOne({
+            //     where: { id: req.params.id },
+            //     attributes: [],
+            //     include: [{
+            //       model: Phase,
+            //       attributes: ['id', 'name', formatDateAttribute('Phases.start_date', 'start_date'), formatDateAttribute('Phases.end_date', 'end_date')],
+            //       include: {
+            //         model: Task,
+            //         attributes: [
+            //           'id', 'name', 'description',
+            //           formatDateAttribute('Phases->Tasks.deadline', 'deadline'),
+            //           formatDateAttribute('Phases->Tasks.start_date', 'start_date'),
+            //           formatDateAttribute('Phases->Tasks.end_date', 'end_date')
+            //         ],
+            //         include: {
+            //           model: User,
+            //             where: { id: user.id },
+            //             attributes: []
+            //         },
+            //         through: { attributes: [] }
+            //       }
+            //     }]
+            // });
+            if (!project) {
+                return res.status(404).json({ message: 'Project not found.' });
+            }
+            const userTasksWithPhase = project.Users[0].Tasks;
+            return res.json(userTasksWithPhase);
+        }
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Internal server error.' });

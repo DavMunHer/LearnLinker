@@ -7,7 +7,26 @@ const process = require('process');
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
 const config = require(__dirname + '/../config/config.json')[env];
-const db = {};
+
+const User = require('./User');
+const Task = require('./Task');
+const Phase = require('./Phase');
+const Project = require('./Project');
+const TaskUser = require('./task_user');
+
+
+Task.belongsTo(Phase);
+Task.belongsToMany(User, { through: TaskUser });
+User.belongsToMany(Task, { through: TaskUser });
+User.belongsToMany(Project, { through: 'project_user' });
+
+const db = {
+    User,
+    Task,
+    Phase,
+    Project,
+    TaskUser
+};
 
 let sequelize;
 if (config.use_env_variable) {

@@ -1,4 +1,5 @@
 import { Phase } from "./phase"
+import { Task } from "./task"
 import { User } from "./user"
 
 export interface Project {
@@ -10,5 +11,6 @@ export interface Project {
         role: string
     }
     Users?: User[],
-    Phases?: Phase[]
+    Phases?: Phase[],
+    Tasks?: Task[]
 }

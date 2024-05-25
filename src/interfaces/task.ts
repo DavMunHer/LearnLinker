@@ -1,3 +1,4 @@
+import { Phase } from "./phase";
 import { User } from "./user";
 
 export interface Task {
@@ -9,5 +10,6 @@ export interface Task {
     deadline: string,
     end_date?: string,
     projectId?: number | string,
-    users: User[]
+    users: User[],
+    Phase?: Phase
 }

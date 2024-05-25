@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Project } from '../../interfaces/project';
 import { Observable } from 'rxjs';
 import { Phase } from '../../interfaces/phase';
+import { Task } from '../../interfaces/task';
 
 @Injectable({
   providedIn: 'root'
@@ -22,8 +23,8 @@ export class ProjectsHttpService {
         return this.http.get<Project>(`project/${role}/${action}/details/${id}`);
     }
 
-    getHomeProjectDetails(id: string): Observable<Phase[]> {
-        return this.http.get<Phase[]>(`project/${id}/details`);
+    getHomeProjectDetails(id: string, role: string | undefined, userEmail: string): Observable<Phase[] | Task[]> {
+        return this.http.get<Phase[] | Task[]>(`user/${userEmail}/project/${id}/${role}/details`);
     }
 
     createProject(request: any): Observable<Project> {

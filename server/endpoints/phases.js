@@ -22,36 +22,6 @@ router.get('/project/:id/phases', async (req, res) => {
     }
 });
 
-router.get('/project/:id/details', async (req, res) => {
-    try {
-        const project = await Project.findOne({
-            where: { id: req.params.id },
-            attributes: [],
-            include: [{
-                model: Phase,
-                attributes: ['id', 'name', formatDateAttribute('Phases.start_date', 'start_date'), formatDateAttribute('Phases.end_date', 'end_date')],
-                include: {
-                    model: Task,
-                    attributes: [
-                        'id', 'name', 'description',
-                        formatDateAttribute('Phases->Tasks.deadline', 'deadline'),
-                        formatDateAttribute('Phases->Tasks.start_date', 'start_date'),
-                        formatDateAttribute('Phases->Tasks.end_date', 'end_date')
-                    ]
-                }
-            }]
-        });
-        if (!project) {
-            return res.status(404).json({ message: 'Project not found.' });
-        }
-        // Devolvemos las fases del proyecto junto a sus tareas dado que ya tenemos el proyecto
-        return res.json(project.Phases);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Internal server error.' });
-    }
-
-});
 
 //FIXME: Cambiar el nombre de la ruta y poner un /create para que quede más claro
 router.post('/project/:id/phase', async (req, res) => {
