@@ -11,5 +11,5 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 export class LoadingSpinnerComponent {
     @Input() isLoading: boolean = false;
     @Input() diameter: number = 50;
-    color = "accent";
+    @Input() color: 'accent' | 'warn' | 'default' = "accent";
 }

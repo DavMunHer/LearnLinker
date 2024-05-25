@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { where, Op } = require('sequelize');
 const Project = require('../models/Project');
+const { formatDateAttribute } = require('./helper');
 const dotenv = require('dotenv').config();
 
 // Endpoint para conseguir todos los usuarios (no se debería usar en el front)
@@ -156,6 +157,7 @@ router.get('/user/:user_email/projects', async (req, res) => {
             attributes: [],
             include: [{
                 model: Project,
+                attributes: ['id', 'name', formatDateAttribute('start_date'), formatDateAttribute('end_date')],
                 through: {
                     attributes: ['role']
                 }
