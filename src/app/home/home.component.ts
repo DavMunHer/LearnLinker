@@ -9,10 +9,12 @@ import { Phase } from '../../interfaces/phase';
 import { AuthService } from '../services/auth.service';
 import { User } from '../../interfaces/user';
 import { Task } from '../../interfaces/task';
+import { TitleCasePipe } from '@angular/common';
+import { TaskCardComponent } from '../others/task-card/task-card.component';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [MatFormFieldModule, MatSelectModule, LoadingSpinnerComponent],
+  imports: [MatFormFieldModule, MatSelectModule, LoadingSpinnerComponent, TitleCasePipe, TaskCardComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
@@ -44,7 +46,7 @@ export class HomeComponent implements OnInit {
         this.projectHttpService.getHomeProjectDetails(this.selectedProjectId, this.userRole, this.sessionUser.email).subscribe(
             {
                 next: (response: any) => {
-                    if (response[0].Phase) {
+                    if (response[0] && response[0].Phase) {
                         this.selectedProject.Tasks = response;
                     } else {
                         this.selectedProject.Phases = response;
@@ -61,13 +63,14 @@ export class HomeComponent implements OnInit {
     // Función para cargar el proyecto seleccionado
     loadProject(): void {
         this.selectedProject = this.userProjects.find(project => project.id == this.selectedProjectId)!;
+        this.userRole = this.selectedProject.project_user?.role;
         // Cuando no tenga cargadas las fases del proyecto, se cargarán indicándole al usuario que se están cargando
         if (!this.selectedProject.Phases) {
             this.isLoading = true;
             this.projectHttpService.getHomeProjectDetails(this.selectedProjectId, this.userRole, this.sessionUser.email).subscribe(
                 {
                     next: (response: any) => {
-                        if (response[0].Phase) {
+                        if (response[0] && response[0].Phase) {
                             /*
                             Cuando la respuesta tenga como atributo "Phase" será porque el usuario es un desarrollador
                             y se habrán cargado las tareas del proyecto con su fase asociada
