@@ -1,14 +1,15 @@
-<mat-card class="example-card high-contrast-card">
+<mat-card class="example-card high-contrast-card h-64 flex flex-col justify-between">
     <mat-card-header>
-        <mat-card-title class="">{{task.name}}</mat-card-title>
-        <mat-card-subtitle class="">{{task.Phase?.name}}</mat-card-subtitle>
+        <mat-card-title>{{task.name}}</mat-card-title>
+        <mat-card-subtitle>{{task.Phase?.name}}</mat-card-subtitle>
     </mat-card-header>
-    <mat-card-content>
-        <p class="text-center">{{task.start_date | date:'yyyy/MM/dd' }} - {{task.deadline | date:'yyyy/MM/dd'}}</p>
-        <p class="">{{task.description}}</p>
+    <mat-card-content class="overflow-y-auto flex-grow">
+        <p class="text-center">{{task.start_date}} - {{task.deadline}}</p>
+        <p class="description">{{task.description}}</p>
     </mat-card-content>
     <mat-card-actions class="progress-section">
         <mat-progress-bar mode="determinate" [value]="40"></mat-progress-bar>
         <div class="progress-text">0/10</div>
     </mat-card-actions>
 </mat-card>
+

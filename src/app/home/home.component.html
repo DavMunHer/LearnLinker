@@ -33,12 +33,12 @@
     </div>
     <app-loading-spinner [isLoading]="isLoading" [color]="'default'"></app-loading-spinner>
 </div>
-<div class="flex">
-    @for (task of selectedProject.Tasks; track $index) {
-        <app-task-card [task]="task"></app-task-card>
-    } @empty {
-    <div class="flex justify-center items-center w-full h-64">
-        <p class="text-xl">No tasks found</p>
-    </div>
- }
+<div class="flex flex-wrap space-y-4 gap-1">
+        @for (task of selectedProject.Tasks; track $index) {
+            <app-task-card [task]="task" class="block mx-auto my-4"></app-task-card>
+        } @empty {
+        <div class="flex justify-center items-center w-full h-64">
+            <p class="text-xl">No tasks found</p>
+        </div>
+    }
 </div>
