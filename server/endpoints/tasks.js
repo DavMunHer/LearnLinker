@@ -27,11 +27,20 @@ router.get('/task/:id/user/:user_email', async (req, res) => {
                     formatDateAttribute('Tasks.deadline', 'deadline'),
                     formatDateAttribute('Tasks.end_date', 'end_date'),
                     [literal("(SELECT COUNT(*) FROM task_user WHERE task_user.taskId = `Tasks`.`id`)"), 'totalUsersInTask'],
-                    [literal("(SELECT COUNT(*) FROM task_user WHERE task_user.taskId = `Tasks`.`id` AND task_user.completed = 1)"), 'completedUsersInTask']
+                    [literal("(SELECT COUNT(*) FROM task_user WHERE task_user.taskId = `Tasks`.`id` AND task_user.completed = 1)"), 'completedUsersInTask'],
+                    [literal("(SELECT completed FROM task_user WHERE task_user.taskId = `Tasks`.`id` AND task_user.userId = " + user.id + ")"), 'userCompleted']
                 ],
                 through: {
                     attributes: []
-                }
+                },
+                include: [{
+                    model: Phase,
+                    attributes: ['name'],
+                    include: [{
+                        model: Project,
+                        attributes: ['name']
+                    }]
+                }]
             }
         });
         if (!userWithTaskDetails) {

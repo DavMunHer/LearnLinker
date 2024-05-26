@@ -5,18 +5,23 @@ import { TasksHttpService } from '../../services/tasks-http.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { User } from '../../../interfaces/user';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-task-details',
   standalone: true,
-  imports: [TaskCardComponent],
+  imports: [MatCardModule, MatButtonModule, MatProgressBarModule, DatePipe],
   templateUrl: './task-details.component.html',
   styleUrl: './task-details.component.scss'
 })
 export class TaskDetailsComponent implements OnInit {
     protected task!: Task;
     protected errorMessage!: string;
-
+    protected userInfo!: User;
     constructor(
         private taskHttpService: TasksHttpService,
         private route: ActivatedRoute,
@@ -34,14 +39,30 @@ export class TaskDetailsComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.taskHttpService.getTaskDetails(this.route.snapshot.params['id'], this.authService.getSessionUser().email).subscribe({
+        this.userInfo = this.authService.getSessionUser();
+        this.taskHttpService.getTaskDetails(this.route.snapshot.params['id'], this.userInfo.email).subscribe({
             next: (response: Task) => {
                 this.task = response;
+                console.log(this.task);
             },
             error: (error) => {
                 this.handleError(error);
             }
         })
+    }
+
+    getProgressValue() {
+        return (this.task?.completedUsersInTask ?? 0) / (this.task?.totalUsersInTask ?? 1) * 100 + '';
+    }
+
+    markAsFinished() {
+        this.task.completedUsersInTask = (this.task?.completedUsersInTask ?? 0) + 1;
+        this.task.userCompleted = 1;
+    }
+
+    markAsUnfinished() {
+        this.task.completedUsersInTask = (this.task?.completedUsersInTask ?? 0) - 1;
+        this.task.userCompleted = 0;
     }
 
 }

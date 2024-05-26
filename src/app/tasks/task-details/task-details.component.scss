@@ -1,0 +1,38 @@
+.example-card {
+    width: 450px;
+}
+
+.high-contrast-card {
+    background-color: #f0f0f0;
+    color: #333;
+    border: 1px solid #ccc;
+
+    mat-card-header {
+        border-bottom: 1px solid #ccc;
+    }
+
+    mat-card-title {
+        font-weight: bold;
+        color: #000;
+    }
+
+    mat-card-subtitle {
+        color: #555;
+    }
+
+
+    mat-card-content p {
+        margin: 0;
+        padding: 8px 0;
+    }
+    .progress-section {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .progress-text {
+        font-weight: bold;
+        color: #333;
+    }
+}

@@ -13,5 +13,6 @@ export interface Task {
     users: User[],
     Phase?: Phase,
     completedUsersInTask?: number
-    totalUsersInTask?: number
+    totalUsersInTask?: number,
+    userCompleted?: 0 | 1
 }

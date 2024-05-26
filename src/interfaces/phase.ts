@@ -1,3 +1,4 @@
+import { Project } from "./project";
 import { Task } from "./task";
 
 export interface Phase {
@@ -7,5 +8,6 @@ export interface Phase {
     start_date: string,
     end_date: string,
     Tasks: Task[],
-    taskCreationMode?: boolean
+    taskCreationMode?: boolean,
+    Project?: Project
 }
