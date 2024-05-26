@@ -23,6 +23,11 @@ module.exports = {
                     onDelete: 'CASCADE',
                     primaryKey: true
                 },
+                completed: {
+                    type: Sequelize.BOOLEAN,
+                    allowNull: false,
+                    defaultValue: false
+                },
                 createdAt: {
                     type: Sequelize.DATE,
                     allowNull: false,

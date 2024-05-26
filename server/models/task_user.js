@@ -22,6 +22,11 @@ const TaskUser = sequelize.define('task_user', {
         onDelete: 'CASCADE',
         primaryKey: true
     },
+    completed: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
+    },
 }, {
     tableName: 'task_user',
     timestamps: true

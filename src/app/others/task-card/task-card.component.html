@@ -4,12 +4,12 @@
         <mat-card-subtitle>{{task.Phase?.name}}</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content class="overflow-y-auto flex-grow">
-        <p class="text-center">{{task.start_date}} - {{task.deadline}}</p>
+        <p class="text-center">{{task.start_date | date:'yyyy/MM/dd'}} - {{task.deadline | date:'yyyy/MM/dd'}}</p>
         <p class="description">{{task.description}}</p>
     </mat-card-content>
     <mat-card-actions class="progress-section">
-        <mat-progress-bar mode="determinate" [value]="40"></mat-progress-bar>
-        <div class="progress-text">0/10</div>
+        <mat-progress-bar mode="determinate" [value]="getProgressValue()"></mat-progress-bar>
+        <div class="progress-text">{{task.completedUsersInTask}}/{{task.totalUsersInTask}}</div>
     </mat-card-actions>
 </mat-card>
 

@@ -11,5 +11,7 @@ export interface Task {
     end_date?: string,
     projectId?: number | string,
     users: User[],
-    Phase?: Phase
+    Phase?: Phase,
+    completedUsersInTask?: number
+    totalUsersInTask?: number
 }

@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Project = require('../models/Project');
 const Phase = require('../models/Phase');
-const { Sequelize, Op } = require('sequelize');
+const { Sequelize, Op, literal } = require('sequelize');
 const { formatDateAttribute } = require('./helper');
 const sequelize = require('../config/database');
 const Task = require('../models/Task');
@@ -84,7 +84,9 @@ router.get('/user/:user_email/project/:id/:role/details', async (req, res) => {
                         'id', 'name', 'description',
                         formatDateAttribute('Users->Tasks.deadline', 'deadline'),
                         formatDateAttribute('Users->Tasks.start_date', 'start_date'),
-                          formatDateAttribute('Users->Tasks.end_date', 'end_date')
+                        formatDateAttribute('Users->Tasks.end_date', 'end_date'),
+                        [literal("(SELECT COUNT(*) FROM task_user WHERE task_user.taskId = `Users->Tasks`.`id`)"), 'totalUsersInTask'],
+                        [literal("(SELECT COUNT(*) FROM task_user WHERE task_user.taskId = `Users->Tasks`.`id` AND task_user.completed = 1)"), 'completedUsersInTask']
                         ],
                       through: { attributes: [] },
                       include: [{
@@ -95,7 +97,7 @@ router.get('/user/:user_email/project/:id/:role/details', async (req, res) => {
                       }]
                     }]
                 }]
-              });
+            });
               // Esta consulta no funciona porque no se relaciona correctamente el modelo tarea con usuario
             // const project = await Project.findOne({
             //     where: { id: req.params.id },
@@ -124,6 +126,8 @@ router.get('/user/:user_email/project/:id/:role/details', async (req, res) => {
                 return res.status(404).json({ message: 'Project not found.' });
             }
             const userTasksWithPhase = project.Users[0].Tasks;
+
+
             return res.json(userTasksWithPhase);
         }
     } catch (error) {
