@@ -3,10 +3,48 @@ const router = express.Router();
 const sequelize = require('../config/database');
 const Project = require('../models/Project');
 const Phase = require('../models/Phase');
-const { Sequelize, Op } = require('sequelize');
+const { Sequelize, Op, literal } = require('sequelize');
 const { formatDateAttribute } = require('./helper');
 const Task = require('../models/Task');
 const User = require('../models/User');
+
+// Endpoint para los detalles de una tarea (comprobando si el usuario tiene acceso a la tarea)
+router.get('/task/:id/user/:user_email', async (req, res) => {
+    try {
+        const user = await User.findOne({ where: { email: req.params.user_email } });
+        const userWithTaskDetails = await User.findOne({
+            where: { id: user.id },
+            attributes: ['email'],
+            include: {
+                model: Task,
+                where: { id: req.params.id },
+                attributes: [
+                    'id',
+                    'name',
+                    'description',
+                    'phaseId',
+                    formatDateAttribute('Tasks.start_date', 'start_date'),
+                    formatDateAttribute('Tasks.deadline', 'deadline'),
+                    formatDateAttribute('Tasks.end_date', 'end_date'),
+                    [literal("(SELECT COUNT(*) FROM task_user WHERE task_user.taskId = `Tasks`.`id`)"), 'totalUsersInTask'],
+                    [literal("(SELECT COUNT(*) FROM task_user WHERE task_user.taskId = `Tasks`.`id` AND task_user.completed = 1)"), 'completedUsersInTask']
+                ],
+                through: {
+                    attributes: []
+                }
+            }
+        });
+        if (!userWithTaskDetails) {
+            return res.status(404).json({ message: 'Task not found for the actual user.' });
+        }
+        const taskDetails = userWithTaskDetails.Tasks[0];
+        res.json(taskDetails);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error.' });
+    }
+});
+
 
 router.post('/create/task', async (req, res) => {
     try {

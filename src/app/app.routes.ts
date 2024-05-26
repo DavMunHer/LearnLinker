@@ -15,6 +15,8 @@ import { userRoleResolver } from './resolvers/user-role.resolver';
 import { EditPhaseComponent } from './phases/edit-phase/edit-phase.component';
 import { CreatePhaseComponent } from './phases/create-phase/create-phase.component';
 import { userProjectsResolver } from './resolvers/user-projects.resolver';
+import { taskGuard } from './guards/task.guard';
+import { TaskDetailsComponent } from './tasks/task-details/task-details.component';
 
 export const routes: Routes = [
     {
@@ -88,6 +90,12 @@ export const routes: Routes = [
         component: EditPhaseComponent,
         canActivate: [authGuard],
         title: 'Edit an existing phase'
+    },
+    {
+        path: 'task/:id/details',
+        component: TaskDetailsComponent,
+        canActivate: [authGuard, taskGuard],
+        title: 'Task details'
     },
     { path: '', redirectTo: '/home', pathMatch: 'full' },
     { path: '**', component: E404Component, pathMatch: 'full' }

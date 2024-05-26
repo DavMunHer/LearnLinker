@@ -10,6 +10,10 @@ export class TasksHttpService {
 
     constructor(private http: HttpClient) { }
 
+    getTaskDetails(taskId: string, userEmail: string): Observable<Task> {
+        return this.http.get<Task>(`task/${taskId}/user/${userEmail}`);
+    }
+
     createTask(task: any): Observable<Task> {
         return this.http.post<Task>('create/task', task);
     }

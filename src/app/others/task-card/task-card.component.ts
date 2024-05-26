@@ -4,11 +4,12 @@ import { MatCardModule } from '@angular/material/card';
 import { Task } from '../../../interfaces/task';
 import { DatePipe } from '@angular/common';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { RouterLink } from '@angular/router';
 
 @Component({
     selector: 'app-task-card',
     standalone: true,
-    imports: [MatCardModule, MatButtonModule, DatePipe, MatProgressBarModule],
+    imports: [MatCardModule, MatButtonModule, DatePipe, MatProgressBarModule, RouterLink],
     templateUrl: './task-card.component.html',
     styleUrl: './task-card.component.scss'
 })
