@@ -10,6 +10,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { DatePipe } from '@angular/common';
+import { TaskUserHttpService } from '../../services/task-user-http.service';
 
 @Component({
   selector: 'app-task-details',
@@ -26,7 +27,8 @@ export class TaskDetailsComponent implements OnInit {
         private taskHttpService: TasksHttpService,
         private route: ActivatedRoute,
         private authService: AuthService,
-        private router: Router
+        private router: Router,
+        private taskUserHttp: TaskUserHttpService
     ) { }
 
     private handleError(error:  HttpErrorResponse) {
@@ -58,11 +60,13 @@ export class TaskDetailsComponent implements OnInit {
     markAsFinished() {
         this.task.completedUsersInTask = (this.task?.completedUsersInTask ?? 0) + 1;
         this.task.userCompleted = 1;
+        this.taskUserHttp.updateTaskStatus(this.task.id!, this.userInfo.email, this.task).subscribe();
     }
 
     markAsUnfinished() {
         this.task.completedUsersInTask = (this.task?.completedUsersInTask ?? 0) - 1;
         this.task.userCompleted = 0;
+        this.taskUserHttp.updateTaskStatus(this.task.id!, this.userInfo.email, this.task).subscribe();
     }
 
 }

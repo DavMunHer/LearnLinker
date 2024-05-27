@@ -1,6 +1,7 @@
 const usersEndpoints = require('./endpoints/users');
 const projectsEndpoints = require('./endpoints/projects');
 const project_userEndpoints = require('./endpoints/project_user');
+const task_userEndpoints = require('./endpoints/task_user');
 const phasesEndpoints = require('./endpoints/phases');
 const tasksEndpoints = require('./endpoints/tasks');
 const cors = require('cors');
@@ -21,6 +22,7 @@ app.use(projectsEndpoints);
 app.use(project_userEndpoints);
 app.use(phasesEndpoints);
 app.use(tasksEndpoints);
+app.use(task_userEndpoints);
 
 
 
