@@ -7,6 +7,7 @@ const Note = sequelize.define('Note', {
     id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
+        autoIncrement: true
     },
     date: {
         type: Sequelize.DATE,

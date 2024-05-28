@@ -4,6 +4,7 @@ const project_userEndpoints = require('./endpoints/project_user');
 const task_userEndpoints = require('./endpoints/task_user');
 const phasesEndpoints = require('./endpoints/phases');
 const tasksEndpoints = require('./endpoints/tasks');
+const noteEndpoints = require('./endpoints/notes');
 const cors = require('cors');
 
 const express = require('express');
@@ -23,8 +24,7 @@ app.use(project_userEndpoints);
 app.use(phasesEndpoints);
 app.use(tasksEndpoints);
 app.use(task_userEndpoints);
-
-
+app.use(noteEndpoints);
 
 app.listen(port, () => {
     console.log(`App listening at port ${port}`);

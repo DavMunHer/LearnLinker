@@ -11,11 +11,19 @@ import { MatCardModule } from '@angular/material/card';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { DatePipe } from '@angular/common';
 import { TaskUserHttpService } from '../../services/task-user-http.service';
+import { FormsModule } from '@angular/forms';
+import {MatInputModule} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import { NoteHttpService } from '../../services/note-http.service';
+
 
 @Component({
   selector: 'app-task-details',
   standalone: true,
-  imports: [MatCardModule, MatButtonModule, MatProgressBarModule, DatePipe],
+    imports: [
+        MatCardModule, MatButtonModule, MatProgressBarModule, DatePipe,
+        FormsModule, MatInputModule, MatFormFieldModule
+    ],
   templateUrl: './task-details.component.html',
   styleUrl: './task-details.component.scss'
 })
@@ -23,13 +31,22 @@ export class TaskDetailsComponent implements OnInit {
     protected task!: Task;
     protected errorMessage!: string;
     protected userInfo!: User;
+    private taskId = this.route.snapshot.params['id'];
     constructor(
         private taskHttpService: TasksHttpService,
         private route: ActivatedRoute,
         private authService: AuthService,
         private router: Router,
-        private taskUserHttp: TaskUserHttpService
+        private taskUserHttp: TaskUserHttpService,
+        private noteHttpService: NoteHttpService
     ) { }
+    protected userNote = {
+        date: '',
+        summary: '',
+        taskId: this.taskId,
+        userEmail: '',
+    };
+    protected successMessage!: string;
 
     private handleError(error:  HttpErrorResponse) {
         if (error.status === 404) {
@@ -42,7 +59,7 @@ export class TaskDetailsComponent implements OnInit {
 
     ngOnInit(): void {
         this.userInfo = this.authService.getSessionUser();
-        this.taskHttpService.getTaskDetails(this.route.snapshot.params['id'], this.userInfo.email).subscribe({
+        this.taskHttpService.getTaskDetails(this.taskId, this.userInfo.email).subscribe({
             next: (response: Task) => {
                 this.task = response;
                 console.log(this.task);
@@ -67,6 +84,19 @@ export class TaskDetailsComponent implements OnInit {
         this.task.completedUsersInTask = (this.task?.completedUsersInTask ?? 0) - 1;
         this.task.userCompleted = 0;
         this.taskUserHttp.updateTaskStatus(this.task.id!, this.userInfo.email, this.task).subscribe();
+    }
+
+    addNote() {
+        this.userNote.date = new Date().toISOString();
+        this.userNote.userEmail = this.userInfo.email;
+        this.noteHttpService.createNote(this.userNote).subscribe({
+            next: () => {
+                this.successMessage = 'Note added successfully.';
+            },
+            error: (error) => {
+                this.errorMessage = 'Internal server error.';
+            }
+        });
     }
 
 }
