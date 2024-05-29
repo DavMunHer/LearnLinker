@@ -8,6 +8,34 @@ const { formatDateAttribute } = require('./helper');
 const Task = require('../models/Task');
 const User = require('../models/User');
 const Note = require('../models/Note');
+const Have = require('../models/Have');
+
+Note.belongsToMany(User, { through: Have });
+Note.belongsToMany(Task, { through: Have });
+Task.belongsToMany(User, { through: 'task_user' });
+
+
+router.get('/task/:taskId/notes', async (req, res) => {
+    try {
+        const { taskId } = req.params;
+        const notes = await Note.findAll({
+            attributes: ['id', 'date', 'summary'],
+            include:
+            [
+                {
+                        through: { attributes: [] },
+                        model: Task, where: { id: taskId }, attributes: ['id'],
+                        include: [{ model: User, attributes: ['username'], through: { attributes: [] } }]
+                    }
+                ]
+        });
+        res.json(notes);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error.' });
+    }
+})
+
 
 router.post('/create/note', async (req, res) => {
     try {

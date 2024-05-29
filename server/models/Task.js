@@ -3,6 +3,7 @@ const sequelize = require('../config/database');
 const Phase = require('./Phase');
 const User = require('./User');
 const TaskUser = require('./task_user');
+const Have = require('./Have');
 
 const Task = sequelize.define('Task', {
     id: {
@@ -47,6 +48,7 @@ const Task = sequelize.define('Task', {
 
 // Asociaciones con otros modelos
 Task.belongsTo(Phase);
+// Task.belongsTo(User, {through: Have});
 // Task.belongsToMany(User, { through: 'task_user' });
 
 module.exports = Task;

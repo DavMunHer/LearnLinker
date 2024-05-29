@@ -1,7 +1,5 @@
 const Sequelize = require('sequelize');
 const sequelize = require('../config/database');
-const User = require('./User');
-const Task = require('./Task');
 
 const Note = sequelize.define('Note', {
     id: {
@@ -18,16 +16,9 @@ const Note = sequelize.define('Note', {
         allowNull: false
     }
 },
-    {
-        tableName: 'notes',
-        timestamps: true
-    }
-);
-
-// Asociaciones con otros modelos
-Note.belongsTo(User);
-Note.belongsTo(Task);
-
-Note.sync(); // Sincronizar el modelo con la base de datos
+{
+    tableName: 'notes',
+    timestamps: true
+});
 
 module.exports = Note;

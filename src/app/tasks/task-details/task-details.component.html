@@ -1,5 +1,7 @@
-<div class="flex">
+<div class="grid grid-cols-1 md:grid-cols-2">
     @if (task) {
+    <div class="self-center justify-self-center">
+        <h2 class="text-2xl font-bold text-center">Task</h2>
         <mat-card class="example-card high-contrast-card h-64 flex flex-col justify-between">
             <mat-card-header>
                 <mat-card-title>{{task.name}}</mat-card-title>
@@ -19,12 +21,26 @@
                 <div class="progress-text">{{task.completedUsersInTask}}/{{task.totalUsersInTask}}</div>
             </mat-card-actions>
         </mat-card>
+    </div>
     }
-    <form action="" (ngSubmit)="addNote()">
-          <mat-form-field class="w-full">
+    <div class="notes-section">
+        <h2 class="text-2xl font-bold text-center">Notes</h2>
+        <div class="notes-list">
+            <mat-card *ngFor="let note of notes" class="example-card high-contrast-card h-64">
+                <mat-card-content>
+                    <p>{{note.summary}}</p>
+                </mat-card-content>
+                <mat-card-actions>
+                    <!-- <button mat-raised-button color="warn" (click)="deleteNote(note.id)">Delete</button> -->
+                </mat-card-actions>
+            </mat-card>
+        </div>
+</div>
+
+    <form class="mt-5" (ngSubmit)="addNote()">
+        <mat-form-field class="w-96">
             <mat-label>Today's progress</mat-label>
-            <textarea matInput name="note-summary" [(ngModel)]="userNote.summary" placeholder="I have finished the tasks endpoints..."></textarea>
-          </mat-form-field>
+            <textarea class="block" matInput name="today-progress" [(ngModel)]="userNote.summary" placeholder="I have finished the tasks endpoints..."></textarea>
+        </mat-form-field>
         <button mat-raised-button color="primary" type="submit" class="ml-auto">Add note</button>
     </form>
-</div>

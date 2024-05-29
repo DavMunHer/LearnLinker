@@ -15,6 +15,7 @@ import { FormsModule } from '@angular/forms';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { NoteHttpService } from '../../services/note-http.service';
+import {MatDividerModule} from '@angular/material/divider';
 
 
 @Component({
@@ -22,7 +23,7 @@ import { NoteHttpService } from '../../services/note-http.service';
   standalone: true,
     imports: [
         MatCardModule, MatButtonModule, MatProgressBarModule, DatePipe,
-        FormsModule, MatInputModule, MatFormFieldModule
+        FormsModule, MatInputModule, MatFormFieldModule, MatDividerModule
     ],
   templateUrl: './task-details.component.html',
   styleUrl: './task-details.component.scss'
