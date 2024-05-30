@@ -11,10 +11,18 @@ import { User } from '../../interfaces/user';
 import { Task } from '../../interfaces/task';
 import { TitleCasePipe } from '@angular/common';
 import { TaskCardComponent } from '../others/task-card/task-card.component';
+import { PhaseColComponent } from '../phases/phase-col/phase-col.component';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [MatFormFieldModule, MatSelectModule, LoadingSpinnerComponent, TitleCasePipe, TaskCardComponent],
+    imports: [
+        MatFormFieldModule,
+        MatSelectModule,
+        LoadingSpinnerComponent,
+        TitleCasePipe,
+        TaskCardComponent,
+        PhaseColComponent
+    ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
@@ -23,16 +31,56 @@ export class HomeComponent implements OnInit {
     protected selectedProjectId!: any;
     protected selectedProject!: Project;
     protected isLoading: boolean = false;
-    protected timeMode: 'current' | 'past' = 'current';
+    protected timeMode: 'current' | 'past' | 'all' = 'all';
     protected viewMode: 'phases' | 'tasks' = 'tasks';
     private userRole!: string | undefined;
     private sessionUser!: User;
+    private selectedProjectPhasesCopy!: Phase[];
+
+    //Variables para cambiar el formato dependiendo de lo que seleccione el usuario
+    protected selectedProjectTasks: Task[] = [];
+    protected selectedProjectPhases: Phase[] = [];
 
     constructor(
         private route: ActivatedRoute,
         private projectHttpService: ProjectsHttpService,
         private authService: AuthService
     ) { }
+
+
+    private changeToTasksFormat(phases: Phase[]) {
+        let tasks: any[] = [];
+        let taskCounter = 0;
+        for (const phase of phases) {
+            if (phase.Tasks) {
+                for (let j = 0; j < phase.Tasks.length; j++) {
+                    tasks[taskCounter] = phase.Tasks[j];
+                    tasks[taskCounter].Phase = {
+                        id: phase.id,
+                        name: phase.name,
+                        start_date: phase.start_date,
+                        end_date: phase.end_date,
+                        deadline: phase.deadline,
+                    };
+                    taskCounter++;
+                }
+            }
+        }
+        return tasks;
+
+    }
+
+    private changeToPhasesFormat(tasks: Task[]) {
+        let phases: Phase[] = [];
+        console.log(tasks);
+    }
+
+    private resetProjectInfo(newProject: Project) {
+        this.selectedProjectPhases = [];
+        this.selectedProjectTasks = [];
+        this.selectedProjectPhasesCopy = [];
+        this.userRole = newProject.project_user?.role;
+    }
 
     ngOnInit(): void {
         this.sessionUser = this.authService.getSessionUser();
@@ -47,9 +95,13 @@ export class HomeComponent implements OnInit {
             {
                 next: (response: any) => {
                     if (response[0] && response[0].Phase) {
-                        this.selectedProject.Tasks = response;
+                        this.viewMode = 'tasks';
+                        this.selectedProjectTasks = response;
+                        // this.selectedProject.Tasks = response;
                     } else {
-                        this.selectedProject.Phases = response;
+                        this.viewMode = 'phases';
+                        this.selectedProjectPhases = response;
+                        // this.selectedProject.Phases = response;
                     }
                     this.isLoading = false;
                 },
@@ -63,7 +115,7 @@ export class HomeComponent implements OnInit {
     // Función para cargar el proyecto seleccionado
     loadProject(): void {
         this.selectedProject = this.userProjects.find(project => project.id == this.selectedProjectId)!;
-        this.userRole = this.selectedProject.project_user?.role;
+        this.resetProjectInfo(this.selectedProject);
         // Cuando no tenga cargadas las fases del proyecto, se cargarán indicándole al usuario que se están cargando
         if (!this.selectedProject.Phases) {
             this.isLoading = true;
@@ -75,9 +127,13 @@ export class HomeComponent implements OnInit {
                             Cuando la respuesta tenga como atributo "Phase" será porque el usuario es un desarrollador
                             y se habrán cargado las tareas del proyecto con su fase asociada
                              */
-                            this.selectedProject.Tasks = response;
+                            this.viewMode = 'tasks';
+                            this.selectedProjectTasks = response;
+                            // this.selectedProject.Tasks = response;
                         } else {
-                            this.selectedProject.Phases = response;
+                            this.viewMode = 'phases';
+                            this.selectedProjectPhases = response;
+                            // this.selectedProject.Phases = response;
                         }
                         // this.selectedProject.Phases = projectPhases;
                         console.log(this.selectedProject);
@@ -88,6 +144,24 @@ export class HomeComponent implements OnInit {
                     }
                 }
             );
+        }
+    }
+
+
+    loadView() {
+        if (this.viewMode === 'phases') {
+            this.changeToPhasesFormat(this.selectedProjectTasks);
+            // this.selectedProjectTasks = [];
+
+        } else {
+            this.selectedProjectTasks = this.changeToTasksFormat(this.selectedProjectPhases);
+            /*
+            Hacemos una copia de las fases para que en el caso en el que
+            las fases no tuviesen ninguna tarea que no se pierda la información de
+            dichas fases
+             */
+            this.selectedProjectPhasesCopy = [...this.selectedProjectPhases];
+            // this.selectedProjectPhases = [];
         }
     }
 }

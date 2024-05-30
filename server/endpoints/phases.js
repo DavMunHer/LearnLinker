@@ -13,7 +13,10 @@ router.get('/project/:id/phases', async (req, res) => {
     try {
         const phases = await Phase.findAll({
             where: { projectId: req.params.id },
-            attributes: ['id', 'name', formatDateAttribute('start_date'), formatDateAttribute('end_date')]
+            attributes: ['id', 'name',
+                formatDateAttribute('start_date'),
+                formatDateAttribute('end_date'),
+                formatDateAttribute('deadline')]
         });
         return res.json(phases);
     } catch (error) {

@@ -15,6 +15,7 @@
             <mat-form-field>
                 <mat-label>Time</mat-label>
                 <mat-select [(value)]="timeMode" (valueChange)="loadProject()">
+                    <mat-option value="all">All {{viewMode}}</mat-option>
                     <mat-option value="current">Current {{viewMode}}</mat-option>
                     <mat-option value="past">Past {{viewMode}}</mat-option>
                 </mat-select>
@@ -24,7 +25,7 @@
         <div class="project-view">
             <mat-form-field>
                 <mat-label>View</mat-label>
-                <mat-select [(value)]="viewMode" (valueChange)="loadProject()">
+                <mat-select [(value)]="viewMode" (valueChange)="loadView()">
                     <mat-option value="tasks">Tasks</mat-option>
                     <mat-option value="phases">Phases</mat-option>
                 </mat-select>
@@ -34,11 +35,21 @@
     <app-loading-spinner [isLoading]="isLoading" [color]="'default'"></app-loading-spinner>
 </div>
 <div class="flex flex-wrap space-y-4 gap-1">
-        @for (task of selectedProject.Tasks; track $index) {
+    @if (viewMode === 'tasks') {
+        @for (task of selectedProjectTasks; track $index) {
             <app-task-card [task]="task" class="block mx-auto my-4"></app-task-card>
+        } @empty {
+            <div class="flex justify-center items-center w-full h-64">
+                <p class="text-xl">No tasks found</p>
+            </div>
+        }
+    } @else {
+        @for (phase of selectedProjectPhases; track $index) {
+            <app-phase-col [phase]="phase" class="block mx-auto my-4"></app-phase-col>
         } @empty {
         <div class="flex justify-center items-center w-full h-64">
             <p class="text-xl">No tasks found</p>
         </div>
+        }
     }
 </div>
