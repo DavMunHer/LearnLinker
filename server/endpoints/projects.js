@@ -95,9 +95,12 @@ router.get('/user/:user_email/project/:id/:role/details', async (req, res) => {
                       through: { attributes: [] },
                       include: [{
                         model: Phase,
-                          attributes: ['id', 'name',
-                              formatDateAttribute('Users->Tasks->Phase.start_date', 'start_date'),
-                              formatDateAttribute('Users->Tasks->Phase.end_date', 'end_date')],
+                          attributes: [
+                            'id', 'name',
+                            formatDateAttribute('Users->Tasks->Phase.start_date', 'start_date'),
+                            formatDateAttribute('Users->Tasks->Phase.end_date', 'end_date'),
+                            formatDateAttribute('Users->Tasks->Phase.deadline', 'deadline')
+                          ],
                       }]
                     }]
                 }]

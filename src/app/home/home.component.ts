@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Project } from '../../interfaces/project';
-import {MatSelectModule} from '@angular/material/select';
-import {MatFormFieldModule} from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
 import { ProjectsHttpService } from '../services/projects-http.service';
@@ -12,9 +12,10 @@ import { Task } from '../../interfaces/task';
 import { TitleCasePipe } from '@angular/common';
 import { TaskCardComponent } from '../others/task-card/task-card.component';
 import { PhaseColComponent } from '../phases/phase-col/phase-col.component';
+import { taskGuard } from '../guards/task.guard';
 @Component({
-  selector: 'app-home',
-  standalone: true,
+    selector: 'app-home',
+    standalone: true,
     imports: [
         MatFormFieldModule,
         MatSelectModule,
@@ -23,8 +24,8 @@ import { PhaseColComponent } from '../phases/phase-col/phase-col.component';
         TaskCardComponent,
         PhaseColComponent
     ],
-  templateUrl: './home.component.html',
-  styleUrl: './home.component.scss'
+    templateUrl: './home.component.html',
+    styleUrl: './home.component.scss'
 })
 export class HomeComponent implements OnInit {
     protected userProjects!: Project[];
@@ -70,9 +71,36 @@ export class HomeComponent implements OnInit {
 
     }
 
+    private existsInArray(targetArray: any[], arrayOfArrays: any[]) {
+        const targetArrayJson = JSON.stringify(targetArray);
+
+        return arrayOfArrays.some(array => JSON.stringify(array) === targetArrayJson);
+    }
     private changeToPhasesFormat(tasks: Task[]) {
-        let phases: Phase[] = [];
-        console.log(tasks);
+        let phases: any[] = [];
+        let phasesCounter = 0;
+        let continueAdding = false;
+        let currentIndex = 0;
+        for (let i = 0; i < tasks.length; i++) {
+            // Comprobamos que la fase de la tarea actual no esté añadida previamente antes de crear una nueva fase
+            if (!phases.some(phase => phase.id === tasks[i].Phase?.id)) {
+                phases[phasesCounter] = tasks[i].Phase;
+                phases[phasesCounter].Tasks = [];
+                continueAdding = true;
+            }
+            for (const task of tasks) {
+                // Comprobamos si la tarea actual pertenece a la fase actual y que esta no esté añadida previamente
+                if (task.Phase?.id === phases[currentIndex].id && (!phases[currentIndex].Tasks.some((t: Task) => t.id === task.id))) {
+                    phases[currentIndex].Tasks.push(task);
+                }
+            }
+            if (continueAdding) {
+                phasesCounter++;
+                continueAdding = false;
+            }
+            currentIndex = phases.length - 1;
+        }
+        return phases;
     }
 
     private resetProjectInfo(newProject: Project) {
@@ -97,10 +125,12 @@ export class HomeComponent implements OnInit {
                     if (response[0] && response[0].Phase) {
                         this.viewMode = 'tasks';
                         this.selectedProjectTasks = response;
+                        console.log(this.selectedProjectTasks);
                         // this.selectedProject.Tasks = response;
                     } else {
                         this.viewMode = 'phases';
                         this.selectedProjectPhases = response;
+                        console.log(this.selectedProjectPhases);
                         // this.selectedProject.Phases = response;
                     }
                     this.isLoading = false;
@@ -129,6 +159,8 @@ export class HomeComponent implements OnInit {
                              */
                             this.viewMode = 'tasks';
                             this.selectedProjectTasks = response;
+                            console.log(this.selectedProjectTasks);
+
                             // this.selectedProject.Tasks = response;
                         } else {
                             this.viewMode = 'phases';
@@ -150,9 +182,14 @@ export class HomeComponent implements OnInit {
 
     loadView() {
         if (this.viewMode === 'phases') {
-            this.changeToPhasesFormat(this.selectedProjectTasks);
-            // this.selectedProjectTasks = [];
 
+            if (this.selectedProjectPhasesCopy.length > 0)
+                this.selectedProjectPhases = this.selectedProjectPhasesCopy;
+            else
+                this.selectedProjectPhases = this.changeToPhasesFormat(this.selectedProjectTasks);
+
+            this.selectedProjectTasks = [];
+        console.log(this.selectedProjectPhases);
         } else {
             this.selectedProjectTasks = this.changeToTasksFormat(this.selectedProjectPhases);
             /*
@@ -161,7 +198,7 @@ export class HomeComponent implements OnInit {
             dichas fases
              */
             this.selectedProjectPhasesCopy = [...this.selectedProjectPhases];
-            // this.selectedProjectPhases = [];
+            this.selectedProjectPhases = [];
         }
     }
 }
