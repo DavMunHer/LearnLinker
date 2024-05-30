@@ -26,14 +26,12 @@
     <div class="notes-section">
         <h2 class="text-2xl font-bold text-center">Notes</h2>
         <div class="notes-list">
-            <mat-card *ngFor="let note of notes" class="example-card high-contrast-card h-64">
-                <mat-card-content>
-                    <p>{{note.summary}}</p>
-                </mat-card-content>
-                <mat-card-actions>
-                    <!-- <button mat-raised-button color="warn" (click)="deleteNote(note.id)">Delete</button> -->
-                </mat-card-actions>
-            </mat-card>
+            @for (note of taskNotes; track $index) {
+                <div class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100">
+                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 text-center">{{note.user.username}} - {{note.date | date:'yyyy/MM/dd'}}</h5>
+                    <p class="font-normal text-gray-700">{{note.summary}}</p>
+                </div>
+            }
         </div>
 </div>
 

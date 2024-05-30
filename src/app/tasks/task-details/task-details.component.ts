@@ -32,6 +32,7 @@ export class TaskDetailsComponent implements OnInit {
     protected task!: Task;
     protected errorMessage!: string;
     protected userInfo!: User;
+    protected taskNotes: any = [];
     private taskId = this.route.snapshot.params['id'];
     constructor(
         private taskHttpService: TasksHttpService,
@@ -49,10 +50,19 @@ export class TaskDetailsComponent implements OnInit {
     };
     protected successMessage!: string;
 
-    private handleError(error:  HttpErrorResponse) {
+    private handleTaskError(error:  HttpErrorResponse) {
         if (error.status === 404) {
             // En este caso no se habrá encontrado la tarea para el usuario, por lo que no se le permitirá ver el componente
             this.router.navigate(['/home']);
+        } else {
+            this.errorMessage = 'Internal server error.';
+        }
+    }
+
+    private handleNotesError(error:  HttpErrorResponse) {
+        if (error.status === 404) {
+            // En este caso no se habrá encontrado la tarea para el usuario, por lo que no se le permitirá ver el componente
+            this.errorMessage = 'No notes found for the current task.';
         } else {
             this.errorMessage = 'Internal server error.';
         }
@@ -66,9 +76,17 @@ export class TaskDetailsComponent implements OnInit {
                 console.log(this.task);
             },
             error: (error) => {
-                this.handleError(error);
+                this.handleTaskError(error);
             }
         })
+        this.noteHttpService.getTaskNotes(this.taskId).subscribe({
+            next: (response: any) => {
+                this.taskNotes = response;
+            },
+            error: (error) => {
+                this.handleNotesError(error);
+            }
+        });
     }
 
     getProgressValue() {
@@ -92,10 +110,11 @@ export class TaskDetailsComponent implements OnInit {
         this.userNote.userEmail = this.userInfo.email;
         this.noteHttpService.createNote(this.userNote).subscribe({
             next: () => {
+                this.taskNotes.push(this.userNote);
                 this.successMessage = 'Note added successfully.';
             },
             error: (error) => {
-                this.errorMessage = 'Internal server error.';
+                this.errorMessage = 'Could\'nt create the note.';
             }
         });
     }

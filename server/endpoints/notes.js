@@ -12,24 +12,37 @@ const Have = require('../models/Have');
 
 Note.belongsToMany(User, { through: Have });
 Note.belongsToMany(Task, { through: Have });
-Task.belongsToMany(User, { through: 'task_user' });
 
 
 router.get('/task/:taskId/notes', async (req, res) => {
     try {
         const { taskId } = req.params;
         const notes = await Note.findAll({
-            attributes: ['id', 'date', 'summary'],
+            attributes: ['id', formatDateAttribute('date'), 'summary'],
             include:
-            [
-                {
+                [
+                    {
                         through: { attributes: [] },
                         model: Task, where: { id: taskId }, attributes: ['id'],
                         include: [{ model: User, attributes: ['username'], through: { attributes: [] } }]
                     }
                 ]
         });
-        res.json(notes);
+        if (notes.length === 0) {
+            return res.status(404).json({ message: 'Notes not found.' });
+        }
+
+        // Cambiamos el formato porque no nos interesa la información de la tarea asociada, solo el usuario
+        let formattedNotes = [];
+        for (const note of notes) {
+            formattedNotes[notes.indexOf(note)] = {
+                id: note.id,
+                date: note.date,
+                summary: note.summary,
+                user: note.Tasks[0].Users[0]
+            }
+        }
+        res.json(formattedNotes);
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Internal server error.' });
