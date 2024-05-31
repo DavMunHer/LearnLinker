@@ -24,6 +24,11 @@ export class SignupComponent {
 
     constructor(private usersHttpService : UsersHttpService, private router: Router) { }
 
+    checkEmailValidity(): boolean {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(this.user.email);
+    }
+
     signup() {
         this.errorMessage = '';
         if (this.user.password === this.passwordConfirmation) {

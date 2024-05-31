@@ -39,8 +39,9 @@
             <input class="h-10 w-full rounded-md border px-3 py-2 text-sm" id="email" name="email" #emailModel="ngModel"
                 placeholder="skrillexgamesdef@gmail.com" type="email" [(ngModel)]="user.email" minlength="5"
                 maxlength="60" required
-                [ngClass]="{'border-red-500 ': emailModel.invalid && emailModel.touched, 'border-green-500': emailModel.valid && emailModel.touched}" />
-            @if (emailModel.invalid && emailModel.touched) {
+                [ngClass]="{'border-red-500 ': emailModel.invalid && emailModel.touched || !checkEmailValidity() && emailModel.touched,
+                'border-green-500': emailModel.valid && emailModel.touched && checkEmailValidity()}" />
+            @if (emailModel.invalid && emailModel.touched || !checkEmailValidity() && emailModel.touched) {
             <div class="text-red-500 text-sm">Email is required and must be a valid email address</div>
             }
         </div>
@@ -74,13 +75,11 @@
             }
         </div>
         <button
-        [disabled]="formModel.invalid || passwordConfirmation.trim() === '' || passwordConfirmation !== user.password"
+            [disabled]="formModel.invalid || passwordConfirmation.trim() === '' || passwordConfirmation !== user.password || !checkEmailValidity()"
             class="inline-flex items-center justify-center rounded-md
         focus-visible:ring-[3px] focus-visible:ring-offset-2
-        font-medium h-10 w-full text-gray-200"
-        [ngClass]="{'bg-slate-950': formModel.valid && passwordConfirmation == user.password,
-        'bg-gray-500': formModel.invalid || passwordConfirmation != user.password}"
-        type="submit">Sign up</button>
+        font-medium h-10 w-full text-gray-200" [ngClass]="{'bg-slate-950': formModel.valid && passwordConfirmation == user.password,
+        'bg-gray-500': formModel.invalid || passwordConfirmation != user.password}" type="submit">Sign up</button>
 
     </div>
 </form>
