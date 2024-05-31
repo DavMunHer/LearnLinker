@@ -1,4 +1,4 @@
-<form (ngSubmit)="signup()">
+<!-- <form (ngSubmit)="signup()">
     <label class="block" for="username">Username:</label>
     <input class="border-2" [(ngModel)]="user.username" autocomplete="username" type="text" name="username" id="username">
     <label class="block" for="email">Email:</label>
@@ -11,5 +11,49 @@
 </form>
 
 @if(errorMessage!= '') {
-    <div class="text-red-600">{{errorMessage}}</div>
+    <div class="text-red-500">{{errorMessage}}</div>
+} -->
+
+<form class="mx-auto max-w-sm space-y-6 mt-3">
+    <div class="space-y-2 text-center">
+        <h1 class="text-3xl font-bold">Sign Up</h1>
+        <p class="text-gray-500 dark:text-gray-400">Create your account to get started.</p>
+    </div>
+    <div class="space-y-4">
+        <div class="space-y-2">
+            <label class="text-sm font-medium" for="username">
+                Username
+            </label>
+            <input type="text" class="h-10 w-full rounded-md border px-3 py-2 text-sm" name="username" id="username"
+                placeholder="skrillexgamesdef" autocomplete="username" [(ngModel)]="user.username" />
+        </div>
+        <div class="space-y-2">
+            <label class="text-sm font-medium" for="email">
+                Email
+            </label>
+            <input class="h-10 w-full rounded-md border px-3 py-2 text-sm" id="email" name="email"
+                placeholder="skrillexgamesdef@gmail.com" type="email" [(ngModel)]="user.email" />
+        </div>
+        <div class="space-y-2">
+            <label class="text-sm font-medium" for="password">
+                Password
+            </label>
+            <input class="h-10 w-full rounded-md border px-3 py-2 text-sm" placeholder="****************" id="password"
+                type="password" autocomplete="new-password" [(ngModel)]="user.password" name="password" />
+        </div>
+        <div class="space-y-2">
+            <label class="text-sm font-medium" for="confirm-password">
+                Confirm Password
+            </label>
+            <input class="h-10 w-full rounded-md border px-3 py-2 text-sm" id="confirm-password" type="password"
+                name="confirm-password" placeholder="****************" autocomplete="new-password"
+                [(ngModel)]="passwordConfirmation" />
+        </div>
+        <button class="inline-flex items-center justify-center rounded-md
+        focus-visible:ring-[3px] focus-visible:ring-offset-2
+        font-medium h-10 w-full bg-slate-950 text-gray-200" type="submit">Sign up</button>
+    </div>
+</form>
+@if(errorMessage!= '') {
+<div class="text-red-500">{{errorMessage}}</div>
 }
