@@ -4,7 +4,6 @@ import { User } from '../../interfaces/user';
 import { UsersHttpService } from '../services/users-http.service';
 import { Router } from '@angular/router';
 import { NgClass } from '@angular/common';
-import { of } from 'rxjs';
 
 @Component({
   selector: 'app-signup',
