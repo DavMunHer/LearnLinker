@@ -78,11 +78,11 @@
             [disabled]="formModel.invalid || passwordConfirmation.trim() === '' || passwordConfirmation !== user.password || !checkEmailValidity()"
             class="inline-flex items-center justify-center rounded-md
         focus-visible:ring-[3px] focus-visible:ring-offset-2
-        font-medium h-10 w-full text-gray-200" [ngClass]="{'bg-slate-950': formModel.valid && passwordConfirmation == user.password,
-        'bg-gray-500': formModel.invalid || passwordConfirmation != user.password}" type="submit">Sign up</button>
-
+        font-medium h-10 w-full text-gray-200"
+        [ngClass]="{'bg-slate-950': formModel.valid && passwordConfirmation == user.password && checkEmailValidity(),
+        'bg-gray-500': formModel.invalid || passwordConfirmation != user.password || !checkEmailValidity()}" type="submit">Sign up</button>
     </div>
 </form>
 @if(errorMessage!= '') {
-<div class="text-red-500">{{errorMessage}}</div>
+    <div class="text-red-500">{{errorMessage}}</div>
 }

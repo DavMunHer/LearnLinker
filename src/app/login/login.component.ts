@@ -3,11 +3,12 @@ import { FormsModule } from '@angular/forms';
 import { UsersHttpService } from '../services/users-http.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { NgClass } from '@angular/common';
 
 @Component({
     selector: 'app-login',
     standalone: true,
-    imports: [FormsModule],
+    imports: [FormsModule, NgClass],
     templateUrl: './login.component.html',
     styleUrl: './login.component.scss'
 })
@@ -24,7 +25,7 @@ export class LoginComponent {
         if (error.status === 401) {
             this.errorMessage = 'Invalid credentials';
         } else {
-            this.errorMessage = 'Ha ocurrido un error';
+            this.errorMessage = error.error.message;
         }
     }
 

@@ -1,4 +1,4 @@
-<form class="mx-auto max-w-sm mt-3" (ngSubmit)="login()">
+<form class="mx-auto max-w-sm mt-3" #form="ngForm" (ngSubmit)="login()">
     <div class="space-y-2 text-center">
         <h1 class="text-3xl font-bold">Login</h1>
         <p class="text-gray-400">Enter your email or username and password to access your account.</p>
@@ -9,22 +9,37 @@
                 for="email-or-username">
                 Email or username
             </label>
-            <input name="username-or-email" [(ngModel)]="user.usernameOrEmail"
+            <input name="username-or-email" [(ngModel)]="user.usernameOrEmail" #usernameOrEmailModel="ngModel"
+                minlength="3" maxlength="60" required
                 class="h-10 w-full rounded-md border px-3 py-2 text-sm"
+                [ngClass]="{'border-red-500': usernameOrEmailModel.invalid && usernameOrEmailModel.touched,
+                'border-green-500': usernameOrEmailModel.valid && usernameOrEmailModel.touched}"
                 id="email-or-username" placeholder="m@example.com" type="email" autocomplete="username" />
+                @if (usernameOrEmailModel.invalid && usernameOrEmailModel.touched) {
+                    <div class="text-red-500 text-sm">The email or username is required and must be between 3 and 60 characters</div>
+                }
         </div>
         <div class="space-y-2">
             <label class="text-sm font-medium"
                 for="password">Password</label>
             <input name="password" [(ngModel)]="user.password"
-                class="h-10 w-full rounded-md border px-3 py-2 text-sm"
+                class="h-10 w-full rounded-md border px-3 py-2 text-sm" #passwordModel="ngModel"
+                minlength="4" required
+                [ngClass]="{'border-red-500': passwordModel.invalid && passwordModel.touched,
+                'border-green-500': passwordModel.valid && passwordModel.touched}"
                 id="password" autocomplete="current-password" placeholder="****************" type="password" />
+                @if (passwordModel.invalid && passwordModel.touched) {
+                    <div class="text-red-500 text-sm">Password is required and must be at least 4 characters</div>
+                }
         </div>
     </div>
     <div class="flex items-center px-6">
         <button type="submit" class="inline-flex items-center justify-center rounded-md
         focus-visible:ring-[3px] focus-visible:ring-offset-2
-        font-medium h-10 w-full bg-slate-950 text-gray-200">
+        font-medium h-10 w-full text-gray-200"
+        [disabled]="form.invalid"
+        [ngClass]="{'bg-slate-950': form.valid, 'bg-gray-500': form.invalid}"
+        >
             Sign in
         </button>
     </div>
