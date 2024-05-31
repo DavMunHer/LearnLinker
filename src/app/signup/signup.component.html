@@ -14,7 +14,7 @@
     <div class="text-red-500">{{errorMessage}}</div>
 } -->
 
-<form class="mx-auto max-w-sm space-y-6 mt-3">
+<form class="mx-auto max-w-sm space-y-6 mt-3" #formModel="ngForm" (ngSubmit)="signup()">
     <div class="space-y-2 text-center">
         <h1 class="text-3xl font-bold">Sign Up</h1>
         <p class="text-gray-500 dark:text-gray-400">Create your account to get started.</p>
@@ -25,35 +25,64 @@
                 Username
             </label>
             <input type="text" class="h-10 w-full rounded-md border px-3 py-2 text-sm" name="username" id="username"
-                placeholder="skrillexgamesdef" autocomplete="username" [(ngModel)]="user.username" />
+                placeholder="skrillexgamesdef" autocomplete="username" [(ngModel)]="user.username"
+                maxlength="50" minlength="3" required #usernameModel="ngModel"
+                [ngClass]="{'border-red-500 ': usernameModel.invalid && usernameModel.touched, 'border-green-500': usernameModel.valid && usernameModel.touched}"
+                />
+                @if (usernameModel.invalid && usernameModel.touched) {
+                    <div class="text-red-500 text-sm">Username is required and must be between 3 and 50 characters</div>
+                }
         </div>
         <div class="space-y-2">
             <label class="text-sm font-medium" for="email">
                 Email
             </label>
-            <input class="h-10 w-full rounded-md border px-3 py-2 text-sm" id="email" name="email"
-                placeholder="skrillexgamesdef@gmail.com" type="email" [(ngModel)]="user.email" />
+            <input class="h-10 w-full rounded-md border px-3 py-2 text-sm" id="email" name="email" #emailModel="ngModel"
+                placeholder="skrillexgamesdef@gmail.com" type="email" [(ngModel)]="user.email" minlength="5" maxlength="60" required
+                [ngClass]="{'border-red-500 ': emailModel.invalid && emailModel.touched, 'border-green-500': emailModel.valid && emailModel.touched}"
+                />
+                @if (emailModel.invalid && emailModel.touched) {
+                    <div class="text-red-500 text-sm">Email is required and must be a valid email address</div>
+                }
         </div>
         <div class="space-y-2">
             <label class="text-sm font-medium" for="password">
                 Password
             </label>
             <input class="h-10 w-full rounded-md border px-3 py-2 text-sm" placeholder="****************" id="password"
-                type="password" autocomplete="new-password" [(ngModel)]="user.password" name="password" />
+                type="password" autocomplete="new-password" [(ngModel)]="user.password" name="password" #passwordModel="ngModel"
+                minlength="4" required [ngClass]="{'border-red-500 ': passwordModel.invalid && passwordModel.touched, 'border-green-500': passwordModel.valid && passwordModel.touched}"
+                />
+                @if (passwordModel.invalid && passwordModel.touched) {
+                    <div class="text-red-500 text-sm">Password is required and must be at least 4 characters</div>
+                }
         </div>
         <div class="space-y-2">
             <label class="text-sm font-medium" for="confirm-password">
                 Confirm Password
             </label>
             <input class="h-10 w-full rounded-md border px-3 py-2 text-sm" id="confirm-password" type="password"
-                name="confirm-password" placeholder="****************" autocomplete="new-password"
-                [(ngModel)]="passwordConfirmation" />
+                name="confirm-password" placeholder="****************" autocomplete="new-password" #confirmPasswordModel="ngModel"
+                [(ngModel)]="passwordConfirmation" minlength="4" required
+                [ngClass]="{'border-red-500 ': confirmPasswordModel.invalid && confirmPasswordModel.touched || passwordConfirmation != user.password,
+                'border-green-500': confirmPasswordModel.valid && confirmPasswordModel.touched && passwordConfirmation == user.password}"
+                />
+                @if (confirmPasswordModel.touched) {
+                    @if (passwordConfirmation != user.password) {
+                        <div class="text-red-500 text-sm">Passwords do not match</div>
+                    } @else if (confirmPasswordModel.invalid) {
+                        <div class="text-red-500 text-sm">Password confirmation is required and must be at least 4 characters</div>
+                    }
+                }
         </div>
-        <button class="inline-flex items-center justify-center rounded-md
+        <button [disabled]="formModel.invalid && passwordConfirmation != user.password" class="inline-flex items-center justify-center rounded-md
         focus-visible:ring-[3px] focus-visible:ring-offset-2
-        font-medium h-10 w-full bg-slate-950 text-gray-200" type="submit">Sign up</button>
+        font-medium h-10 w-full text-gray-200"
+        [ngClass]="{'bg-slate-950': formModel.valid && passwordConfirmation == user.password,
+        'bg-gray-500': formModel.invalid || passwordConfirmation != user.password}"
+        type="submit">Sign up</button>
     </div>
 </form>
 @if(errorMessage!= '') {
-<div class="text-red-500">{{errorMessage}}</div>
+    <div class="text-red-500">{{errorMessage}}</div>
 }

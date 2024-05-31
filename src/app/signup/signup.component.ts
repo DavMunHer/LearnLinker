@@ -3,11 +3,13 @@ import { FormsModule } from '@angular/forms';
 import { User } from '../../interfaces/user';
 import { UsersHttpService } from '../services/users-http.service';
 import { Router } from '@angular/router';
+import { NgClass } from '@angular/common';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'app-signup',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, NgClass],
   templateUrl: './signup.component.html',
   styleUrl: './signup.component.scss'
 })
@@ -29,6 +31,9 @@ export class SignupComponent {
             this.usersHttpService.signUp(this.user).subscribe({
                 next: () => {
                     this.router.navigate(['/login']);
+                },
+                error: (error) => {
+                    this.errorMessage = error.error.message;
                 }
             });
         } else {
