@@ -1,4 +1,4 @@
-<div class="w-80 bg-slate-950/90 text-gray-300 rounded-lg p-3">
+<div class="w-80  bg-[#F0F0F0] border border-gray-300 text-slate-900 rounded-lg p-3">
     <section class="flex justify-between items-center px-2 pb-3">
         <h2 class="text-xl font-bold">{{phase.name}}</h2>
         <div class="flex items-center space-x-2">
@@ -10,15 +10,15 @@
             </button>
             <div id="dropdown" class="z-10 hidden text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
                 <ul class="py-2" aria-labelledby="dropdownButton">
-                <li>
-                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Edit</a>
-                </li>
-                <li>
-                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Export Data</a>
-                </li>
-                <li>
-                    <a href="#" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Delete</a>
-                </li>
+                    <li>
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Edit</a>
+                    </li>
+                    <li>
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Export Data</a>
+                    </li>
+                    <li>
+                        <a href="#" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100">Delete</a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -30,13 +30,13 @@
             @for (task of phase.Tasks; track $index) {
                 @if (task == phase.Tasks[phase.Tasks.length -1]) {
                     <a [routerLink]="['/task', task.id, 'details']">
-                        <div class="bg-slate-800 rounded-md p-2.5">
+                        <div class="bg-gray-100 border border-gray-300 shadow-sm shadow-gray-700 rounded-md p-2.5">
                             {{task.name}}
                         </div>
                     </a>
                 } @else {
                     <a [routerLink]="['/task', task.id, 'details']">
-                        <div class="bg-slate-800 rounded-md mb-3 p-2.5">
+                        <div class="bg-gray-100 border border-gray-300 shadow-sm shadow-gray-700  rounded-md mb-3 p-2.5">
                             {{task.name}}
                         </div>
                     </a>
