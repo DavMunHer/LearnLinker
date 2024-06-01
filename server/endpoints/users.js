@@ -3,7 +3,7 @@ const router = express.Router();
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { where, Op } = require('sequelize');
+const { where, Op, literal } = require('sequelize');
 const Project = require('../models/Project');
 const { formatDateAttribute } = require('./helper');
 const dotenv = require('dotenv').config();
@@ -157,7 +157,13 @@ router.get('/user/:user_email/projects', async (req, res) => {
             attributes: [],
             include: [{
                 model: Project,
-                attributes: ['id', 'name', formatDateAttribute('start_date'), formatDateAttribute('end_date')],
+                attributes: [
+                    'id',
+                    'name',
+                    formatDateAttribute('start_date'),
+                    formatDateAttribute('end_date'),
+                    [literal('(SELECT COUNT(*) FROM phases WHERE phases.projectId = Projects.id)'), 'phasesCount']
+                ],
                 through: {
                     attributes: ['role']
                 }

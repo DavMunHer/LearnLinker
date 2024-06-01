@@ -12,5 +12,6 @@ export interface Project {
     }
     Users?: User[],
     Phases?: Phase[],
-    Tasks?: Task[]
+    Tasks?: Task[],
+    phasesCount?: number
 }

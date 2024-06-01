@@ -1,0 +1,27 @@
+<div class="bg-white shadow rounded-lg p-4">
+    <div class="flex items-center justify-between mb-4">
+        <h2 class="text-xl font-bold">{{project.name}}</h2>
+        <div class="bg-green-500 text-white px-2 py-1 rounded-full text-sm font-medium">{{project.project_user?.role |
+            titlecase}}</div>
+    </div>
+    <div class="space-y-2 mb-4">
+        <div>
+            <span class="font-medium">Start date:</span> {{project.start_date | date:'longDate'}}
+        </div>
+        <div>
+            <span class="font-medium">Deadline:</span> {{project.end_date | date:'longDate'}}
+        </div>
+        <div>
+            <span class="font-medium">Total Phases:</span> {{project.phasesCount}}
+        </div>
+    </div>
+    <div class="flex justify-end gap-2">
+        <button class="border border-gray-300 text-gray-700 px-4 py-2 rounded">View</button>
+        @if (project.project_user?.role == 'manager' || project.project_user?.role == 'leader') {
+            <button class="bg-cyan-800 text-white px-4 py-2 rounded">Edit</button>
+        }
+        @if (project.project_user?.role == 'manager') {
+            <button class="bg-red-500 text-white px-4 py-2 rounded">Delete</button>
+        }
+    </div>
+</div>
