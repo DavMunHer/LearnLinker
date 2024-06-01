@@ -44,22 +44,18 @@
 
 }
 
-<!--
-// v0 by Vercel.
-// https://v0.dev/t/Ul0Q7X2lZ7E
--->
-
-<div className="flex flex-col w-full min-h-screen">
+<div class="flex flex-col w-full min-h-screen">
     <header class="bg-gray-900 text-white py-4 px-6 flex items-center justify-between">
         <h1 class="text-2xl font-bold ">Project Management</h1>
-        <button class="text-white font-bold py-2 px-4 rounded">Create New Project</button>
+        <button class="text-white font-bold py-2 px-4 rounded" routerLink="/create-project">Create New Project</button>
     </header>
     <main class="flex-1 bg-gray-100 p-6 md:p-10">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             @for (project of userProjects; track project.id) {
-                <app-project-card [project]="project"></app-project-card>
+            <app-project-card [project]="project" (deleteProjectEvent)="deleteProject($event)"
+                (errorOccurred)="loadError($event)"></app-project-card>
             }
-          </div>
-      </main>
-  </div>
+        </div>
+    </main>
+</div>
 <!-- <a routerLink="/edit-project">Edit an existing project</a> -->
