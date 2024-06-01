@@ -13,6 +13,7 @@ import { TitleCasePipe } from '@angular/common';
 import { TaskCardComponent } from '../others/task-card/task-card.component';
 import { PhaseColComponent } from '../phases/phase-col/phase-col.component';
 import { taskGuard } from '../guards/task.guard';
+import { ProjectDataService } from '../services/project-data.service';
 @Component({
     selector: 'app-home',
     standalone: true,
@@ -45,7 +46,8 @@ export class HomeComponent implements OnInit {
     constructor(
         private route: ActivatedRoute,
         private projectHttpService: ProjectsHttpService,
-        private authService: AuthService
+        private authService: AuthService,
+        private projectDataService: ProjectDataService
     ) { }
 
 
@@ -71,11 +73,6 @@ export class HomeComponent implements OnInit {
 
     }
 
-    private existsInArray(targetArray: any[], arrayOfArrays: any[]) {
-        const targetArrayJson = JSON.stringify(targetArray);
-
-        return arrayOfArrays.some(array => JSON.stringify(array) === targetArrayJson);
-    }
     private changeToPhasesFormat(tasks: Task[]) {
         let phases: any[] = [];
         let phasesCounter = 0;
@@ -114,9 +111,16 @@ export class HomeComponent implements OnInit {
         this.sessionUser = this.authService.getSessionUser();
         this.userProjects = this.route.snapshot.data['projects'];
         console.log(this.userProjects);
-        //Hacemos que el proyecto seleccionado sea el primero de la lista (lo convertimos a string para que quede seleccionado)
-        this.selectedProjectId = this.userProjects[0].id + '';
-        this.selectedProject = this.userProjects[0];
+        if (this.projectDataService.getProjectId()) {
+            // Cuando haya información guardada será porque se ha pasado desde project management
+            this.selectedProjectId = this.projectDataService.getProjectId() + '';
+            this.projectDataService.clearprojectId();
+            this.loadProject();
+        } else {
+//Hacemos que el proyecto seleccionado sea el primero de la lista (lo convertimos a string para que quede seleccionado)
+            this.selectedProjectId = this.userProjects[0].id + '';
+            this.selectedProject = this.userProjects[0];
+        }
         this.userRole = this.selectedProject.project_user?.role;
         this.isLoading = true;
         this.projectHttpService.getHomeProjectDetails(this.selectedProjectId, this.userRole, this.sessionUser.email).subscribe(

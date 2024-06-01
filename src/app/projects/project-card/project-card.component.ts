@@ -1,9 +1,10 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Project } from '../../../interfaces/project';
 import { DatePipe, NgClass, TitleCasePipe } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ProjectsHttpService } from '../../services/projects-http.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { ProjectDataService } from '../../services/project-data.service';
 
 @Component({
   selector: 'app-project-card',
@@ -18,7 +19,11 @@ export class ProjectCardComponent {
     @Output() errorOccurred = new EventEmitter<string>();
 
     private errorMessage = '';
-    constructor(private projectHttpService: ProjectsHttpService) { }
+    constructor(
+        private projectHttpService: ProjectsHttpService,
+        private projectDataService: ProjectDataService,
+        private router: Router
+    ) { }
 
     private handleError(error: HttpErrorResponse) {
         if (error.status == 404) {
@@ -40,5 +45,10 @@ export class ProjectCardComponent {
                 }
             });
         }
+    }
+
+    redirectToHomeWithProjectData() {
+        this.projectDataService.setProjectId(this.project.id);
+        this.router.navigate(['/home']);
     }
 }

@@ -21,7 +21,7 @@
         </div>
     </div>
     <div class="flex justify-end gap-2">
-        <button class="border border-gray-300 text-gray-700 px-4 py-2 rounded">View</button>
+        <button class="border border-gray-300 text-gray-700 px-4 py-2 rounded" (click)="redirectToHomeWithProjectData()">View</button>
         @if (project.project_user?.role == 'manager' || project.project_user?.role == 'leader') {
             <button class="bg-cyan-800 text-white px-4 py-2 rounded" [routerLink]='["/edit-project", project.id]'>Edit</button>
         }
