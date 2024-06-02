@@ -6,21 +6,22 @@
                 | date:'yyyy/MM/dd'}}</div>
         </div>
         <div class="flex items-center gap-2 mt-4 md:mt-0">
-            <button class="inline-flex items-center justify-center text-sm font-medium border h-9 rounded-md px-3">
+            <button
+                class="inline-flex items-center justify-center text-sm bg-cyan-800 text-white font-medium border h-9 rounded-md px-3">
                 Edit
             </button>
-            <button class="inline-flex items-center justify-center text-sm font-medium border h-9 rounded-md px-3">
+            <button class="inline-flex items-center justify-center text-sm bg-red-500 text-white font-medium border h-9 rounded-md px-3">
                 Delete
             </button>
         </div>
     </div>
     <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         @for (task of phase.Tasks; track $index) {
-            <app-task-mini-card [task]="task"></app-task-mini-card>
+        <app-task-mini-card [task]="task"></app-task-mini-card>
         } @empty {
-            <div class="flex justify-center items-center w-full h-20 col-span-2 lg:col-span-1 lg:col-start-2">
-                <p class="text-xl">No tasks found</p>
-            </div>
+        <div class="flex justify-center items-center w-full h-20 col-span-2 lg:col-span-1 lg:col-start-2">
+            <p class="text-xl">No tasks found</p>
+        </div>
         }
     </div>
 </div>
