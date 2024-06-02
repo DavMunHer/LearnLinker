@@ -17,6 +17,7 @@ import { CreatePhaseComponent } from './phases/create-phase/create-phase.compone
 import { userProjectsResolver } from './resolvers/user-projects.resolver';
 import { taskGuard } from './guards/task.guard';
 import { TaskDetailsComponent } from './tasks/task-details/task-details.component';
+import { CreateTaskComponent } from './tasks/create-task/create-task.component';
 
 export const routes: Routes = [
     {
@@ -90,6 +91,12 @@ export const routes: Routes = [
         component: EditPhaseComponent,
         canActivate: [authGuard],
         title: 'Edit an existing phase'
+    },
+    {
+        path: 'project/:projetId/edit/:phaseId/create-task',
+        component: CreateTaskComponent,
+        canActivate: [authGuard],
+        title: 'Create a new Task'
     },
     {
         path: 'task/:id/details',
