@@ -1,0 +1,40 @@
+@if (phase) {
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-6">
+        <h1 class="text-3xl font-bold mb-4 md:mb-6">Edit Phase - <span class="text-2xl">{{phase.name}}</span></h1>
+        <form class="space-y-8 md:space-y-12" #formModel="ngForm" (ngSubmit)="updatePhase()">
+            <div class="flex flex-col md:flex-row items-start md:items-center gap-4 md:justify-center mb-4 md:mb-6">
+                <div class="flex items-center gap-2 flex-1 md:flex-initial">
+                    <label class="font-medium text-sm md:text-base" for="new-phase-name">
+                        Phase Name
+                    </label>
+                    <input class="flex h-10 rounded-md border px-3 py-2 text-sm flex-1 md:w-auto" id="new-phase-name"
+                        placeholder="Phase name" [(ngModel)]="phase.name" name="phase-name" #nameModel="ngModel" required="" minlength="1" maxlength="50"
+                        [ngClass]="{'border-red-500': nameModel.invalid && nameModel.touched, 'border-green-500': nameModel.valid && nameModel.touched}" />
+                </div>
+                <div class="flex items-center gap-2 flex-1 md:flex-initial">
+                    <label class="font-medium text-sm md:text-base" for="new-phase-start-date">
+                        Start Date
+                    </label>
+                    <input class="flex h-10 rounded-md border px-3 py-2 text-sm flex-1 md:w-auto" id="new-phase-start-date"
+                        type="date" [(ngModel)]="phase.start_date" name="phase-start_date" #start_dateModel="ngModel" required="" [min]="minDate"
+                        [ngClass]="{'border-red-500': start_dateModel.invalid && start_dateModel.touched,
+                        'border-green-500': start_dateModel.valid && start_dateModel.touched}" />
+                </div>
+                <div class="flex items-center gap-2 flex-1 md:flex-initial">
+                    <label class="font-medium text-sm md:text-base" for="new-phase-deadline">
+                        Deadline
+                    </label>
+                    <input class="flex h-10 rounded-md border px-3 py-2 text-sm flex-1 md:w-auto" id="new-phase-deadline"
+                        type="date" [(ngModel)]="phase.deadline" name="phase-deadline" #deadlineModel="ngModel" required="" [min]="phase.start_date || minDate"
+                        [ngClass]="{'border-red-500': deadlineModel.invalid && deadlineModel.touched,
+                        'border-green-500': deadlineModel.valid && deadlineModel.touched}"/>
+                </div>
+                <button class="inline-flex items-center justify-center text-sm font-medium border h-9 rounded-md px-3 text-gray-200"
+                    type="submit" [disabled]="formModel.invalid"
+                    [ngClass]="{'bg-slate-950': formModel.valid, 'bg-gray-500': formModel.invalid}"
+                    >Edit phase</button>
+            </div>
+        </form>
+            <app-phase-card [phase]="phase" [mode]="'edit'"></app-phase-card>
+    </div>
+}
