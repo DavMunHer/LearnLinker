@@ -1,4 +1,4 @@
-<form (ngSubmit)="sendProject()">
+<!-- <form (ngSubmit)="sendProject()">
     <label for="project-name">Project name:</label>
     <input class="border-2" type="text" name="project-name" autocomplete="project-name" [(ngModel)]="newProject.name"
         id="project-name">
@@ -6,20 +6,20 @@
     <div id="leader-container" class="flex flex-wrap">
         <label for="leader-email-or-username" class="self-center">Project leader email or username: </label>
         @if (leaders.length > 0) {
-            @for (leader of leaders; track $index) {
-                <div class="flex mx-2 px-0.5 border-2 rounded-xl">
-                    <span class="leader-info mr-1 ml-0.5">{{leader.username}}</span>
-                    <svg (click)="removeUser(leader.username)" class="hover:bg-gray-400 rounded-xl hover:cursor-pointer"
-                        width="25px" height="25px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                        <g id="SVGRepo_iconCarrier">
-                            <path d="M16 8L8 16M8.00001 8L16 16" stroke="#000000" stroke-width="1.5" stroke-linecap="round"
-                                stroke-linejoin="round"></path>
-                        </g>
-                    </svg>
-                </div>
-            }
+        @for (leader of leaders; track $index) {
+        <div class="flex mx-2 px-0.5 border-2 rounded-xl">
+            <span class="leader-info mr-1 ml-0.5">{{leader.username}}</span>
+            <svg (click)="removeUser(leader.username)" class="hover:bg-gray-400 rounded-xl hover:cursor-pointer"
+                width="25px" height="25px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                <g id="SVGRepo_iconCarrier">
+                    <path d="M16 8L8 16M8.00001 8L16 16" stroke="#000000" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round"></path>
+                </g>
+            </svg>
+        </div>
+        }
         }
         <input (change)="addUser()" class="border-2" type="text" autocomplete="current-leader-email-or-username"
             [(ngModel)]="leaderEmailOrUsername" name="leader-email-or-username" id="leader-email-or-username">
@@ -41,4 +41,88 @@
 <p class="text-red-500">{{errorMessage}}</p>
 } @else if (successMessage) {
 <p class="text-green-800">{{successMessage}}</p>
-}
+} -->
+
+
+<div class="rounded-lg border bg-card text-card-foreground shadow-sm w-full max-w-2xl" data-v0-t="card">
+    <div class="flex flex-col px-6 pt-6">
+        <h3 class="whitespace-nowrap text-2xl font-semibold leading-none tracking-tight">Create New Project</h3>
+    </div>
+    <div class="p-6">
+        <form class="grid gap-4" (ngSubmit)="sendProject()" #form="ngForm">
+            <div class="grid grid-cols-2 gap-4">
+                <div class="space-y-1.5">
+                    <label class="text-sm font-medium leading-none" for="name">Project Name</label>
+                    <input class="flex h-10 w-full rounded-md border px-3 py-2 text-sm" id="name"
+                        placeholder="Enter project name" required minlength="4" maxlength="50" #nameModel="ngModel"
+                        [(ngModel)]="newProject.name" name="name" [ngClass]="{'border-red-500': nameModel.invalid && nameModel.touched,
+              'border-green-500': nameModel.valid && nameModel.touched}" />
+                    @if (nameModel.invalid && nameModel.touched) {
+                    <p class="text-red-500 text-xs">Project name is required and must be between 4 and 50 characters</p>
+                    }
+                </div>
+                <div class="space-y-1.5">
+                    <label class="text-sm font-medium leading-none" for="start-date">Start Date</label>
+                    <input class="flex h-10 rounded-md border px-3 py-2 text-md flex-1 w-40" id="start-date" type="date"
+                        [(ngModel)]="newProject.start_date" name="phase-start_date" #start_dateModel="ngModel"
+                        required="" [min]="minDate" [ngClass]="{'border-red-500': start_dateModel.invalid && start_dateModel.touched,
+                'border-green-500': start_dateModel.valid && start_dateModel.touched}" />
+                    @if (start_dateModel.invalid && start_dateModel.touched) {
+                    <p class="text-red-500 text-xs">Start date is required</p>
+                    }
+                </div>
+                <div class="space-y-1.5">
+                    <label class="text-sm font-medium leading-none" for="end-date">End Date</label>
+                    <input class="flex h-10 rounded-md border px-3 py-2 text-md flex-1 w-40" id="end-date" type="date"
+                        [(ngModel)]="newProject.end_date" name="phase-end_date" #end_dateModel="ngModel" required=""
+                        [min]="newProject.start_date || minDate" [ngClass]="{'border-red-500': end_dateModel.invalid && end_dateModel.touched,
+                        'border-green-500': end_dateModel.valid && end_dateModel.touched}" />
+                    @if (end_dateModel.invalid && end_dateModel.touched) {
+                    <p class="text-red-500 text-xs">End date is required</p>
+                    }
+                </div>
+            </div>
+            <div>
+                <label class="text-sm font-medium leading-none mb-2" for="leaders">Project Leaders</label>
+                <div class="space-y-2">
+                    <div class="flex items-center gap-2">
+                        <input class="flex h-10 w-full rounded-md border px-3 py-2 text-sm flex-1" id="leaders"
+                            placeholder="Enter username or email" name="leaders" [(ngModel)]="leaderEmailOrUsername" #leaderModel="ngModel" />
+                        <button (click)="addUser()"
+                            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium h-10 w-10">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="h-4 w-4">
+                                <path d="M5 12h14"></path>
+                                <path d="M12 5v14"></path>
+                            </svg>
+                            <span class="sr-only">Add leader</span>
+                        </button>
+                    </div>
+                    @if (leaders.length == 0 && leaderModel.touched) {
+                        <p class="text-red-500 text-xs">You must add at least one leader!</p>
+                    }
+                    @if (leaderEmailErrorMessage) {
+                        <p class="text-red-500">{{leaderEmailErrorMessage}}</p>
+                        }
+                    <div class="grid gap-2">
+                        @for (leader of leaders; track $index) {
+                            <app-added-user-mini-card [user]="leader" (removeUser)="removeUser($event)"></app-added-user-mini-card>
+                        } @empty {
+                            <p class="text-gray-500 text-xs">No leaders added</p>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="flex items-center justify-center px-6 pt-6">
+                <button [disabled]="form.invalid || leaders.length == 0"
+                    class="inline-flex items-center justify-center rounded-md text-sm font-medium
+                    text-gray-100 h-10 px-4 py-2"
+                    [ngClass]="{'bg-slate-900 hover:bg-slate-900/90': form.valid && leaders.length > 0,
+                    'bg-gray-500': form.invalid || leaders.length == 0}">
+                    Create Project
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

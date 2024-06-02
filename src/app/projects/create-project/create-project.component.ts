@@ -6,11 +6,14 @@ import { AuthService } from '../../services/auth.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { HelperService } from '../../services/helper.service';
 import { User } from '../../../interfaces/user';
+import { NgClass } from '@angular/common';
+import { AddedUserMiniCardComponent } from '../../others/added-user-mini-card/added-user-mini-card.component';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-create-project',
     standalone: true,
-    imports: [FormsModule],
+    imports: [FormsModule, NgClass, AddedUserMiniCardComponent],
     templateUrl: './create-project.component.html',
     styleUrl: './create-project.component.scss'
 })
@@ -23,6 +26,7 @@ export class CreateProjectComponent implements OnInit {
     private sessionUser!: User;
     protected leaderEmailOrUsername = '';
     protected leaders: any[] = [];
+    protected minDate: string = new Date().toISOString().split('T')[0]; // Formato para que no se pueda seleccionar una fecha anterior a la actual en el input
 
     protected leaderEmailErrorMessage = '';
     protected errorMessage = '';
@@ -32,6 +36,7 @@ export class CreateProjectComponent implements OnInit {
         private projectHttpService: ProjectsHttpService,
         private authService: AuthService,
         private helper: HelperService,
+        private router: Router
     ) { }
 
     private handleError(error: HttpErrorResponse) {
@@ -83,11 +88,14 @@ export class CreateProjectComponent implements OnInit {
             user_email: this.sessionUser.email,
             leaders: this.leaders
         }).subscribe({
+            next: () => {
+                this.successMessage = 'Projected created successfully!';
+            },
             error: (error) => {
                 this.handleError(error);
             },
             complete: () => {
-                this.successMessage = 'Projected created successfully!';
+                this.router.navigate(['/project-management']);
             }
         });
     }

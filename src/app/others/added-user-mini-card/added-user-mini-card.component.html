@@ -1,0 +1,22 @@
+<div class="flex items-center justify-between">
+    <div class="flex items-center gap-2">
+        <span class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full">
+            <span
+                class="flex h-full w-full items-center justify-center rounded-full bg-muted">{{user.username[0].toUpperCase()}}</span>
+        </span>
+        <div class="grid gap-0.5 text-xs">
+            <div class="font-medium">{{user.username}}</div>
+            <div class="text-gray-500">{{user.email}}</div>
+        </div>
+    </div>
+    <button (click)="removeUserEvent()"
+        class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium h-10 w-10">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round" class="h-4 w-4">
+            <path d="M18 6 6 18"></path>
+            <path d="m6 6 12 12"></path>
+        </svg>
+        <span class="sr-only">Remove leader</span>
+    </button>
+</div>
