@@ -228,10 +228,10 @@
                     class="inline-flex items-center justify-center text-sm font-medium border h-9 rounded-md px-3">Add
                     phase</button>
             </div>
-            @for (phase of project.Phases; track $index) {
-                <app-phase-card [phase]="phase"></app-phase-card>
-            }
         </div>
+        @for (phase of project.Phases; track $index) {
+            <app-phase-card [phase]="phase"></app-phase-card>
+        }
     </div>
 
     }
