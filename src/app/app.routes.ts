@@ -93,7 +93,7 @@ export const routes: Routes = [
         title: 'Edit an existing phase'
     },
     {
-        path: 'project/:projetId/edit/:phaseId/create-task',
+        path: 'project/:projectId/edit/:phaseId/create-task',
         component: CreateTaskComponent,
         canActivate: [authGuard],
         title: 'Create a new Task'

@@ -5,6 +5,7 @@ import { TasksHttpService } from '../../services/tasks-http.service';
 import { HelperService } from '../../services/helper.service';
 import { AuthService } from '../../services/auth.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { ActivatedRoute, Route } from '@angular/router';
 
 @Component({
     selector: 'app-create-task',
@@ -36,7 +37,8 @@ export class CreateTaskComponent implements OnInit {
     constructor(
         private taskHttpService: TasksHttpService,
         private helper: HelperService,
-        private authService: AuthService
+        private authService: AuthService,
+        private route: ActivatedRoute
     ) { }
 
     private handleError(error: HttpErrorResponse): string {
@@ -52,6 +54,8 @@ export class CreateTaskComponent implements OnInit {
 
     ngOnInit(): void {
         this.sessionUser = this.authService.getSessionUser();
+        this.phaseId = this.route.snapshot.params['phaseId'];
+        this.projectId = this.route.snapshot.params['projectId'];
     }
 
 

@@ -15,9 +15,9 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrl: './edit-phase.component.scss'
 })
 export class EditPhaseComponent implements OnInit {
-    private projectId!: string;
+    protected projectId!: string;
     private phaseId!: string;
-    @Input() phase!: Phase;
+    protected phase!: Phase;
     protected minDate = new Date().toISOString().split('T')[0];
     protected errorMessage: string = '';
 
@@ -38,6 +38,7 @@ export class EditPhaseComponent implements OnInit {
 
     ngOnInit(): void {
         this.projectId = this.route.snapshot.params['projectId'];
+        console.log(this.projectId);
         this.phaseId = this.route.snapshot.params['phaseId'];
         this.phaseHttpService.getPhase(this.phaseId).subscribe({
             next: (phase: Phase) => {

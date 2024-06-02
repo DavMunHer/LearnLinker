@@ -34,7 +34,7 @@ import { NgClass } from '@angular/common';
   styleUrl: './edit-project.component.scss'
 })
 export class EditProjectComponent implements OnInit {
-    protected projectId: string;
+    protected projectId!: string;
     protected project: Project = {
         name: '',
         start_date: '',
@@ -60,10 +60,7 @@ export class EditProjectComponent implements OnInit {
         private authService: AuthService,
         private helper: HelperService,
         private phaseHttpService: PhasesHttpService
-    ) {
-        this.projectId = this.route.snapshot.params['id'];
-    }
-
+    ) { }
 
     private handleGetError(error: HttpErrorResponse): string {
         let errorMessage = '';
@@ -91,6 +88,7 @@ export class EditProjectComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.projectId = this.route.snapshot.params['id'];
         this.sessionUser = this.authService.getSessionUser();
         this.userRole = this.route.snapshot.data['role'];
         this.projectHttpService.getProjectDetails(this.userRole, 'edit', this.route.snapshot.params['id']).subscribe({

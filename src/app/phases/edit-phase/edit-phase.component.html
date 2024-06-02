@@ -35,6 +35,6 @@
                     >Edit phase</button>
             </div>
         </form>
-            <app-phase-card [phase]="phase" [mode]="'edit'" (phaseDeletion)="goBack()"></app-phase-card>
+            <app-phase-card [phase]="phase" [projectId]="projectId" [mode]="'edit'" (phaseDeletion)="goBack()"></app-phase-card>
     </div>
 }
