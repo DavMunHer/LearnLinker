@@ -1,7 +1,7 @@
 import { Component, OnInit, Renderer2 } from '@angular/core';
 import { Project } from '../../../interfaces/project';
 import { ProjectsHttpService } from '../../services/projects-http.service';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -14,11 +14,22 @@ import { CreateTaskComponent } from '../../tasks/create-task/create-task.compone
 import { TaskListComponent } from '../../tasks/task-list/task-list.component';
 import { Task } from '../../../interfaces/task';
 import { PhaseCardComponent } from '../../phases/phase-card/phase-card.component';
+import { AddedUserMiniCardComponent } from '../../others/added-user-mini-card/added-user-mini-card.component';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-edit-project',
   standalone: true,
-  imports: [FormsModule, RouterLink, CreatePhaseComponent, CreateTaskComponent, TaskListComponent, PhaseCardComponent],
+    imports: [
+        FormsModule,
+        RouterLink,
+        CreatePhaseComponent,
+        CreateTaskComponent,
+        TaskListComponent,
+        PhaseCardComponent,
+        AddedUserMiniCardComponent,
+        NgClass
+    ],
   templateUrl: './edit-project.component.html',
   styleUrl: './edit-project.component.scss'
 })
@@ -31,10 +42,11 @@ export class EditProjectComponent implements OnInit {
         Users: [],
         Phases: []
     }
+    protected minDate: string = new Date().toISOString().split('T')[0];
     protected userRole: string = '';
     protected leaderEmailOrUsername = '';
     protected phaseCreationMode: boolean = false;
-
+    protected leaderEmailErrorMessage: string = '';
 
     private sessionUser!: User;
 
@@ -44,6 +56,7 @@ export class EditProjectComponent implements OnInit {
     constructor(
         private projectHttpService: ProjectsHttpService,
         protected route: ActivatedRoute,
+        protected router: Router,
         private authService: AuthService,
         private helper: HelperService,
         private phaseHttpService: PhasesHttpService
@@ -52,7 +65,7 @@ export class EditProjectComponent implements OnInit {
     }
 
 
-    private handleError(error: HttpErrorResponse): string {
+    private handleGetError(error: HttpErrorResponse): string {
         let errorMessage = '';
         if (error.status == 404) {
             // Ponemos el mensaje de error del servidor dado que puede no encontrar el proyecto o el usuario
@@ -67,6 +80,15 @@ export class EditProjectComponent implements OnInit {
         return errorMessage;
     }
 
+    private handlePutError(error: HttpErrorResponse): string {
+        let errorMessage = '';
+        if (error.status == 404) {
+            errorMessage = 'Project not found!';
+        } else {
+            errorMessage = 'Internal server error.';
+        }
+        return errorMessage;
+    }
 
     ngOnInit(): void {
         this.sessionUser = this.authService.getSessionUser();
@@ -77,7 +99,7 @@ export class EditProjectComponent implements OnInit {
                 console.log(this.project);
             },
             error: (error) => {
-                this.handleError(error);
+                this.handleGetError(error);
             }
         });
     }
@@ -90,13 +112,23 @@ export class EditProjectComponent implements OnInit {
 
     editProject() {
         if (this.project.Users) {
-            this.projectHttpService.updateProject(this.project, this.route.snapshot.params['id']).subscribe();
+            this.projectHttpService.updateProject(this.project, this.route.snapshot.params['id']).subscribe({
+                next: () => {
+                    this.router.navigate(['/project-management']);
+                },
+                error: (error) => {
+                    this.errorMessage = this.handlePutError(error);
+                },
+                complete: () => {
+                }
+            });
+            // this.router.navigate(['/project-management']);
         }
     }
 
     async addUser() {
-        this.errorMessage = await this.helper.checkAndAddProjectUser(this.leaderEmailOrUsername, this.project.Users!, this.sessionUser, this.projectId, this.handleError);
-        if (this.errorMessage == '') {
+        this.leaderEmailErrorMessage = await this.helper.checkAndAddProjectUser(this.leaderEmailOrUsername, this.project.Users!, this.sessionUser, this.projectId, this.handleGetError);
+        if (this.leaderEmailErrorMessage == '') {
             this.leaderEmailOrUsername = '';
         }
     }

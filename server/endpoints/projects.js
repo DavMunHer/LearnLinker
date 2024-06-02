@@ -288,7 +288,7 @@ router.put(`/update/project/:id`, async (req, res) => {
             }
         }
         // Fin lógica editar los líderes de proyecto
-
+        return res.status(200).json({ message: 'Project updated successfully.' });
         //TODO: Lógica para editar las fases poniendo las fases que este tendrá
     } catch (error) {
         console.error(error);
