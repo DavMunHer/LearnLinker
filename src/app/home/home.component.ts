@@ -75,28 +75,25 @@ export class HomeComponent implements OnInit {
 
     private changeToPhasesFormat(tasks: Task[]) {
         let phases: any[] = [];
-        let phasesCounter = 0;
-        let continueAdding = false;
-        let currentIndex = 0;
+        let phasesMap = new Map<number, any>(); // Mapa para rastrear fases por ID
+
         for (let i = 0; i < tasks.length; i++) {
-            // Comprobamos que la fase de la tarea actual no esté añadida previamente antes de crear una nueva fase
-            if (!phases.some(phase => phase.id === tasks[i].Phase?.id)) {
-                phases[phasesCounter] = tasks[i].Phase;
-                phases[phasesCounter].Tasks = [];
-                continueAdding = true;
-            }
-            for (const task of tasks) {
-                // Comprobamos si la tarea actual pertenece a la fase actual y que esta no esté añadida previamente
-                if (task.Phase?.id === phases[currentIndex].id && (!phases[currentIndex].Tasks.some((t: Task) => t.id === task.id))) {
-                    phases[currentIndex].Tasks.push(task);
+            const task = tasks[i];
+            const phaseId = task.Phase?.id;
+
+            if (phaseId !== undefined) {
+                if (!phasesMap.has(phaseId)) {
+                    // Si la fase no está en el mapa, la añadimos
+                    const phase = { ...task.Phase, Tasks: [] };
+                    phasesMap.set(phaseId, phase);
+                    phases.push(phase);
                 }
+
+                // Añadimos la tarea a la fase correspondiente
+                phasesMap.get(phaseId).Tasks.push(task);
             }
-            if (continueAdding) {
-                phasesCounter++;
-                continueAdding = false;
-            }
-            currentIndex = phases.length - 1;
         }
+
         return phases;
     }
 
