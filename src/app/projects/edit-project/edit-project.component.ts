@@ -13,11 +13,12 @@ import { PhasesHttpService } from '../../services/phases-http.service';
 import { CreateTaskComponent } from '../../tasks/create-task/create-task.component';
 import { TaskListComponent } from '../../tasks/task-list/task-list.component';
 import { Task } from '../../../interfaces/task';
+import { PhaseCardComponent } from '../../phases/phase-card/phase-card.component';
 
 @Component({
   selector: 'app-edit-project',
   standalone: true,
-  imports: [FormsModule, RouterLink, CreatePhaseComponent, CreateTaskComponent, TaskListComponent],
+  imports: [FormsModule, RouterLink, CreatePhaseComponent, CreateTaskComponent, TaskListComponent, PhaseCardComponent],
   templateUrl: './edit-project.component.html',
   styleUrl: './edit-project.component.scss'
 })
@@ -73,6 +74,7 @@ export class EditProjectComponent implements OnInit {
         this.projectHttpService.getProjectDetails(this.userRole, 'edit', this.route.snapshot.params['id']).subscribe({
             next: (response) => {
                 this.project = response;
+                console.log(this.project);
             },
             error: (error) => {
                 this.handleError(error);
