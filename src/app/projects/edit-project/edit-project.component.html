@@ -136,7 +136,8 @@
         <h1 class="text-3xl font-bold mb-4 md:mb-6">Edit Project - <span class="text-2xl">{{project.name}}</span></h1>
         <app-create-phase [projectId]="projectId" (phaseCreation)="savePhase($event)"></app-create-phase>
         @for (phase of project.Phases; track $index) {
-            <app-phase-card [phase]="phase" [projectId]="projectId"></app-phase-card>
+            <app-phase-card [phase]="phase" [projectId]="projectId" (phaseDeletion)="removePhase($event)"
+            (phaseDeletionError)="renderError($event)"></app-phase-card>
         }
     </div>
 }

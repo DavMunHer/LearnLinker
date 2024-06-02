@@ -14,7 +14,6 @@ export class PhasesHttpService {
         return this.http.get<Phase>(`phase/${phaseId}`);
     }
 
-
     createPhase(projectId: string, phase: Phase) {
         return this.http.post(`project/${projectId}/create/phase`, phase);
     }
@@ -23,7 +22,7 @@ export class PhasesHttpService {
         return this.http.patch(`edit/phase/${phaseId}`, phase);
     }
 
-    deletePhase(phaseId: string | number) {
+    deletePhase(phaseId: number | undefined) {
         return this.http.delete(`phase/${phaseId}`);
     }
 }

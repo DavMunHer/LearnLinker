@@ -170,4 +170,13 @@ export class EditProjectComponent implements OnInit {
         phase.Tasks = phaseTasks;
     }
 
+    removePhase(phase: Phase) {
+        this.project.Phases = this.project.Phases!.filter((storedPhase: Phase) => {
+            return storedPhase != phase;
+        });
+    }
+
+    renderError(error: string) {
+        this.errorMessage = error;
+    }
 }

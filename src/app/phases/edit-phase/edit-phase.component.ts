@@ -49,7 +49,6 @@ export class EditPhaseComponent implements OnInit {
         });
     }
 
-
     updatePhase() {
         this.phaseHttpService.updatePhase(this.phase.id, this.phase).subscribe({
             next: () => {
@@ -60,5 +59,9 @@ export class EditPhaseComponent implements OnInit {
                 this.handleError(error);
             }
         });
+    }
+
+    goBack() {
+        this.router.navigate(['/edit-project', this.projectId]);
     }
 }
