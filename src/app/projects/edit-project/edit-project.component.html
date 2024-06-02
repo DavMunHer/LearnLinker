@@ -192,43 +192,7 @@
 
     <div class="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-8 md:py-12">
         <h1 class="text-3xl font-bold mb-4 md:mb-6">Edit Project</h1>
-        <div class="space-y-8 md:space-y-12">
-            <div class="flex flex-col md:flex-row items-start md:items-center gap-4 md:justify-end mb-4 md:mb-6">
-                <div class="flex items-center gap-2 flex-1 md:flex-initial">
-                    <label
-                        class="font-medium text-sm md:text-base"
-                        for="new-phase-name">
-                        Phase Name
-                    </label>
-                    <input
-                        class="flex h-10 rounded-md border px-3 py-2 text-sm flex-1 md:w-auto"
-                        id="new-phase-name" placeholder="Phase name" value="" />
-                </div>
-                <div class="flex items-center gap-2 flex-1 md:flex-initial">
-                    <label
-                        class="font-medium text-sm md:text-base"
-                        for="new-phase-start-date">
-                        Start Date
-                    </label>
-                    <input
-                        class="flex h-10 rounded-md border px-3 py-2 text-sm flex-1 md:w-auto"
-                        id="new-phase-start-date" type="date" value="" />
-                </div>
-                <div class="flex items-center gap-2 flex-1 md:flex-initial">
-                    <label
-                        class="font-medium text-sm md:text-base"
-                        for="new-phase-deadline">
-                        Deadline
-                    </label>
-                    <input
-                        class="flex h-10 rounded-md border px-3 py-2 text-sm flex-1 md:w-auto"
-                        id="new-phase-deadline" type="date" value="" />
-                </div>
-                <button
-                    class="inline-flex items-center justify-center text-sm font-medium border h-9 rounded-md px-3">Add
-                    phase</button>
-            </div>
-        </div>
+        <app-create-phase [projectId]="projectId" (phaseCreation)="savePhase($event)"></app-create-phase>
         @for (phase of project.Phases; track $index) {
             <app-phase-card [phase]="phase"></app-phase-card>
         }

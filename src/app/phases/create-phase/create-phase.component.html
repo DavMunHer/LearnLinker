@@ -1,38 +1,34 @@
-<form (ngSubmit)="sendAndCreatePhase()">
-    <div>
-        <label for="phase-name">Phase name:</label>
-        <input type="text" class="border-2" [(ngModel)]="phase.name" name="phase-name" id="phase-name">
+<form class="space-y-8 md:space-y-12" #formModel="ngForm" (ngSubmit)="sendAndCreatePhase()">
+    <div class="flex flex-col md:flex-row items-start md:items-center gap-4 md:justify-center mb-4 md:mb-6">
+        <div class="flex items-center gap-2 flex-1 md:flex-initial">
+            <label class="font-medium text-sm md:text-base" for="new-phase-name">
+                Phase Name
+            </label>
+            <input class="flex h-10 rounded-md border px-3 py-2 text-sm flex-1 md:w-auto" id="new-phase-name"
+                placeholder="Phase name" [(ngModel)]="phase.name" name="phase-name" #nameModel="ngModel" required="" minlength="1" maxlength="50"
+                [ngClass]="{'border-red-500': nameModel.invalid && nameModel.touched, 'border-green-500': nameModel.valid && nameModel.touched}" />
+        </div>
+        <div class="flex items-center gap-2 flex-1 md:flex-initial">
+            <label class="font-medium text-sm md:text-base" for="new-phase-start-date">
+                Start Date
+            </label>
+            <input class="flex h-10 rounded-md border px-3 py-2 text-sm flex-1 md:w-auto" id="new-phase-start-date"
+                type="date" [(ngModel)]="phase.start_date" name="phase-start_date" #start_dateModel="ngModel" required="" [min]="minDate"
+                [ngClass]="{'border-red-500': start_dateModel.invalid && start_dateModel.touched,
+                'border-green-500': start_dateModel.valid && start_dateModel.touched}" />
+        </div>
+        <div class="flex items-center gap-2 flex-1 md:flex-initial">
+            <label class="font-medium text-sm md:text-base" for="new-phase-deadline">
+                Deadline
+            </label>
+            <input class="flex h-10 rounded-md border px-3 py-2 text-sm flex-1 md:w-auto" id="new-phase-deadline"
+                type="date" [(ngModel)]="phase.deadline" name="phase-deadline" #deadlineModel="ngModel" required="" [min]="phase.start_date || minDate"
+                [ngClass]="{'border-red-500': deadlineModel.invalid && deadlineModel.touched,
+                'border-green-500': deadlineModel.valid && deadlineModel.touched}"/>
+        </div>
+        <button class="inline-flex items-center justify-center text-sm font-medium border h-9 rounded-md px-3 text-gray-200"
+            type="submit" [disabled]="formModel.invalid"
+            [ngClass]="{'bg-slate-950': formModel.valid, 'bg-gray-500': formModel.invalid}"
+            >Add phase</button>
     </div>
-
-    <div>
-        <label for="phase-deadline">Deadline: </label>
-        <input type="date" class="border-2" [(ngModel)]="phase.deadline" name="phase-deadline" id="phase-deadline">
-    </div>
-
-    <div>
-        <label for="phase-start-date">Start date: </label>
-        <input type="date" class="border-2" [(ngModel)]="phase.start_date" name="phase-start-date" id="phase-start-date">
-    </div>
-        <button class="block bg-green-500 text-white font-bold py-2 px-4 rounded" type="submit">Create</button>
 </form>
-<!-- <div class="">tasks</div>
-<app-task-list [taskList]="phase.Tasks"></app-task-list>
-    <div class="bg-blue-500 p-2 rounded-xl w-[fit-content] hover:cursor-pointer" (click)="toggleTaskCreation()">
-        <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-            <g id="SVGRepo_iconCarrier">
-                <path
-                    d="M12 6C12.5523 6 13 6.44772 13 7V11H17C17.5523 11 18 11.4477 18 12C18 12.5523 17.5523 13 17 13H13V17C13 17.5523 12.5523 18 12 18C11.4477 18 11 17.5523 11 17V13H7C6.44772 13 6 12.5523 6 12C6 11.4477 6.44772 11 7 11H11V7C11 6.44772 11.4477 6 12 6Z"
-                    fill="#000000"></path>
-                <path fill-rule="evenodd" clip-rule="evenodd"
-                    d="M1 12C1 5.92487 5.92487 1 12 1C18.0751 1 23 5.92487 23 12C23 18.0751 18.0751 23 12 23C5.92487 23 1 18.0751 1 12ZM12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3Z"
-                    fill="#000000"></path>
-            </g>
-        </svg>
-    </div> -->
-    <!-- @if (taskCreationMode) {
-        <app-create-task (taskCreation)="addTask($event)"></app-create-task>
-    } -->
-
-
