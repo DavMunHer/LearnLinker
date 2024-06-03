@@ -58,7 +58,6 @@ export class CreateTaskComponent implements OnInit {
         this.projectId = this.route.snapshot.params['projectId'];
     }
 
-
     async addUser() {
         this.errorMessage = await this.helper.checkAndAddTaskUser(this.developerEmailOrUsername, this.task.users, this.sessionUser, this.projectId, this.handleError);
         if (this.errorMessage == '') {

@@ -10,5 +10,5 @@ import { Task } from '../../../interfaces/task';
   styleUrl: './task-mini-card.component.scss'
 })
 export class TaskMiniCardComponent {
-    @Input() task!: Task;
+    @Input() task!: any;
 }

@@ -21,6 +21,10 @@
             <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
             <circle cx="12" cy="7" r="4"></circle>
         </svg>
-        <div class="text-gray-500 text-sm">Oscar, Xuan</div>
+        <div class="text-gray-500 text-sm">
+            @for (user of task.Users; track $index) {
+                {{user.username}}@if ($index < task.Users.length - 1) {, }
+            }
+        </div>
     </div>
 </div>

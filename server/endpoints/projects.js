@@ -7,7 +7,6 @@ const { formatDateAttribute } = require('./helper');
 const sequelize = require('../config/database');
 const Task = require('../models/Task');
 const User = require('../models/User');
-const TaskUser = require('../models/task_user');
 
 Phase.belongsTo(Project);
 Project.hasMany(Phase);
@@ -206,7 +205,17 @@ router.get('/project/:role/:action/details/:projectId', async (req, res) => {
                                 formatDateAttribute('Phases->Tasks.start_date', 'start_date'),
                                 formatDateAttribute('Phases->Tasks.end_date', 'end_date'),
                                 formatDateAttribute('Phases->Tasks.deadline', 'deadline'),
-                            ]
+                            ],
+                            include: {
+                                model: User,
+                                attributes: [
+                                    'email',
+                                    'username'
+                                ],
+                                through: {
+                                    attributes: []
+                                }
+                            }
                         }
                     }
                 });
