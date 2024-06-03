@@ -25,7 +25,7 @@
     </div>
     <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         @for (task of phase.Tasks; track $index) {
-        <app-task-mini-card [task]="task"></app-task-mini-card>
+            <app-task-mini-card [task]="task" (taskDeletion)="removeTask($event)"></app-task-mini-card>
         } @empty {
         <div class="flex justify-center items-center w-full h-20 col-span-2 lg:col-span-1 lg:col-start-2">
             <p class="text-xl">No tasks found</p>

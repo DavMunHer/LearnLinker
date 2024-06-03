@@ -29,11 +29,10 @@ export class PhaseCardComponent {
         }
     }
 
-
     constructor(private phaseHttpService: PhasesHttpService) { }
 
     deletePhase() {
-        if (confirm('Are you sure you want to delete the phase ' + this.phase.name + '?')) {
+        if (confirm('Are you sure you want to delete the phase "' + this.phase.name + '"?')) {
             this.phaseHttpService.deletePhase(this.phase.id).subscribe({
                 next: () => {
                     this.phaseDeletion.emit(this.phase);
@@ -45,4 +44,9 @@ export class PhaseCardComponent {
             });
         }
     }
+
+    removeTask(task: any) {
+        this.phase.Tasks = this.phase.Tasks.filter(t => t.id !== task.id);
+    }
+
 }
