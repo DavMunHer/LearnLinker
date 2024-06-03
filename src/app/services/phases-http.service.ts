@@ -14,8 +14,8 @@ export class PhasesHttpService {
         return this.http.get<Phase>(`phase/${phaseId}`);
     }
 
-    createPhase(projectId: string, phase: Phase) {
-        return this.http.post(`project/${projectId}/create/phase`, phase);
+    createPhase(projectId: string, phase: Phase): Observable<Phase> {
+        return this.http.post<Phase>(`project/${projectId}/create/phase`, phase);
     }
 
     updatePhase(phaseId: number | undefined, phase: Phase) {

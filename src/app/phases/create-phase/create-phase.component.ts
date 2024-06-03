@@ -31,8 +31,15 @@ export class CreatePhaseComponent {
     constructor(private phaseService: PhasesHttpService) { }
 
     sendAndCreatePhase() {
-        this.phaseCreation.emit(this.phase);
-        this.phaseService.createPhase(this.projectId, this.phase).subscribe();
+        // this.phaseCreation.emit(this.phase);
+        this.phaseService.createPhase(this.projectId, this.phase).subscribe({
+            next: (phase: Phase) => {
+                this.phaseCreation.emit(phase);
+            },
+            error: (error) => {
+                console.error('Error creating phase', error);
+            }
+        });
         this.phase = {
             name: '',
             deadline: '',
