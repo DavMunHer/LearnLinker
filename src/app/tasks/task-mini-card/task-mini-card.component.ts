@@ -2,16 +2,19 @@ import { DatePipe } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Task } from '../../../interfaces/task';
 import { TasksHttpService } from '../../services/tasks-http.service';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-task-mini-card',
   standalone: true,
-  imports: [DatePipe],
+  imports: [DatePipe, RouterLink],
   templateUrl: './task-mini-card.component.html',
   styleUrl: './task-mini-card.component.scss'
 })
 export class TaskMiniCardComponent {
     @Input() task!: any;
+    @Input() phaseId!: number | undefined;
+    @Input() projectId!: string;
     @Output() taskDeletion = new EventEmitter<Task>();
 
     constructor(private taskHttpService: TasksHttpService) {}

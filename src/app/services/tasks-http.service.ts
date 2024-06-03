@@ -10,6 +10,10 @@ export class TasksHttpService {
 
     constructor(private http: HttpClient) { }
 
+    getTask(taskId: string): Observable<Task> {
+        return this.http.get<Task>(`task/${taskId}`);
+    }
+
     getTaskDetails(taskId: string, userEmail: string): Observable<Task> {
         return this.http.get<Task>(`task/${taskId}/user/${userEmail}`);
     }
@@ -20,5 +24,9 @@ export class TasksHttpService {
 
     deleteTask(taskId: string) {
         return this.http.delete(`delete/task/${taskId}`);
+    }
+
+    updateTask(task: Task): Observable<Task> {
+        return this.http.put<Task>(`update/task/${task.id}`, task);
     }
 }

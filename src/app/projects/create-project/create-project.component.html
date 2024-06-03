@@ -105,7 +105,7 @@
                         }
                     <div class="grid gap-2">
                         @for (leader of leaders; track $index) {
-                            <app-added-user-mini-card [user]="leader" (removeUser)="removeUser($event)"></app-added-user-mini-card>
+                            <app-added-user-mini-card [user]="leader" (userDeletion)="removeUser($event)"></app-added-user-mini-card>
                         } @empty {
                             <p class="text-gray-500 text-xs">No leaders added</p>
                         }

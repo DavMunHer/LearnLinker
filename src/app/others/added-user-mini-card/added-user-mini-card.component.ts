@@ -9,9 +9,9 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 })
 export class AddedUserMiniCardComponent {
     @Input() user: any;
-    @Output() removeUser = new EventEmitter<string>();
+    @Output() userDeletion = new EventEmitter<string>();
 
     removeUserEvent() {
-        this.removeUser.emit(this.user.username);
+        this.userDeletion.emit(this.user.username);
     }
 }

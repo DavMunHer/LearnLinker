@@ -8,6 +8,40 @@ const { formatDateAttribute } = require('./helper');
 const Task = require('../models/Task');
 const User = require('../models/User');
 
+Task.belongsToMany(User, { through: 'task_user' });
+
+
+router.get('/task/:id', async (req, res) => {
+    try {
+        const task = await Task.findOne({
+            where: { id: req.params.id },
+            attributes: [
+                'id',
+                'name',
+                'description',
+                formatDateAttribute('start_date', 'start_date'),
+                formatDateAttribute('deadline', 'deadline'),
+            ],
+            include: {
+                model: User,
+                attributes: ['username', 'email'],
+                through: {
+                    attributes: []
+                }
+            }
+        });
+        if (!task) {
+            return res.status(404).json({ message: 'Task not found.' });
+        }
+        res.json(task);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error.' });
+    }
+});
+
+
+
 // Endpoint para los detalles de una tarea (comprobando si el usuario tiene acceso a la tarea)
 router.get('/task/:id/user/:user_email', async (req, res) => {
     try {
@@ -91,6 +125,29 @@ router.post('/create/task', async (req, res) => {
         // res.status(201).json({ message: 'Task creation successful.' });
     } catch (error) {
         console.error(error);
+        res.status(500).json({ message: 'Internal server error.' });
+    }
+});
+
+
+router.put('/update/task/:id', async (req, res) => {
+    try {
+        const taskId = req.params.id;
+        const task = await Task.findOne({ where: { id: taskId } });
+        if (!task) {
+            return res.status(404).json({ message: 'Task not found.' });
+        }
+        const { name, description, start_date, deadline, phaseId, Users } = req.body;
+        await task.update({ name, description, start_date, deadline, phaseId });
+        if (Users) {
+            await sequelize.query(`DELETE FROM task_user WHERE taskId = ${taskId}`);
+            for (const user of Users) {
+                const developer = await User.findOne({ where: { 'email': user.email } });
+                sequelize.query(`INSERT INTO task_user (userId, taskId) VALUES (${developer.id}, ${taskId});`);
+            }
+        }
+        res.status(204).json({ message: 'Task update successful.' });
+    } catch (error) {
         res.status(500).json({ message: 'Internal server error.' });
     }
 });
