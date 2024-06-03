@@ -49,7 +49,7 @@ export class EditTaskComponent implements OnInit{
         this.taskHttpService.getTask(this.route.snapshot.params['taskId']).subscribe({
             next: (task: Task) => {
                 this.task = task;
-                console.log(this.task);
+                // console.log(this.task);
             },
             error: (error) => {
                 console.error('Error getting task', error);

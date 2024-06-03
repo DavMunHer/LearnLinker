@@ -107,7 +107,7 @@ export class HomeComponent implements OnInit {
     ngOnInit(): void {
         this.sessionUser = this.authService.getSessionUser();
         this.userProjects = this.route.snapshot.data['projects'];
-        console.log(this.userProjects);
+        // console.log(this.userProjects);
         if (this.projectDataService.getProjectId()) {
             // Cuando haya información guardada será porque se ha pasado desde project management
             this.selectedProjectId = this.projectDataService.getProjectId() + '';
@@ -126,12 +126,12 @@ export class HomeComponent implements OnInit {
                     if (response[0] && response[0].Phase) {
                         this.viewMode = 'tasks';
                         this.selectedProjectTasks = response;
-                        console.log(this.selectedProjectTasks);
+                        // console.log(this.selectedProjectTasks);
                         // this.selectedProject.Tasks = response;
                     } else {
                         this.viewMode = 'phases';
                         this.selectedProjectPhases = response;
-                        console.log(this.selectedProjectPhases);
+                        // console.log(this.selectedProjectPhases);
                         // this.selectedProject.Phases = response;
                     }
                     this.isLoading = false;
@@ -160,7 +160,7 @@ export class HomeComponent implements OnInit {
                              */
                             this.viewMode = 'tasks';
                             this.selectedProjectTasks = response;
-                            console.log(this.selectedProjectTasks);
+                            // console.log(this.selectedProjectTasks);
 
                             // this.selectedProject.Tasks = response;
                         } else {
@@ -169,7 +169,7 @@ export class HomeComponent implements OnInit {
                             // this.selectedProject.Phases = response;
                         }
                         // this.selectedProject.Phases = projectPhases;
-                        console.log(this.selectedProject);
+                        // console.log(this.selectedProject);
                         this.isLoading = false;
                     },
                     error: () => {
@@ -190,7 +190,7 @@ export class HomeComponent implements OnInit {
                 this.selectedProjectPhases = this.changeToPhasesFormat(this.selectedProjectTasks);
 
             this.selectedProjectTasks = [];
-        console.log(this.selectedProjectPhases);
+        // console.log(this.selectedProjectPhases);
         } else {
             this.selectedProjectTasks = this.changeToTasksFormat(this.selectedProjectPhases);
             /*

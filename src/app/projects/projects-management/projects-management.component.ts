@@ -21,7 +21,7 @@ export class ProjectsManagementComponent implements OnInit {
     ngOnInit(): void {
         this.projectHttpService.getUserProjects(this.authService.getSessionUser().email).subscribe((response) => {
             this.userProjects = response;
-            console.log(this.userProjects);
+            // console.log(this.userProjects);
         });
     }
 

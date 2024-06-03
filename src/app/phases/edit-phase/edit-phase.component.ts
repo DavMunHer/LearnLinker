@@ -38,7 +38,7 @@ export class EditPhaseComponent implements OnInit {
 
     ngOnInit(): void {
         this.projectId = this.route.snapshot.params['projectId'];
-        console.log(this.projectId);
+        // console.log(this.projectId);
         this.phaseId = this.route.snapshot.params['phaseId'];
         this.phaseHttpService.getPhase(this.phaseId).subscribe({
             next: (phase: Phase) => {

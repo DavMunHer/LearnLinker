@@ -22,7 +22,7 @@ export class ProfileComponent {
     ngOnInit(): void {
         if (this.authService.isLogued()) {
             this.loguedUser = this.authService.getSessionUser();
-            console.log(this.loguedUser);
+            // console.log(this.loguedUser);
         }
     }
 }
