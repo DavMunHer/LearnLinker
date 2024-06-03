@@ -9,6 +9,7 @@ const User = require('../models/User');
 const Task = require('../models/Task');
 
 Phase.hasMany(Task);
+Task.belongsToMany(User, { through: 'task_user' });
 
 router.get('/project/:id/phases', async (req, res) => {
     try {
@@ -43,7 +44,14 @@ router.get('/phase/:id', async (req, res) => {
                     formatDateAttribute('Tasks.start_date', 'start_date'),
                     formatDateAttribute('Tasks.end_date', 'end_date'),
                     formatDateAttribute('Tasks.deadline', 'deadline'),
-                ]
+                ],
+                include: {
+                    model: User,
+                    attributes: ['username', 'email'],
+                    through: {
+                        attributes: []
+                    }
+                }
             }]
 
         });
