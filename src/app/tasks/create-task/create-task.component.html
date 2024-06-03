@@ -1,4 +1,4 @@
-<form (ngSubmit)="sendAndCreateTask()">
+<!-- <form (ngSubmit)="sendAndCreateTask()">
     <div>
         <label for="task-name">Task name:</label>
         <input type="text" class="border-2" [(ngModel)]="task.name" name="task-name" id="task-name">
@@ -55,4 +55,98 @@
     <button class="block bg-blue-500 text-white font-bold py-2 px-4 rounded" type="submit">Create</button>
 
 </form>
+ -->
+
+ <div class="rounded-lg border bg-card text-card-foreground shadow-sm w-full max-w-2xl mx-auto mt-4">
+    <div class="flex flex-col px-6 pt-6">
+        <h3 class="whitespace-nowrap text-2xl font-semibold leading-none tracking-tight">Create New Task</h3>
+    </div>
+    <div class="p-6">
+        <form class="grid gap-4" (ngSubmit)="createTask()" #form="ngForm">
+            <div class="space-y-1.5">
+                <label class="text-sm font-medium leading-none" for="name">Task Name</label>
+                <input class="flex h-10 w-full rounded-md border px-3 py-2 text-sm" id="name"
+                    placeholder="Enter task name" required minlength="4" maxlength="50" #nameModel="ngModel"
+                    [(ngModel)]="task.name" name="name" [ngClass]="{'border-red-500': nameModel.invalid && nameModel.touched,
+            'border-green-500': nameModel.valid && nameModel.touched}" />
+                @if (nameModel.invalid && nameModel.touched) {
+                    <p class="text-red-500 text-xs">Task name is required and must be between 4 and 50 characters</p>
+                }
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div class="space-y-1.5">
+                    <label class="text-sm font-medium leading-none" for="start-date">Start Date</label>
+                    <input class="flex h-10 rounded-md border px-3 py-2 text-md w-full" id="start-date" type="date"
+                        [(ngModel)]="task.start_date" name="phase-start_date" #start_dateModel="ngModel"
+                        required="" [min]="minDate" [ngClass]="{'border-red-500': start_dateModel.invalid && start_dateModel.touched,
+                        'border-green-500': start_dateModel.valid && start_dateModel.touched}" />
+                    @if (start_dateModel.invalid && start_dateModel.touched) {
+                        <p class="text-red-500 text-xs">Start date is required</p>
+                    }
+                </div>
+                <div class="space-y-1.5">
+                    <label class="text-sm font-medium leading-none" for="end-date">Deadline</label>
+                    <input class="flex h-10 rounded-md border px-3 py-2 text-md w-full" id="end-date" type="date"
+                        [(ngModel)]="task.deadline" name="task-deadline" #deadlineModel="ngModel" required=""
+                        [min]="task.start_date || minDate" [ngClass]="{'border-red-500': deadlineModel.invalid && deadlineModel.touched,
+                        'border-green-500': deadlineModel.valid && deadlineModel.touched}" />
+                    @if (deadlineModel.invalid && deadlineModel.touched) {
+                        <p class="text-red-500 text-xs">End date is required</p>
+                    }
+                </div>
+            </div>
+            <div class="space-y-1.5">
+                <label class="text-sm font-medium leading-none" for="description">Description</label>
+                <textarea class="flex h-20 w-full rounded-md border px-3 py-2 text-sm resize-none" id="description"
+                    placeholder="Enter task description" required minlength="10" maxlength="250" #descriptionModel="ngModel"
+                    [(ngModel)]="task.description" name="description" [ngClass]="{'border-red-500': descriptionModel.invalid && descriptionModel.touched,
+                    'border-green-500': descriptionModel.valid && descriptionModel.touched}"></textarea>
+                @if (descriptionModel.invalid && descriptionModel.touched) {
+                    <p class="text-red-500 text-xs">Description is required and must be between 10 and 250 characters</p>
+                }
+            </div>
+            <div>
+                <label class="text-sm font-medium leading-none mb-2" for="developers">Task Developers</label>
+                <div class="space-y-2">
+                    <div class="flex items-center gap-2">
+                        <input class="flex h-10 w-full rounded-md border px-3 py-2 text-sm flex-1" id="developers"
+                            placeholder="Enter username or email" name="developers" [(ngModel)]="developerEmailOrUsername" #developerModel="ngModel" />
+                        <button (click)="addUser()" type="button"
+                            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium h-10 w-10">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="h-4 w-4">
+                                <path d="M5 12h14"></path>
+                                <path d="M12 5v14"></path>
+                            </svg>
+                            <span class="sr-only">Add developer</span>
+                        </button>
+                    </div>
+                    @if (task.users.length == 0 && developerModel.touched) {
+                        <p class="text-red-500 text-xs">You must add at least one developer!</p>
+                    }
+                    @if (developerErrorMessage) {
+                        <p class="text-red-500">{{developerErrorMessage}}</p>
+                    }
+                    <div class="grid gap-2">
+                        @for (developer of task.users; track $index) {
+                            <app-added-user-mini-card [user]="developer" (removeUser)="removeUser($event)"></app-added-user-mini-card>
+                        } @empty {
+                            <p class="text-gray-500 text-xs">No developers added</p>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="flex items-center justify-center px-6 pt-6">
+                <button [disabled]="form.invalid || task.users.length == 0"
+                    class="inline-flex items-center justify-center rounded-md text-sm font-medium
+                    text-gray-100 h-10 px-4 py-2"
+                    [ngClass]="{'bg-slate-900 hover:bg-slate-900/90': form.valid && task.users.length > 0,
+                    'bg-gray-500': form.invalid || task.users.length == 0}">
+                    Create Task
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 

@@ -25,13 +25,11 @@ export class CreatePhaseComponent {
         start_date: '',
         end_date: '',
         Tasks: [],
-        taskCreationMode: false
     }
 
     constructor(private phaseService: PhasesHttpService) { }
 
     sendAndCreatePhase() {
-        // this.phaseCreation.emit(this.phase);
         this.phaseService.createPhase(this.projectId, this.phase).subscribe({
             next: (phase: Phase) => {
                 this.phaseCreation.emit(phase);
@@ -47,19 +45,6 @@ export class CreatePhaseComponent {
             end_date: '',
             Tasks: []
         }
-    }
-
-    toggleTaskCreation() {
-        this.phase.taskCreationMode ? this.phase.taskCreationMode = false : this.phase.taskCreationMode = true;
-    }
-
-    getPhaseTaks() {
-        return this.phase.Tasks;
-    }
-
-    addTask(task: Task) {
-        this.phase.Tasks?.push(task);
-        this.phase.taskCreationMode = false;
     }
 
     removeTask(task: Task) {
