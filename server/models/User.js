@@ -2,6 +2,7 @@ const Sequelize = require('sequelize');
 const sequelize = require('../config/database');
 const Task = require('./Task');
 const Project = require('./Project');
+const Note = require('./Note');
 const TaskUser = require('./task_user');
 
 const User = sequelize.define('User', {
@@ -36,7 +37,9 @@ const User = sequelize.define('User', {
 // Asociaciones con otros modelos
 User.belongsToMany(Task, { through: TaskUser });
 User.belongsToMany(Project, {through: 'project_user'});
+User.belongsToMany(Note, {through: 'have'});
 
-// User.sync(); // Sincronizar el modelo con la base de datos
 
 module.exports = User;
+
+
