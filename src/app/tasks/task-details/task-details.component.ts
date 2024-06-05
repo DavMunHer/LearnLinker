@@ -116,6 +116,15 @@ export class TaskDetailsComponent implements OnInit {
         this.noteHttpService.createNote(this.userNote).subscribe({
             next: () => {
                 this.taskNotes.push({ ...this.userNote });
+                this.userNote = {
+                    date: '',
+                    summary: '',
+                    taskId: this.taskId,
+                    userEmail: '',
+                    user: {
+                        username: ''
+                    }
+                };
                 this.successMessage = 'Note added successfully.';
             },
             error: (error) => {
