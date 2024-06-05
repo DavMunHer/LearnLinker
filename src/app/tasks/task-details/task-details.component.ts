@@ -52,10 +52,10 @@ export class TaskDetailsComponent implements OnInit {
         }
     };
     protected successMessage!: string;
+    protected participatingInTask = true;
 
     private handleTaskError(error:  HttpErrorResponse) {
         if (error.status === 404) {
-            // En este caso no se habrá encontrado la tarea para el usuario, por lo que no se le permitirá ver el componente
             this.router.navigate(['/home']);
         } else {
             this.errorMessage = 'Internal server error.';
@@ -76,7 +76,9 @@ export class TaskDetailsComponent implements OnInit {
         this.taskHttpService.getTaskDetails(this.taskId, this.userInfo.email).subscribe({
             next: (response: Task) => {
                 this.task = response;
-                console.log(this.task);
+                // Cuando la tarea venga con el atributo userCompleted, significará que este está participando en la tarea
+                this.task.userCompleted != undefined ? this.participatingInTask = true : this.participatingInTask = false;
+                console.log(this.participatingInTask);
             },
             error: (error) => {
                 this.handleTaskError(error);

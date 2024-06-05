@@ -6,10 +6,12 @@
             <mat-card-header>
                 <mat-card-title>{{task.name}}</mat-card-title>
                 <mat-card-subtitle>@if(task.Phase?.Project) { {{task.Phase?.Project?.name}} - }{{task.Phase?.name}}</mat-card-subtitle>
-                @if (task.userCompleted == 0) {
-                    <button mat-raised-button color="primary" (click)="markAsFinished()" class="ml-auto">Finished</button>
-                } @else {
-                    <button mat-raised-button color="warn" (click)="markAsUnfinished()" class="ml-auto">Not finished</button>
+                @if (participatingInTask) {
+                    @if (task.userCompleted == 0) {
+                        <button mat-raised-button color="primary" (click)="markAsFinished()" class="ml-auto">Finished</button>
+                    } @else {
+                        <button mat-raised-button color="warn" (click)="markAsUnfinished()" class="ml-auto">Not finished</button>
+                    }
                 }
             </mat-card-header>
             <mat-card-content class="overflow-y-auto flex-grow">
@@ -23,7 +25,7 @@
         </mat-card>
     </div>
     }
-    <form class="mt-5 md:mt-0" (ngSubmit)="addNote()">
+    <form class="mt-5 md:mt-0" #form="ngForm" (ngSubmit)="addNote()">
         <h2 class="text-2xl font-bold text-center">Add Note</h2>
             <div class="text-center my-2">Write comment as <span class="font-bold">{{userInfo.username}}</span></div>
             <mat-form-field class="w-full px-12 sm:px-32 md:px-16 lg:px-32 pt-3">
@@ -33,7 +35,9 @@
                     [(ngModel)]="userNote.summary" name="summary"></textarea>
             </mat-form-field>
             <div class="flex items-center justify-center">
-                <button mat-raised-button color="primary" type="submit">Add note</button>
+                <button mat-raised-button color="primary" type="submit"
+                [disabled]="form.invalid || !participatingInTask"
+                >Add note</button>
             </div>
     </form>
 
@@ -47,6 +51,8 @@
                 <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 text-center">{{note.user.username}} - {{note.date | date:'yyyy/MM/dd'}}</h5>
                 <p class="font-normal text-gray-700">{{note.summary}}</p>
             </div>
+        } @empty {
+            <div class="text-center text-gray-500">No notes yet</div>
         }
     </div>
 </div>

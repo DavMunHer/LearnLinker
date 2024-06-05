@@ -9,7 +9,7 @@ const Task = require('../models/Task');
 const User = require('../models/User');
 
 Task.belongsToMany(User, { through: 'task_user' });
-
+Task.belongsTo(Phase, { foreignKey: 'phaseId' });
 
 router.get('/task/:id', async (req, res) => {
     try {
@@ -78,7 +78,28 @@ router.get('/task/:id/user/:user_email', async (req, res) => {
             }
         });
         if (!userWithTaskDetails) {
-            return res.status(404).json({ message: 'Task not found for the actual user.' });
+            const task = await Task.findOne({
+                where: { id: req.params.id },
+                attributes: [
+                    'id',
+                    'name',
+                    'description',
+                    'phaseId',
+                    formatDateAttribute('Task.start_date', 'start_date'),
+                    formatDateAttribute('Task.deadline', 'deadline'),
+                    [literal("(SELECT COUNT(*) FROM task_user WHERE task_user.taskId = `Task`.`id`)"), 'totalUsersInTask'],
+                    [literal("(SELECT COUNT(*) FROM task_user WHERE task_user.taskId = `Task`.`id` AND task_user.completed = 1)"), 'completedUsersInTask']
+                ],
+                include: {
+                    model: Phase,
+                    attributes: ['name']
+                }
+            });
+            if (!task) {
+                return res.status(404).json({ message: 'Task not found.' });
+            } else
+                return res.json(task);
+            // return res.status(404).json({ message: 'Task not found for the actual user.' });
         }
         const taskDetails = userWithTaskDetails.Tasks[0];
         res.json(taskDetails);
