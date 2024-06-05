@@ -180,6 +180,12 @@ export class HomeComponent implements OnInit {
         }
     }
 
+    removeTask(phase: Phase) {
+        this.selectedProjectPhases = this.selectedProjectPhases.filter((storedPhase: Phase) => {
+            return storedPhase != phase;
+        });
+    }
+
 
     loadView() {
         if (this.viewMode === 'phases') {

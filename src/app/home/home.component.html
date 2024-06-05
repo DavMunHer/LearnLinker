@@ -45,7 +45,8 @@
         }
     } @else {
         @for (phase of selectedProjectPhases; track $index) {
-            <app-phase-col [phase]="phase" class="block mx-auto my-4"></app-phase-col>
+            <app-phase-col [project]="selectedProject" [phase]="phase" (phaseDeletion)="removeTask($event)"
+            class="block mx-auto my-4"></app-phase-col>
         } @empty {
         <div class="flex justify-center items-center w-full h-64">
             <p class="text-xl">No tasks found</p>
