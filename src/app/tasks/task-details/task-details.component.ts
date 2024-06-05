@@ -110,6 +110,11 @@ export class TaskDetailsComponent implements OnInit {
         this.taskUserHttp.updateTaskStatus(this.task.id!, this.userInfo.email, this.task).subscribe();
     }
 
+
+    checkIfUserHasAddedNoteToday() {
+
+    }
+
     addNote() {
         this.userNote.date = new Date().toISOString();
         this.userNote.userEmail = this.userInfo.email;

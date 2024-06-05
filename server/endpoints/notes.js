@@ -47,7 +47,36 @@ router.get('/task/:taskId/notes', async (req, res) => {
         console.error(error);
         res.status(500).json({ message: 'Internal server error.' });
     }
-})
+});
+
+
+// Endopoint para comprobar si un usuario ha comentado en una tarea en el día actual
+router.get('/check/task/:taskId/user/:userEmail', async (req, res) => {
+    try {
+        const taskId = req.params.taskId;
+        const user = await User.findOne({ where: { email: req.params.userEmail } });
+        const noteId = await sequelize.query(`SELECT noteId FROM have WHERE taskId = ${taskId} AND userId = ${user.id};`);
+        if (!noteId) {
+            // El usuario no habrá comentado nunca en la tarea
+            return res.json({ commented: false });
+        }
+        const todayDate = new Date().toISOString().split('T')[0];
+        const commented = await sequelize.query(`SELECT h.taskId
+        FROM have h
+        JOIN notes n ON h.noteId = n.id
+        WHERE h.userId = ${user.id} AND h.taskId = ${taskId} AND DATE(n.date) = DATE('${todayDate}');
+        `);
+        if (commented[0][0] && commented[0][0].taskId) {
+            return res.json({ commented: true });
+        } else {
+            return res.json({ commented: false });
+        }
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error.' });
+    }
+});
 
 
 router.post('/create/note', async (req, res) => {

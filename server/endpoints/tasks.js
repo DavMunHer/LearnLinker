@@ -42,6 +42,8 @@ router.get('/task/:id', async (req, res) => {
 
 
 
+
+
 // Endpoint para los detalles de una tarea (comprobando si el usuario tiene acceso a la tarea)
 router.get('/task/:id/user/:user_email', async (req, res) => {
     try {
