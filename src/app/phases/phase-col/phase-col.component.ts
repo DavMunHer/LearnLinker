@@ -11,4 +11,10 @@ import { RouterLink } from '@angular/router';
 })
 export class PhaseColComponent {
     @Input() phase!: Phase;
+    protected dropdownView: boolean = false;
+
+    toggleDropdown() {
+        this.dropdownView ? this.dropdownView = false : this.dropdownView = true;
+    }
+
 }
