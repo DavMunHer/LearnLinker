@@ -85,7 +85,7 @@ router.post('/create/note', async (req, res) => {
         const note = await Note.create({ date: date, summary: summary });
         const user = await User.findOne({ where: { email: userEmail } });
         sequelize.query(`INSERT INTO have (taskId, userId, noteId) VALUES (${taskId}, ${user.id}, ${note.id});`);
-        res.status(201).json({ message: 'Note created successfully.' });
+        res.json({ id: note.id, date: note.date, summary: note.summary, user: { username: user.username } });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Internal server error.' });

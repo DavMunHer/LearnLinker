@@ -20,4 +20,8 @@ export class NoteHttpService {
     deleteNote(noteId: string): Observable<any> {
         return this.http.delete(`delete/note/${noteId}`);
     }
+
+    checkIfUserHasCommented(taskId: string, userEmail: string): Observable<any> {
+        return this.http.get(`check/task/${taskId}/user/${userEmail}`);
+    }
 }

@@ -27,10 +27,14 @@
     }
     <form class="mt-5 md:mt-0" #form="ngForm" (ngSubmit)="addNote()">
         <h2 class="text-2xl font-bold text-center">Add Note</h2>
-        @if (participatingInTask) {
-            <div class="text-center my-2">Write comment as <span class="font-bold">{{userInfo.username}}</span></div>
+        @if (addedNoteToday) {
+            <div class="text-center text-red-500">You have already added a note today</div>
         } @else {
-            <div class="text-center my-2">You can't add comments since you are not participating in the task</div>
+            @if (participatingInTask) {
+                <div class="text-center my-2">Write comment as <span class="font-bold">{{userInfo.username}}</span></div>
+            } @else {
+                <div class="text-center my-2">You can't add comments since you are not participating in the task</div>
+            }
         }
             <mat-form-field class="w-full px-12 sm:px-32 md:px-16 lg:px-32 pt-3">
                 <mat-label>Today's progress</mat-label>
@@ -40,7 +44,7 @@
             </mat-form-field>
             <div class="flex items-center justify-center">
                 <button mat-raised-button color="primary" type="submit"
-                [disabled]="form.invalid || !participatingInTask"
+                [disabled]="form.invalid || !participatingInTask || addedNoteToday"
                 >Add note</button>
             </div>
     </form>

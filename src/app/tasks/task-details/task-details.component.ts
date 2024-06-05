@@ -33,6 +33,7 @@ export class TaskDetailsComponent implements OnInit {
     protected errorMessage!: string;
     protected userInfo!: User;
     protected taskNotes: any = [];
+    protected addedNoteToday: boolean = false;
     private taskId = this.route.snapshot.params['id'];
     constructor(
         private taskHttpService: TasksHttpService,
@@ -71,8 +72,21 @@ export class TaskDetailsComponent implements OnInit {
         }
     }
 
+    private checkIfUserHasAddedNoteToday() {
+        this.noteHttpService.checkIfUserHasCommented(this.taskId, this.userInfo.email).subscribe({
+            next: (response: any) => {
+                console.log(response);
+                this.addedNoteToday = response.commented;
+            },
+            error: (error) => {
+                this.errorMessage = 'Could\'nt check if the user has already added a note today.';
+            }
+        });
+    }
+
     ngOnInit(): void {
         this.userInfo = this.authService.getSessionUser();
+        this.checkIfUserHasAddedNoteToday();
         this.taskHttpService.getTaskDetails(this.taskId, this.userInfo.email).subscribe({
             next: (response: Task) => {
                 this.task = response;
@@ -110,19 +124,15 @@ export class TaskDetailsComponent implements OnInit {
         this.taskUserHttp.updateTaskStatus(this.task.id!, this.userInfo.email, this.task).subscribe();
     }
 
-
-    checkIfUserHasAddedNoteToday() {
-
-    }
-
     addNote() {
         this.userNote.date = new Date().toISOString();
         this.userNote.userEmail = this.userInfo.email;
         this.userNote.user.username = this.userInfo.username;
         console.log(this.userNote);
         this.noteHttpService.createNote(this.userNote).subscribe({
-            next: () => {
-                this.taskNotes.push({ ...this.userNote });
+            next: (noteResponse) => {
+                noteResponse.user.username = this.userInfo.username;
+                this.taskNotes.push(noteResponse);
                 this.userNote = {
                     date: '',
                     summary: '',
@@ -133,6 +143,7 @@ export class TaskDetailsComponent implements OnInit {
                     }
                 };
                 this.successMessage = 'Note added successfully.';
+                this.addedNoteToday = true;
             },
             error: (error) => {
                 this.errorMessage = 'Could\'nt create the note.';
@@ -149,6 +160,9 @@ export class TaskDetailsComponent implements OnInit {
                 },
                 error: (error) => {
                     this.errorMessage = 'Could\'nt delete the note.';
+                },
+                complete: () => {
+                    this.checkIfUserHasAddedNoteToday();
                 }
             });
         }
