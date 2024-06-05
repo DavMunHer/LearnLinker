@@ -2,7 +2,7 @@
     @if (task) {
     <div class="self-center justify-self-center">
         <h2 class="text-2xl font-bold text-center">Task</h2>
-        <mat-card class="example-card high-contrast-card h-64 flex flex-col justify-between">
+        <mat-card class="example-card high-contrast-card h-64 flex flex-col justify-between w-96">
             <mat-card-header>
                 <mat-card-title>{{task.name}}</mat-card-title>
                 <mat-card-subtitle>@if(task.Phase?.Project) { {{task.Phase?.Project?.name}} - }{{task.Phase?.name}}</mat-card-subtitle>
@@ -23,22 +23,28 @@
         </mat-card>
     </div>
     }
-    <div class="notes-section">
-        <h2 class="text-2xl font-bold text-center">Notes</h2>
-        <div class="notes-list">
-            @for (note of taskNotes; track $index) {
-                <div class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100">
-                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 text-center">{{note.user.username}} - {{note.date | date:'yyyy/MM/dd'}}</h5>
-                    <p class="font-normal text-gray-700">{{note.summary}}</p>
-                </div>
-            }
-        </div>
+    <form class="mt-5" (ngSubmit)="addNote()">
+        <h2 class="text-2xl font-bold text-center">Add Note</h2>
+            <mat-form-field class="w-full px-32 pt-3">
+                <mat-label>Today's progress</mat-label>
+                <textarea class="w-full" matInput name="today-progress" [(ngModel)]="userNote.summary"
+                placeholder="I have finished the tasks endpoints..."></textarea>
+            </mat-form-field>
+            <div class="flex items-center justify-center">
+                <button mat-raised-button color="primary" type="submit">Add note</button>
+            </div>
+    </form>
+
 </div>
 
-    <form class="mt-5" (ngSubmit)="addNote()">
-        <mat-form-field class="w-96">
-            <mat-label>Today's progress</mat-label>
-            <textarea class="block" matInput name="today-progress" [(ngModel)]="userNote.summary" placeholder="I have finished the tasks endpoints..."></textarea>
-        </mat-form-field>
-        <button mat-raised-button color="primary" type="submit" class="ml-auto">Add note</button>
-    </form>
+<div class="notes-section mt-5 px-5">
+    <h2 class="text-2xl font-bold text-center">Notes</h2>
+    <div class="notes-list">
+        @for (note of taskNotes; track $index) {
+            <div class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100">
+                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 text-center">{{note.user.username}} - {{note.date | date:'yyyy/MM/dd'}}</h5>
+                <p class="font-normal text-gray-700">{{note.summary}}</p>
+            </div>
+        }
+    </div>
+</div>
