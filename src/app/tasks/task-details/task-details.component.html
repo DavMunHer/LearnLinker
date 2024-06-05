@@ -25,10 +25,12 @@
     }
     <form class="mt-5" (ngSubmit)="addNote()">
         <h2 class="text-2xl font-bold text-center">Add Note</h2>
-            <mat-form-field class="w-full px-32 pt-3">
+            <div class="text-center my-2">Write comment as <span class="font-bold">{{userInfo.username}}</span></div>
+            <mat-form-field class="w-full px-12 sm:px-32 md:px-16 lg:px-32 pt-3">
                 <mat-label>Today's progress</mat-label>
-                <textarea class="w-full" matInput name="today-progress" [(ngModel)]="userNote.summary"
-                placeholder="I have finished the tasks endpoints..."></textarea>
+                <textarea  class="flex rounded-md text-sm" id="description" matInput rows="3"
+                    placeholder="I have finished the tasks endpoints..." required minlength="10" maxlength="250"
+                    [(ngModel)]="userNote.summary" name="summary"></textarea>
             </mat-form-field>
             <div class="flex items-center justify-center">
                 <button mat-raised-button color="primary" type="submit">Add note</button>
@@ -39,7 +41,7 @@
 
 <div class="notes-section mt-5 px-5">
     <h2 class="text-2xl font-bold text-center">Notes</h2>
-    <div class="notes-list">
+    <div class="notes-list flex gap-6">
         @for (note of taskNotes; track $index) {
             <div class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100">
                 <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 text-center">{{note.user.username}} - {{note.date | date:'yyyy/MM/dd'}}</h5>
