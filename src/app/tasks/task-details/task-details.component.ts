@@ -47,6 +47,9 @@ export class TaskDetailsComponent implements OnInit {
         summary: '',
         taskId: this.taskId,
         userEmail: '',
+        user: {
+            username: ''
+        }
     };
     protected successMessage!: string;
 
@@ -108,6 +111,8 @@ export class TaskDetailsComponent implements OnInit {
     addNote() {
         this.userNote.date = new Date().toISOString();
         this.userNote.userEmail = this.userInfo.email;
+        this.userNote.user.username = this.userInfo.username;
+        console.log(this.userNote);
         this.noteHttpService.createNote(this.userNote).subscribe({
             next: () => {
                 this.taskNotes.push(this.userNote);
