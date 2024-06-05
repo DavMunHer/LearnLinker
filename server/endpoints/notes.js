@@ -64,4 +64,19 @@ router.post('/create/note', async (req, res) => {
 });
 
 
+router.delete('/delete/note/:id', async (req, res) => {
+    try {
+        const noteId = req.params.id;
+        const note = await Note.findByPk(noteId);
+        if (!note) {
+            return res.status(404).json({ message: 'Note not found.' });
+        }
+        await note.destroy();
+        res.json({ message: 'Note deleted successfully.' });
+    } catch (error) {
+        res.status(500).json({ message: 'Internal server error.' });
+    }
+});
+
+
 module.exports = router;

@@ -9,7 +9,7 @@ import { User } from '../../../interfaces/user';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { DatePipe } from '@angular/common';
+import { DatePipe, NgClass } from '@angular/common';
 import { TaskUserHttpService } from '../../services/task-user-http.service';
 import { FormsModule } from '@angular/forms';
 import {MatInputModule} from '@angular/material/input';
@@ -23,7 +23,7 @@ import {MatDividerModule} from '@angular/material/divider';
   standalone: true,
     imports: [
         MatCardModule, MatButtonModule, MatProgressBarModule, DatePipe,
-        FormsModule, MatInputModule, MatFormFieldModule, MatDividerModule
+        FormsModule, MatInputModule, MatFormFieldModule, MatDividerModule, NgClass
     ],
   templateUrl: './task-details.component.html',
   styleUrl: './task-details.component.scss'
@@ -133,6 +133,20 @@ export class TaskDetailsComponent implements OnInit {
                 this.errorMessage = 'Could\'nt create the note.';
             }
         });
+    }
+
+    deleteNote(note: any) {
+        if (confirm('Are you sure that you want to delete this note?')) {
+            this.noteHttpService.deleteNote(note.id).subscribe({
+                next: () => {
+                    this.taskNotes = this.taskNotes.filter((storedNote: any) => storedNote.id !== note.id);
+                    this.successMessage = 'Note deleted successfully.';
+                },
+                error: (error) => {
+                    this.errorMessage = 'Could\'nt delete the note.';
+                }
+            });
+        }
     }
 
 }

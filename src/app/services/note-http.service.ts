@@ -16,4 +16,8 @@ export class NoteHttpService {
     createNote(note: any): Observable<any> {
         return this.http.post('create/note', note);
     }
+
+    deleteNote(noteId: string): Observable<any> {
+        return this.http.delete(`delete/note/${noteId}`);
+    }
 }
