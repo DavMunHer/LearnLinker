@@ -11,7 +11,5 @@ import { User } from '../../interfaces/user';
   styleUrl: './navbar.component.scss'
 })
 export class NavbarComponent {
-
     constructor(protected authService: AuthService) { }
-
 }
