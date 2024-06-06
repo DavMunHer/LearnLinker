@@ -1,4 +1,9 @@
 <div class="board">
+    @if(!selectedProject) {
+        <div class="flex justify-center items-center w-full h-64">
+            <p class="text-xl">You aren't participating in any project yet!</p>
+        </div>
+    } @else {
     <h1 class="text-2xl font-bold mb-4 text-center">Your Board - {{selectedProject.project_user?.role | titlecase}}</h1>
     <div class="flex justify-around flex-wrap">
         <div class="project-filters">
@@ -33,6 +38,7 @@
         </div>
     </div>
     <app-loading-spinner [isLoading]="isLoading" [color]="'default'"></app-loading-spinner>
+}
 </div>
 <div class="flex flex-wrap space-y-4 gap-1">
     @if (viewMode === 'tasks') {

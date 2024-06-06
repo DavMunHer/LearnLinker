@@ -54,6 +54,10 @@
             @for (project of userProjects; track project.id) {
             <app-project-card [project]="project" (deleteProjectEvent)="deleteProject($event)"
                 (errorOccurred)="loadError($event)"></app-project-card>
+            }@empty {
+            <div class="medium-size-col lg:col-start-2 flex justify-center items-center w-full h-64">
+                <p class="text-xl">No projects found</p>
+            </div>
             }
         </div>
     </main>
