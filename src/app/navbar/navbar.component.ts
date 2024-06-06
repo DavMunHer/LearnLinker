@@ -11,18 +11,7 @@ import { User } from '../../interfaces/user';
   styleUrl: './navbar.component.scss'
 })
 export class NavbarComponent {
-    protected loguedUser: User = {
-        username: '',
-        email: '',
-        password: ''
-    };
 
     constructor(protected authService: AuthService) { }
 
-    // ngOnInit(): void {
-    //     if (this.authService.isLogued()) {
-    //         this.loguedUser = jwtDecode.jwtDecode(JSON.stringify(this.authService.getToken()));
-    //         console.log(this.loguedUser);
-    //     }
-    // }
 }
