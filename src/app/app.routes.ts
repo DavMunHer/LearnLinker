@@ -9,17 +9,16 @@ import { authGuard } from './guards/session/auth.guard';
 import { guestGuard } from './guards/session/guest.guard';
 import { CreateProjectComponent } from './projects/create-project/create-project.component';
 import { EditProjectComponent } from './projects/edit-project/edit-project.component';
-import { ProjectDetailsComponent } from './projects/project-details/project-details.component';
 import { ProjectsManagementComponent } from './projects/projects-management/projects-management.component';
 import { userRoleResolver } from './resolvers/user-role.resolver';
 import { EditPhaseComponent } from './phases/edit-phase/edit-phase.component';
-import { CreatePhaseComponent } from './phases/create-phase/create-phase.component';
 import { userProjectsResolver } from './resolvers/user-projects.resolver';
 import { taskGuard } from './guards/task.guard';
 import { TaskDetailsComponent } from './tasks/task-details/task-details.component';
 import { CreateTaskComponent } from './tasks/create-task/create-task.component';
 import { EditTaskComponent } from './tasks/edit-task/edit-task.component';
 import { managerLeaderGuard } from './guards/projects/manager-leader.guard';
+import { leaderGuard } from './guards/projects/leader.guard';
 
 export const routes: Routes = [
     {
@@ -73,36 +72,25 @@ export const routes: Routes = [
         resolve: {
             role: userRoleResolver
         },
-        // TODO: Un guard más
         canActivate: [authGuard, managerLeaderGuard],
         title: 'Edit an existing project'
     },
     {
-        path: 'project/:id/create-phase',
-        component: CreatePhaseComponent,
-        // TODO: Un guard más
-        canActivate: [authGuard],
-        title: 'Create a new Phase'
-    },
-    {
         path: 'project/:projectId/phase/:phaseId/edit',
         component: EditPhaseComponent,
-        // TODO: Un guard más
-        canActivate: [authGuard],
+        canActivate: [authGuard, leaderGuard],
         title: 'Edit an existing phase'
     },
     {
         path: 'project/:projectId/phase/:phaseId/create-task',
         component: CreateTaskComponent,
-        // TODO: Un guard más
-        canActivate: [authGuard],
+        canActivate: [authGuard, leaderGuard],
         title: 'Create a new Task'
     },
     {
         path: 'project/:projectId/phase/:phaseId/task/:taskId/edit',
         component: EditTaskComponent,
-        // TODO: Un guard más
-        canActivate: [authGuard],
+        canActivate: [authGuard, leaderGuard],
         title: 'Edit an existing task'
     },
     {
